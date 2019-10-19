@@ -1,9 +1,6 @@
 .App {
   padding: 0.5em;
   margin: 0;
-}
-
-.Message {
-  position: fixed;
-  bottom: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }

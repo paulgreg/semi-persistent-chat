@@ -1,14 +1,15 @@
-.Message {
+.WriteBox {
   margin: 1em 0;
   width: 100%;
   display: flex;
 }
 
-.MessageLabel {
+.WriteBoxLabel {
   font-weight: bold;
+  margin-top: 0.2em;
 }
 
-.MessageInput {
+.WriteBoxInput {
   margin: 0 1em 0 0.5em;
   flex: 2;
 }

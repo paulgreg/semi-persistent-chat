@@ -1,19 +1,45 @@
 import React from "react"
+import "./Messages.css"
 
 export default function Messages(props) {
-  const { messages } = props
-  console.log("messages", messages)
+  const { login, messages } = props
+
+  function hightlightSameUser(text) {
+    if (text.includes(login)) {
+      return <span className="MessageSameUser">{text}</span>
+    }
+    return text
+  }
 
   return (
-    <div className="Messages">
-      {messages.map(({ timestamp, user, message }) => {
-        console.log("loop", user)
-        return (
-          <div key={`${timestamp}-${user}`}>
-            {timestamp} {user} {message}
-          </div>
-        )
-      })}
-    </div>
+    login && (
+      <div className="Messages">
+        {messages
+          .reverse()
+          .map(({ uuid, timestamp, user, message, validated }) => {
+            const statusClassName = validated
+              ? "MessagesCheck"
+              : "MessagesPending"
+            const statusSign = validated ? "✔" : "~"
+            return (
+              <div key={uuid} className="MessagesRow">
+                <span className="MessagesTime">
+                  {new Date(timestamp).toLocaleTimeString()}
+                </span>
+                <span className="MessagesUser">
+                  {hightlightSameUser(user)} :
+                </span>
+                <span className="MessagesText">
+                  {hightlightSameUser(message)}
+                </span>
+                <span className={`MessagesStatus ${statusClassName}`}>
+                  {statusSign}
+                </span>
+                <span className="MessagesUuid">{uuid}</span>
+              </div>
+            )
+          })}
+      </div>
+    )
   )
 }

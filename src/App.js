@@ -1,21 +1,59 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import "./Global.css"
 import "./App.css"
 import Login from "./components/Login"
-import Message from "./components/Message"
+import WriteBox from "./components/WriteBox"
 import Messages from "./components/Messages"
+import uuid from "uuid/v1"
+import {
+  sendMessage,
+  onIncomingMessage,
+  getInitialMessages
+} from "./services/communication"
+
+function mergeMessages(messages = [], newMessages = []) {
+  const merged = messages.concat(newMessages)
+  const validatedIds = merged
+    .filter(({ validated }) => validated)
+    .map(({ uuid }) => uuid)
+  const withoutUnvalidatedMessages = merged.filter(
+    ({ uuid, validated }) => validated || !validatedIds.includes(uuid)
+  )
+  return withoutUnvalidatedMessages
+}
 
 function App() {
-  let messages = [{ timestamp: Date.now(), user: "test", message: "test" }]
-
   const [login, setLogin] = useState("")
+  const [messages, setMessages] = useState([])
+  const [initialMessageLoading, setInitialMessageLoading] = useState(false)
 
   const onLogin = v => setLogin(v)
 
-  const onMessage = m => {
-    messages = messages.concat([
-      { timestamp: Date.now(), user: login, message: m }
-    ])
+  useEffect(() => {
+    if (!initialMessageLoading) {
+      setInitialMessageLoading(true)
+      getInitialMessages().then(initialMessages => {
+        setMessages(mergeMessages(messages, initialMessages))
+      })
+    }
+  }, [messages, setMessages, initialMessageLoading, setInitialMessageLoading])
+
+  useEffect(() => {
+    onIncomingMessage(incomingMessage => {
+      setMessages(mergeMessages(messages, incomingMessage))
+    })
+  }, [messages, setMessages])
+
+  const onMessage = text => {
+    const m = {
+      uuid: uuid(),
+      timestamp: Date.now(),
+      user: login,
+      message: text,
+      validated: false
+    }
+    sendMessage(m)
+    setMessages(messages.concat(m))
   }
 
   return (
@@ -24,12 +62,8 @@ function App() {
         <h1>Chat</h1>
         <Login onLogin={onLogin} />
       </header>
-      {login && (
-        <>
-          <Messages className="Messages" messages={messages} />
-          <Message className="Message" onMessage={onMessage} />
-        </>
-      )}
+      <WriteBox className="Message" login={login} onMessage={onMessage} />
+      <Messages className="Messages" login={login} messages={messages} />
     </div>
   )
 }

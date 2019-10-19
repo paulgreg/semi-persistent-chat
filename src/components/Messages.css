@@ -1,0 +1,33 @@
+.MessagesRow {
+  margin: 0.2em 0.2em 0.5em 0.2em;
+  width: 100%;
+}
+
+.MessagesTime {
+  margin-right: 0.5em;
+  font-size: small;
+}
+
+.MessagesUser {
+  margin-right: 0.5em;
+}
+
+.MessageSameUser {
+  color: red;
+}
+
+.MessagesUuid {
+  display: none;
+}
+
+.MessagesStatus {
+  margin: 0.2em;
+}
+
+.MessagesCheck {
+  color: green;
+}
+
+.MessagesPending {
+  color: orange;
+}
