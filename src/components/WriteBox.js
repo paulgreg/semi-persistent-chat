@@ -29,6 +29,7 @@ export default function WriteBox(props) {
           value={message}
           onChange={onChange}
           onKeyUp={onKeyUp}
+          autoComplete="false"
           autoFocus
         ></input>
       </div>

@@ -4,3 +4,9 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.RefreshButton {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+}

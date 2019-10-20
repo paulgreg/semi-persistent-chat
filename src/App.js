@@ -4,6 +4,7 @@ import "./App.css"
 import Login from "./components/Login"
 import WriteBox from "./components/WriteBox"
 import Messages from "./components/Messages"
+import RefreshButton from "./components/RefreshButton"
 import uuid from "uuid/v1"
 import {
   sendMessage,
@@ -58,6 +59,10 @@ function App() {
     return () => document.removeEventListener("visibilitychange", checkFn)
   }, [messages])
 
+  const onRefresh = () => {
+    checkMissingMessages(messages)
+  }
+
   const onMessage = text => {
     const m = {
       uuid: uuid(),
@@ -67,16 +72,19 @@ function App() {
       validated: false
     }
     sendMessage(m)
-    setMessages(messages.concat(m))
+    setMessages(mergeMessages(messages, m))
   }
 
   return (
     <div className="App">
-      <header className="Header">
-        {!login && <Login onLogin={onLogin} />}
-      </header>
-      <WriteBox className="Message" login={login} onMessage={onMessage} />
-      <Messages className="Messages" login={login} messages={messages} />
+      {!login && <Login onLogin={onLogin} />}
+      {login && (
+        <>
+          <WriteBox login={login} onMessage={onMessage} />
+          <Messages login={login} messages={messages} />
+          <RefreshButton className="RefreshButton" onRefresh={onRefresh} />
+        </>
+      )}
     </div>
   )
 }
