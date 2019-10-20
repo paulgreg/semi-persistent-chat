@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
 export default function Login(props) {
-  const [login, setLogin] = useState("");
-  const [validated, setValidated] = useState(false);
+  const [login, setLogin] = useState("")
+  const [validated, setValidated] = useState(false)
 
   function onChange(e) {
-    setLogin(e.target.value);
+    setLogin(e.target.value)
   }
   function onKeyUp(e) {
     if (e.key === "Enter") {
-      setValidated(true);
-      props.onLogin && props.onLogin(login);
+      setValidated(true)
+      props.onLogin && props.onLogin(login)
     }
   }
 
@@ -29,5 +29,5 @@ export default function Login(props) {
         autoFocus
       />
     </div>
-  );
+  )
 }

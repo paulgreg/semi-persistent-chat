@@ -23,11 +23,14 @@ function mergeMessages(messages = [], newMessages = []) {
 }
 
 function App() {
-  const [login, setLogin] = useState("")
+  const [login, setLogin] = useState(localStorage.login || "")
   const [messages, setMessages] = useState([])
   const [initialMessageLoading, setInitialMessageLoading] = useState(false)
 
-  const onLogin = v => setLogin(v)
+  const onLogin = v => {
+    localStorage.setItem("login", v)
+    setLogin(v)
+  }
 
   useEffect(() => {
     if (!initialMessageLoading) {
@@ -60,7 +63,7 @@ function App() {
     <div className="App">
       <header className="Header">
         <h1>Chat</h1>
-        <Login onLogin={onLogin} />
+        {!login && <Login onLogin={onLogin} />}
       </header>
       <WriteBox className="Message" login={login} onMessage={onMessage} />
       <Messages className="Messages" login={login} messages={messages} />
