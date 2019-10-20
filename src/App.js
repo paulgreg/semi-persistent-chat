@@ -62,7 +62,6 @@ function App() {
   return (
     <div className="App">
       <header className="Header">
-        <h1>Chat</h1>
         {!login && <Login onLogin={onLogin} />}
       </header>
       <WriteBox className="Message" login={login} onMessage={onMessage} />
