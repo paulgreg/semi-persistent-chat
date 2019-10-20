@@ -8,7 +8,8 @@ import uuid from "uuid/v1"
 import {
   sendMessage,
   onIncomingMessage,
-  getInitialMessages
+  getInitialMessages,
+  checkMissingMessages
 } from "./services/communication"
 
 function mergeMessages(messages = [], newMessages = []) {
@@ -46,6 +47,16 @@ function App() {
       setMessages(mergeMessages(messages, incomingMessage))
     })
   }, [messages, setMessages])
+
+  useEffect(() => {
+    const checkFn = () => {
+      if (document.visibilityState === "visible") {
+        checkMissingMessages(messages)
+      }
+    }
+    document.addEventListener("visibilitychange", checkFn)
+    return () => document.removeEventListener("visibilitychange", checkFn)
+  }, [messages])
 
   const onMessage = text => {
     const m = {

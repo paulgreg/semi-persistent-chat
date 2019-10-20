@@ -15,7 +15,7 @@ export default function Messages(props) {
     login && (
       <div className="Messages">
         {messages
-          .reverse()
+          .sort(({ timestamp: ts1 }, { timestamp: ts2 }) => ts2 - ts1)
           .map(({ uuid, timestamp, user, message, validated }) => {
             const statusClassName = validated
               ? "MessagesCheck"

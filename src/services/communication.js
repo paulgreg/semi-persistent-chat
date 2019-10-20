@@ -30,3 +30,7 @@ export function getInitialMessages() {
     })
   })
 }
+
+export function checkMissingMessages(messages) {
+  socket.emit("checkMissingMessages", messages.map(({ uuid }) => uuid))
+}
