@@ -1,7 +1,7 @@
 # Semi Persistent Chat
 
 That project is a simple semi-persistent PWA chat using web socket.
-Messages are keeped in memory and purged after X hours (configurable).
+Messages are kept in memory and purged after X hours (configurable).
 
 The `src/config.json` (that you need to copy from `src/config.json.dist`) is where you want to configure the app.
 
