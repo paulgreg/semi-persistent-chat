@@ -1,4 +1,5 @@
 import React from "react"
+import Linkify from "react-linkify"
 import "./Messages.css"
 
 export default function Messages(props) {
@@ -30,7 +31,7 @@ export default function Messages(props) {
                   {hightlightSameUser(user)} :
                 </span>
                 <span className="MessagesText">
-                  {hightlightSameUser(message)}
+                  <Linkify>{hightlightSameUser(message)}</Linkify>
                 </span>
                 <span className={`MessagesStatus ${statusClassName}`}>
                   {statusSign}

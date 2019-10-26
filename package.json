@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-linkify": "^1.0.0-alpha",
     "react-scripts": "3.2.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",

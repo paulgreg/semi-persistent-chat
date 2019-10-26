@@ -18,3 +18,10 @@ input {
   padding: 0.25em;
   border: 1px solid lightblue;
 }
+
+a {
+  color: white;
+}
+a:visited {
+  color: lightgrey;
+}
