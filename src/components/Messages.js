@@ -2,6 +2,14 @@ import React from "react"
 import Linkify from "react-linkify"
 import "./Messages.css"
 
+const dateOptions = {
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric"
+}
+
 export default function Messages(props) {
   const { login, messages } = props
 
@@ -25,7 +33,10 @@ export default function Messages(props) {
             return (
               <div key={uuid} className="MessagesRow">
                 <span className="MessagesTime">
-                  {new Date(timestamp).toLocaleTimeString()}
+                  {new Date(timestamp).toLocaleString(
+                    navigator.language,
+                    dateOptions
+                  )}
                 </span>
                 <span className="MessagesUser">
                   {hightlightSameUser(user)} :
