@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+const { maxLength } = require("../config.json")
 
 export default function Login(props) {
   const [login, setLogin] = useState("")
@@ -8,9 +9,10 @@ export default function Login(props) {
     setLogin(e.target.value)
   }
   function onKeyUp(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && String(login).length > 1) {
       setValidated(true)
-      props.onLogin && props.onLogin(login)
+      const cleanedLogin = login.replace(/ /g, "-")
+      props.onLogin && props.onLogin(cleanedLogin)
     }
   }
 
@@ -26,6 +28,8 @@ export default function Login(props) {
         value={login}
         onChange={onChange}
         onKeyUp={onKeyUp}
+        minLength="1"
+        maxLength={maxLength}
         autoFocus
       />
     </div>

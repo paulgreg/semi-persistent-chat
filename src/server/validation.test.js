@@ -23,7 +23,7 @@ it("should trucate user ", () => {
   expect(
     validateMessage({ user: "1234567890-1234567890", message: "a" })
   ).toMatchObject({
-    user: "1234567890-123"
+    user: "1234567890"
   })
 })
 
