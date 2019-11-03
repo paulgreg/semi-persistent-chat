@@ -13,25 +13,22 @@ import {
   checkMissingMessages
 } from "./services/communication"
 import mergeMessages from "./mergeMessages"
+import useEffectOnce from "./useEffectOnce"
 
 function App() {
   const [login, setLogin] = useState(localStorage.login || "")
   const [messages, setMessages] = useState([])
-  const [initialMessageLoading, setInitialMessageLoading] = useState(false)
 
   const onLogin = v => {
     localStorage.setItem("login", v)
     setLogin(v)
   }
 
-  useEffect(() => {
-    if (!initialMessageLoading) {
-      setInitialMessageLoading(true)
-      getInitialMessages().then(initialMessages => {
-        setMessages(mergeMessages(messages, initialMessages))
-      })
-    }
-  }, [messages, setMessages, initialMessageLoading, setInitialMessageLoading])
+  useEffectOnce(() => {
+    getInitialMessages().then(initialMessages => {
+      setMessages(mergeMessages(messages, initialMessages))
+    })
+  })
 
   useEffect(() => {
     onIncomingMessage(incomingMessage => {
