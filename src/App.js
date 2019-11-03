@@ -14,6 +14,7 @@ import {
 } from "./services/communication"
 import mergeMessages from "./mergeMessages"
 import useEffectOnce from "./useEffectOnce"
+import useEffectOnVisibilityChange from "./useEffectOnVisibilityChange"
 
 function App() {
   const [login, setLogin] = useState(localStorage.login || "")
@@ -36,19 +37,9 @@ function App() {
     })
   }, [messages, setMessages])
 
-  useEffect(() => {
-    const checkFn = () => {
-      if (document.visibilityState === "visible") {
-        checkMissingMessages(messages)
-      }
-    }
-    document.addEventListener("visibilitychange", checkFn)
-    return () => document.removeEventListener("visibilitychange", checkFn)
-  }, [messages])
+  useEffectOnVisibilityChange(checkMissingMessages, messages)
 
-  const onRefresh = () => {
-    checkMissingMessages(messages)
-  }
+  const onRefresh = () => checkMissingMessages(messages)
 
   const onMessage = text => {
     const m = {
