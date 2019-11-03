@@ -12,17 +12,7 @@ import {
   getInitialMessages,
   checkMissingMessages
 } from "./services/communication"
-
-function mergeMessages(messages = [], newMessages = []) {
-  const merged = messages.concat(newMessages)
-  const validatedIds = merged
-    .filter(({ validated }) => validated)
-    .map(({ uuid }) => uuid)
-  const withoutUnvalidatedMessages = merged.filter(
-    ({ uuid, validated }) => validated || !validatedIds.includes(uuid)
-  )
-  return withoutUnvalidatedMessages
-}
+import mergeMessages from "./mergeMessages"
 
 function App() {
   const [login, setLogin] = useState(localStorage.login || "")
