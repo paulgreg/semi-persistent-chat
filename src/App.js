@@ -14,10 +14,14 @@ import {
 } from "./services/communication"
 import mergeMessages from "./mergeMessages"
 import useEffectOnce from "./useEffectOnce"
-import useEffectOnVisibilityChange from "./useEffectOnVisibilityChange"
+import useEffectOnVisibilityChange , {isDocumentVisible} from "./useEffectOnVisibilityChange"
+import Favicon from "react-favicon"
+import logoInbase64 from './logoInBase64'
+ 
 
 function App() {
   const [login, setLogin] = useState(localStorage.login || "")
+  const [count, setCount] = useState(0)
   const [messages, setMessages] = useState([])
 
   const onLogin = v => {
@@ -33,11 +37,13 @@ function App() {
 
   useEffect(() => {
     onIncomingMessage(incomingMessage => {
+      if (!isDocumentVisible()) setCount(count+1)
       setMessages(mergeMessages(messages, incomingMessage))
     })
-  }, [messages, setMessages])
+  }, [messages, setMessages, count, setCount])
 
   useEffectOnVisibilityChange(checkMissingMessages, messages)
+  useEffectOnVisibilityChange(() => setCount(0), setCount)
 
   const onRefresh = () => checkMissingMessages(messages)
 
@@ -58,6 +64,7 @@ function App() {
       {!login && <Login onLogin={onLogin} />}
       {login && (
         <>
+          <Favicon url={logoInbase64} alertCount={count}/>
           <WriteBox login={login} onMessage={onMessage} />
           <Messages login={login} messages={messages} />
           <RefreshButton className="RefreshButton" onRefresh={onRefresh} />
