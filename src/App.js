@@ -16,7 +16,7 @@ import mergeMessages from "./mergeMessages"
 import useEffectOnce from "./useEffectOnce"
 import useEffectOnVisibilityChange , {isDocumentVisible} from "./useEffectOnVisibilityChange"
 import Favicon from "react-favicon"
-import logoInbase64 from './logoInBase64'
+import logo512 from './logo512.png'
  
 
 function App() {
@@ -64,7 +64,7 @@ function App() {
       {!login && <Login onLogin={onLogin} />}
       {login && (
         <>
-          <Favicon url={logoInbase64} alertCount={count}/>
+          <Favicon url={logo512} alertCount={count} />
           <WriteBox login={login} onMessage={onMessage} />
           <Messages login={login} messages={messages} />
           <RefreshButton className="RefreshButton" onRefresh={onRefresh} />
