@@ -4,7 +4,6 @@ import "./App.css"
 import Login from "./components/Login"
 import WriteBox from "./components/WriteBox"
 import Messages from "./components/Messages"
-import RefreshButton from "./components/RefreshButton"
 import uuid from "uuid/v1"
 import {
   sendMessage,
@@ -45,7 +44,6 @@ function App() {
   useEffectOnVisibilityChange(checkMissingMessages, messages)
   useEffectOnVisibilityChange(() => setCount(0), setCount)
 
-  const onRefresh = () => checkMissingMessages(messages)
 
   const onMessage = text => {
     const m = {
@@ -67,7 +65,6 @@ function App() {
           <Favicon url={logo512} alertCount={count} />
           <WriteBox login={login} onMessage={onMessage} />
           <Messages login={login} messages={messages} />
-          <RefreshButton className="RefreshButton" onRefresh={onRefresh} />
         </>
       )}
     </div>
