@@ -11,7 +11,7 @@ import {
   getInitialMessages,
   checkMissingMessages
 } from "./services/communication"
-import mergeMessages from "./mergeMessages"
+import mergeMessages from "./services/mergeMessages"
 import useEffectOnce from "./useEffectOnce"
 import useEffectOnVisibilityChange , {isDocumentVisible} from "./useEffectOnVisibilityChange"
 import Favicon from "react-favicon"
