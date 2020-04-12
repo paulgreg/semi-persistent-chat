@@ -10,9 +10,13 @@ const HOUR = 60 * MINUTE
 const { port, cleanupTimeInHours } = require("../config.json")
 
 let persistentMessages = []
+let users = [] 
+
+const getUsernames = () => users.map(({user}) => user)
 
 io.on("connection", function(socket) {
   socket.emit("initialMessages", persistentMessages)
+  socket.emit('usersOnline', getUsernames())
 
   socket.on("incomingMessage", function(incomingMessage) {
     try {
@@ -31,9 +35,24 @@ io.on("connection", function(socket) {
       ({ uuid }) => !clientUuids.includes(uuid)
     )
     if (missing.length) {
-      console.log(`Sending ${missing.length} missed messages to a client`)
+      console.log(new Date(), `Sending ${missing.length} missed messages to a client`)
       missing.map(message => socket.emit("pushMessage", message))
     }
+  })
+
+  socket.on("userOnline", function(username) {
+    const userEntry = { user: username, timestamp: Date.now(), s: socket }
+    const idx = users.findIndex(({user}) => user === username)
+    if (idx >= 0) users[idx] = userEntry
+    else users.push(userEntry)
+    socket.broadcast.emit('usersOnline', getUsernames())
+    console.log(new Date(), 'new user online - current users :', getUsernames())
+  })
+
+  socket.on('disconnect', function () {
+    users = users.filter(({s}) => s !== socket)
+    socket.broadcast.emit('usersOnline', getUsernames())
+    console.log(new Date(), 'user offline - current users :', getUsernames())
   })
 })
 
@@ -45,9 +64,7 @@ function cleanupOldMessages() {
   const beforeMessagesNb = persistentMessages.length
   const now = Date.now()
   const cleanupTimeStamp = cleanupTimeInHours * HOUR
-  persistentMessages = persistentMessages.filter(
-    ({ timestamp }) => now - timestamp < cleanupTimeStamp
-  )
+  persistentMessages = persistentMessages.filter(({ timestamp }) => now - timestamp < cleanupTimeStamp)
   const afterMessagesNb = persistentMessages.length
   console.log(
     new Date(),
@@ -55,5 +72,4 @@ function cleanupOldMessages() {
   )
   setTimeout(cleanupOldMessages, HOUR)
 }
-
 cleanupOldMessages()

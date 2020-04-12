@@ -9,24 +9,30 @@ import {
   sendMessage,
   onIncomingMessage,
   getInitialMessages,
-  checkMissingMessages
+  checkMissingMessages,
+  notifyUserOnline,
+  onUsersOnline
 } from "./services/communication"
 import mergeMessages from "./services/mergeMessages"
 import useEffectOnce from "./useEffectOnce"
 import useEffectOnVisibilityChange , {isDocumentVisible} from "./useEffectOnVisibilityChange"
 import Favicon from "react-favicon"
 import logo512 from './logo512.png'
+import { arrayEquals } from './array'
  
 
 function App() {
   const [login, setLogin] = useState(localStorage.login || "")
   const [count, setCount] = useState(0)
   const [messages, setMessages] = useState([])
+  const [users, setUsers] = useState([])
 
   const onLogin = v => {
     localStorage.setItem("login", v)
     setLogin(v)
+    notifyUserOnline(v)
   }
+  if (localStorage.login) notifyUserOnline(localStorage.login)
 
   useEffectOnce(() => {
     getInitialMessages().then(initialMessages => {
@@ -44,6 +50,11 @@ function App() {
   useEffectOnVisibilityChange(checkMissingMessages, messages)
   useEffectOnVisibilityChange(() => setCount(0), setCount)
 
+  useEffect(() => {
+    onUsersOnline(newUsers => {
+      if (!arrayEquals(users, newUsers)) setUsers(newUsers)
+    })
+  }, [users, setUsers])
 
   const onMessage = text => {
     const m = {
@@ -64,7 +75,7 @@ function App() {
         <>
           <Favicon url={logo512} alertCount={count} />
           <WriteBox login={login} onMessage={onMessage} />
-          <Messages login={login} messages={messages} />
+          <Messages login={login} users={users} messages={messages} />
         </>
       )}
     </div>

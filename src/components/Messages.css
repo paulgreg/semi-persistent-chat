@@ -31,3 +31,15 @@
 .MessagesPending {
   color: orange;
 }
+
+.UserStatus {
+  margin: auto .1em auto .25em;
+}
+
+.online {
+  color: rgb(55, 165, 55);
+}
+
+.offline {
+  color: rgb(196, 0, 0);
+}

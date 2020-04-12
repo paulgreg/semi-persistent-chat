@@ -10,15 +10,14 @@ const dateOptions = {
   second: "numeric"
 }
 
-export default function Messages(props) {
-  const { login, messages } = props
+const isUserOnlineFromUsers = users => user => users.findIndex(entry => entry === user) !== -1
 
-  function hightlightSameUser(text) {
-    if (text.includes(login)) {
-      return <span className="MessageSameUser">{text}</span>
-    }
-    return text
-  }
+export default function Messages(props) {
+  const { login, messages, users } = props
+
+  const isUserOnline = isUserOnlineFromUsers(users)
+
+  const hightlightSameUser = text => text.includes(login) ? <span className="MessageSameUser">{text}</span> : text 
 
   return (
     login && (
@@ -30,6 +29,7 @@ export default function Messages(props) {
               ? "MessagesCheck"
               : "MessagesPending"
             const statusSign = validated ? "✔" : "~"
+            const userStatus = isUserOnline(user) ? 'online' : 'offline'
             return (
               <div key={uuid} className="MessagesRow">
                 <span className="MessagesTime">
@@ -39,7 +39,9 @@ export default function Messages(props) {
                   )}
                 </span>
                 <span className="MessagesUser">
-                  {hightlightSameUser(user)} :
+                  {hightlightSameUser(user)} 
+                  {login !== user && <span className={`UserStatus ${userStatus}`} title={userStatus}>•</span>} 
+                  {' '}:
                 </span>
                 <span className="MessagesText">
                   <Linkify>{hightlightSameUser(message)}</Linkify>
