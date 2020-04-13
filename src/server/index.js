@@ -21,7 +21,7 @@ io.on("connection", function (socket) {
     try {
       const validatedMessage = validateMessage(incomingMessage)
       persistentMessages.push(validatedMessage)
-      io.emit("pushMessage", validatedMessage)
+      socket.broadcast.emit("pushMessage", validatedMessage)
       socket.emit("pushMessage", validatedMessage)
     } catch (e) {
       console.error("error on incoming message", e)
