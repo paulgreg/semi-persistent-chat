@@ -22,7 +22,7 @@ import { arrayEquals } from './array'
  
 
 function App() {
-  const [login, setLogin] = useState(localStorage.login || "")
+  const [login, setLogin] = useState("")
   const [count, setCount] = useState(0)
   const [messages, setMessages] = useState([])
   const [users, setUsers] = useState([])
@@ -32,7 +32,6 @@ function App() {
     setLogin(v)
     notifyUserOnline(v)
   }
-  if (localStorage.login) notifyUserOnline(localStorage.login)
 
   useEffectOnce(() => {
     getInitialMessages().then(initialMessages => {
