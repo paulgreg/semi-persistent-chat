@@ -19,11 +19,11 @@ export function onUsersOnline(cb) {
   onUsersOnlineCb = cb
 }
 
-socket.on("pushMessage", function(incomingMessage) {
+socket.on("pushMessage", function (incomingMessage) {
   if (onMessageCb) onMessageCb(incomingMessage)
 })
 
-socket.on("usersOnline", function(users) {
+socket.on("usersOnline", function (users) {
   if (onUsersOnlineCb) onUsersOnlineCb(users)
 })
 
@@ -33,7 +33,7 @@ export function sendMessage(message) {
 
 export function getInitialMessages() {
   return new Promise(resolve => {
-    socket.on("initialMessages", function(initialMessages) {
+    socket.on("initialMessages", function (initialMessages) {
       resolve(initialMessages)
     })
   })

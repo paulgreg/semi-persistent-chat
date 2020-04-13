@@ -17,7 +17,7 @@ export default function Messages(props) {
 
   const isUserOnline = isUserOnlineFromUsers(users)
 
-  const hightlightSameUser = text => text.includes(login) ? <span className="MessageSameUser">{text}</span> : text 
+  const hightlightSameUser = text => text.includes(login) ? <span className="MessageSameUser">{text}</span> : text
 
   return (
     login && (
@@ -39,8 +39,8 @@ export default function Messages(props) {
                   )}
                 </span>
                 <span className="MessagesUser">
-                  {hightlightSameUser(user)} 
-                  {login !== user && <span className={`UserStatus ${userStatus}`} title={userStatus}>•</span>} 
+                  {hightlightSameUser(user)}
+                  {login !== user && <span className={`UserStatus ${userStatus}`} title={userStatus}>•</span>}
                   {' '}:
                 </span>
                 <span className="MessagesText">

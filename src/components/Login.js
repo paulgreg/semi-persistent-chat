@@ -8,6 +8,7 @@ export default function Login(props) {
   function onChange(e) {
     setLogin(e.target.value)
   }
+
   function onKeyUp(e) {
     if (e.key === "Enter" && String(login).length > 1) {
       setValidated(true)

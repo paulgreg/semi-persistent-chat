@@ -10,15 +10,15 @@ const HOUR = 60 * MINUTE
 const { port, cleanupTimeInHours } = require("../config.json")
 
 let persistentMessages = []
-let users = [] 
+let users = []
 
-const getUsernames = () => users.map(({user}) => user)
+const getUsernames = () => users.map(({ user }) => user)
 
-io.on("connection", function(socket) {
+io.on("connection", function (socket) {
   socket.emit("initialMessages", persistentMessages)
   socket.emit('usersOnline', getUsernames())
 
-  socket.on("incomingMessage", function(incomingMessage) {
+  socket.on("incomingMessage", function (incomingMessage) {
     try {
       const validatedMessage = validateMessage(incomingMessage)
       persistentMessages.push(validatedMessage)
@@ -29,7 +29,7 @@ io.on("connection", function(socket) {
     }
   })
 
-  socket.on("checkMissingMessages", function(uuids) {
+  socket.on("checkMissingMessages", function (uuids) {
     const clientUuids = (uuids || []).sort()
     const missing = persistentMessages.filter(
       ({ uuid }) => !clientUuids.includes(uuid)
@@ -40,9 +40,9 @@ io.on("connection", function(socket) {
     }
   })
 
-  socket.on("userOnline", function(username) {
+  socket.on("userOnline", function (username) {
     const userEntry = { user: username, timestamp: Date.now(), s: socket }
-    const idx = users.findIndex(({user}) => user === username)
+    const idx = users.findIndex(({ user }) => user === username)
     if (idx >= 0) users[idx] = userEntry
     else users.push(userEntry)
     socket.broadcast.emit('usersOnline', getUsernames())
@@ -50,7 +50,7 @@ io.on("connection", function(socket) {
   })
 
   socket.on('disconnect', function () {
-    users = users.filter(({s}) => s !== socket)
+    users = users.filter(({ s }) => s !== socket)
     socket.broadcast.emit('usersOnline', getUsernames())
     console.log(new Date(), 'user offline - current users :', getUsernames())
   })

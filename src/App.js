@@ -15,11 +15,11 @@ import {
 } from "./services/communication"
 import mergeMessages from "./services/mergeMessages"
 import useEffectOnce from "./useEffectOnce"
-import useEffectOnVisibilityChange , {isDocumentVisible} from "./useEffectOnVisibilityChange"
+import useEffectOnVisibilityChange, { isDocumentVisible } from "./useEffectOnVisibilityChange"
 import Favicon from "react-favicon"
 import logo512 from './logo512.png'
 import { arrayEquals } from './array'
- 
+
 
 function App() {
   const [login, setLogin] = useState("")
@@ -41,7 +41,7 @@ function App() {
 
   useEffect(() => {
     onIncomingMessage(incomingMessage => {
-      if (!isDocumentVisible()) setCount(count+1)
+      if (!isDocumentVisible()) setCount(count + 1)
       setMessages(mergeMessages(messages, incomingMessage))
     })
   }, [messages, setMessages, count, setCount])
