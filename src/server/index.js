@@ -16,13 +16,12 @@ const getUsernames = () => users.map(({ user }) => user)
 
 io.on("connection", function (socket) {
   socket.emit("initialMessages", persistentMessages)
-  socket.emit('usersOnline', getUsernames())
 
   socket.on("incomingMessage", function (incomingMessage) {
     try {
       const validatedMessage = validateMessage(incomingMessage)
       persistentMessages.push(validatedMessage)
-      socket.broadcast.emit("pushMessage", validatedMessage)
+      io.emit("pushMessage", validatedMessage)
       socket.emit("pushMessage", validatedMessage)
     } catch (e) {
       console.error("error on incoming message", e)
@@ -45,13 +44,13 @@ io.on("connection", function (socket) {
     const idx = users.findIndex(({ user }) => user === username)
     if (idx >= 0) users[idx] = userEntry
     else users.push(userEntry)
-    socket.broadcast.emit('usersOnline', getUsernames())
+    io.emit('usersOnline', getUsernames())
     console.log(new Date(), 'new user online - current users :', getUsernames())
   })
 
   socket.on('disconnect', function () {
     users = users.filter(({ s }) => s !== socket)
-    socket.broadcast.emit('usersOnline', getUsernames())
+    io.emit('usersOnline', getUsernames())
     console.log(new Date(), 'user offline - current users :', getUsernames())
   })
 })
