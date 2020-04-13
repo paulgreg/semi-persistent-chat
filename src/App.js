@@ -49,6 +49,7 @@ function App() {
 
   useEffectOnVisibilityChange(checkMissingMessages, messages)
   useEffectOnVisibilityChange(() => setCount(0), setCount)
+  useEffectOnVisibilityChange(() => login && notifyUserOnline(login), login)
 
   useEffect(() => {
     onUsersOnline(newUsers => {
