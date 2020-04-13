@@ -1,0 +1,63 @@
+.UsersCount {
+    position: fixed;
+    bottom: .8em;
+    transition: bottom 1s;
+    right: 1em;
+    cursor: pointer;                                                                                                                                                                                                
+    display: flex;
+    font-size: 1.2em;
+    width: 70px;                                                                                                                                                                                                    
+    height: 70px;                                                                                                                                                                                                   
+    border-radius: 35px; 
+    border: 1px solid white;                                                                                                                                                                                        
+    fill: white;                                                                                                                                                                                                    
+    background: black;                                                                                                                                                                                          
+    padding: 0.6em;                                                                                                                                                                                                 
+}
+
+.UsersCountText {
+    margin: auto;
+    text-align: center;
+}
+
+.UsersCountIcon {
+    margin-left: .25em;
+}
+
+.UsersCountVisible {
+    bottom: 16%;
+}
+
+.UsersList {
+    position: fixed;
+    bottom: -20%;
+    transition: bottom 1s;
+    left: 0;
+    right: 0;
+    height: 20%;
+    border-top: 1px solid white;
+    background-color: #282c34;
+}
+
+.UsersListContent {
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.UsersUl {
+    list-style-type: square;
+    margin: .5em auto;
+}
+
+.UsersVisible {
+    bottom: 0; 
+}
+
+.UsersYourself {
+    color: cadetblue;
+}
+
+.UsersListTitle {
+    font-size: 16px;
+    margin: .6em;
+}
