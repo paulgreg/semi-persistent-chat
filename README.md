@@ -13,12 +13,14 @@ run `npm run start` and `node server`
 
 ## To deploy on production
 
-Run `sudo ./build.sh` and use nginx to deliver the generated `build` directory.
+Run `./build.sh` to generate static files into `build` directory.
 
-I suggest you to use pm2 to launch server by using `./pm2.sh`
+Serve static files via a web server (node is not serving them).
+I’m using a symbolic link from `/var/www/semi-persistent-chat` to the `build` directory.
 
-Also, adapt nginx to let pass web socket :
+Launch src/server code (I suggest you to use pm2 to launch server via `./pm2.sh`).
 
+And adapt nginx to let pass web socket to node :
 ```
 location /persistent-chat-ws/ {
         proxy_pass http://127.0.0.1:6060;
