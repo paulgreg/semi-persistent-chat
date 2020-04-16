@@ -9,6 +9,9 @@ const baseUrl = `${window.location.hostname}${portPart}`
 
 const socket = io.connect(baseUrl, { path: "/persistent-chat-ws", secure })
 
+const SECOND = 1000
+const MINUTE = 60 * SECOND
+
 let onMessageCb, onUsersOnlineCb
 
 export function onIncomingMessage(cb) {
@@ -43,6 +46,11 @@ export function checkMissingMessages(messages) {
   socket.emit("checkMissingMessages", messages.map(({ uuid }) => uuid))
 }
 
+let notifyTimeout
+
 export function notifyUserOnline(user) {
+  if (!user) return
+  clearTimeout(notifyTimeout)
   socket.emit("userOnline", user)
+  notifyTimeout = setTimeout(notifyUserOnline.bind(this, user), MINUTE)
 }

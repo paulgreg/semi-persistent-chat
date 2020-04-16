@@ -42,16 +42,19 @@ io.on("connection", function (socket) {
   socket.on("userOnline", function (username) {
     const userEntry = { user: username, timestamp: Date.now(), s: socket }
     const idx = users.findIndex(({ user }) => user === username)
-    if (idx >= 0) users[idx] = userEntry
-    else users.push(userEntry)
-    io.emit('usersOnline', getUsernames())
-    console.log(new Date(), 'new user online - current users :', getUsernames())
+    if (idx >= 0) {
+      users[idx] = userEntry
+    } else {
+      users.push(userEntry)
+      console.log(new Date(), `user online (${username})`)
+      io.emit('usersOnline', getUsernames())
+    }
   })
 
   socket.on('disconnect', function () {
     users = users.filter(({ s }) => s !== socket)
+    console.log(new Date(), 'user offline')
     io.emit('usersOnline', getUsernames())
-    console.log(new Date(), 'user offline - current users :', getUsernames())
   })
 })
 
@@ -59,16 +62,50 @@ server.listen(port)
 console.log(`Server listeming on port ${port}`)
 console.log("NODE_ENV=", process.env.NODE_ENV)
 
+let cleanupMessagesTimeout
+
 function cleanupOldMessages() {
-  const beforeMessagesNb = persistentMessages.length
+  clearTimeout(cleanupMessagesTimeout)
   const now = Date.now()
-  const cleanupTimeStamp = cleanupTimeInHours * HOUR
-  persistentMessages = persistentMessages.filter(({ timestamp }) => now - timestamp < cleanupTimeStamp)
+  const beforeMessagesNb = persistentMessages.length
+  const cleanupTimestamp = cleanupTimeInHours * HOUR
+  persistentMessages = persistentMessages.filter(({ timestamp }) => now - timestamp < cleanupTimestamp)
   const afterMessagesNb = persistentMessages.length
   console.log(
     new Date(),
-    `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimeStamp} ms). ${afterMessagesNb} message(s) still in memory`
+    `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
   )
-  setTimeout(cleanupOldMessages, HOUR)
+  cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
 }
+
 cleanupOldMessages()
+
+
+const USER_TIMEOUT = 2 * MINUTE
+let cleanupUsersTimeout
+
+function cleanupOldUsers() {
+  clearTimeout(cleanupUsersTimeout)
+  const beforeUsersNb = users.length
+  const now = Date.now()
+  users = users.filter(({ user, timestamp }) => {
+    const alive = now - timestamp < USER_TIMEOUT
+    if (!alive) console.log(`User ${user} has timedout`)
+    return alive
+  })
+  if (beforeUsersNb !== users.length) io.emit('usersOnline', getUsernames())
+
+  cleanupUsersTimeout = setTimeout(cleanupOldUsers, MINUTE)
+
+}
+cleanupOldUsers()
+
+
+let logOnlineUsersTimeout
+
+const logOnlineUsers = () => {
+  clearTimeout(logOnlineUsersTimeout)
+  console.log(new Date(), 'current users : ', getUsernames())
+  setTimeout(logOnlineUsers, 5 * MINUTE)
+}
+logOnlineUsers()
