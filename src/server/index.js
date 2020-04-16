@@ -52,9 +52,12 @@ io.on("connection", function (socket) {
   })
 
   socket.on('disconnect', function () {
+    const beforeUsersNb = users.length
     users = users.filter(({ s }) => s !== socket)
-    console.log(new Date(), 'user offline')
-    io.emit('usersOnline', getUsernames())
+    if (beforeUsersNb !== users.length) {
+      console.log(new Date(), 'user offline')
+      io.emit('usersOnline', getUsernames())
+    }
   })
 })
 
