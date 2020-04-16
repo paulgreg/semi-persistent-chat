@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Logout from './Logout'
 import "./Users.css"
 
 export default function Users({ users, login }) {
@@ -6,7 +7,7 @@ export default function Users({ users, login }) {
 
     const onClick = e => setVisible(!visible)
 
-    const hightlightYourself = username => username === login ? <span className="UsersYourself">{username}</span> : username
+    const hightlightYourself = username => username === login ? <><span className="UsersYourself">{username}</span><Logout /></> : username
 
     return <>
         <div className={`UsersList ${visible && 'UsersVisible'}`}>
