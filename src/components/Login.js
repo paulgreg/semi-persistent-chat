@@ -2,7 +2,7 @@ import React, { useState } from "react"
 const { maxLength } = require("../config.json")
 
 export default function Login(props) {
-  const [login, setLogin] = useState(localStorage.login || "")
+  const [login, setLogin] = useState("")
   const [validated, setValidated] = useState(false)
 
   function onChange(e) {
