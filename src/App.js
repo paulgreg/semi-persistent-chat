@@ -31,9 +31,11 @@ function App() {
   const onLogin = v => {
     localStorage.setItem("login", v)
     setLogin(v)
-    notifyUserOnline(v)
   }
-  if (localStorage.login) notifyUserOnline(localStorage.login)
+
+  useEffect(() => {
+    notifyUserOnline(localStorage.login)
+  }, [login])
 
   useEffectOnce(() => {
     getInitialMessages().then(initialMessages => {
