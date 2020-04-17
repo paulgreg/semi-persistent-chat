@@ -74,10 +74,12 @@ function cleanupOldMessages() {
   const cleanupTimestamp = cleanupTimeInHours * HOUR
   persistentMessages = persistentMessages.filter(({ timestamp }) => now - timestamp < cleanupTimestamp)
   const afterMessagesNb = persistentMessages.length
-  console.log(
-    new Date(),
-    `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
-  )
+  if (beforeMessagesNb !== afterMessagesNb) {
+    console.log(
+      new Date(),
+      `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
+    )
+  }
   cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
 }
 
@@ -108,7 +110,7 @@ let logOnlineUsersTimeout
 
 const logOnlineUsers = () => {
   clearTimeout(logOnlineUsersTimeout)
-  console.log(new Date(), 'current users : ', getUsernames())
+  if (users.length > 0) console.log(new Date(), 'current users : ', getUsernames())
   setTimeout(logOnlineUsers, 5 * MINUTE)
 }
 logOnlineUsers()
