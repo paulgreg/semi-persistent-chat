@@ -93,9 +93,12 @@ function cleanupOldUsers() {
   clearTimeout(cleanupUsersTimeout)
   const beforeUsersNb = users.length
   const now = Date.now()
-  users = users.filter(({ user, timestamp }) => {
+  users = users.filter(({ user, timestamp, s }) => {
     const alive = now - timestamp < USER_TIMEOUT
-    if (!alive) console.log(`User ${user} has timedout`)
+    if (!alive) {
+      console.log(`User ${user} has timedout`)
+      if (s) s.close()
+    }
     return alive
   })
   if (beforeUsersNb !== users.length) io.emit('usersOnline', getUsernames())
