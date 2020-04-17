@@ -54,3 +54,7 @@ export function notifyUserOnline(user) {
   socket.emit("userOnline", user)
   notifyTimeout = setTimeout(notifyUserOnline.bind(this, user), MINUTE)
 }
+
+export function disconnect() {
+  if (socket) socket.close()
+}
