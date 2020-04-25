@@ -130,6 +130,8 @@ function cleanupOldMessages() {
             new Date(),
             `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
         )
+    } else {
+        console.log(new Date(), `${afterMessagesNb} message(s) still in memory`)
     }
     cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
 }
