@@ -21,6 +21,7 @@ I’m using a symbolic link from `/var/www/semi-persistent-chat` to the `build` 
 Launch src/server code (I suggest you to use pm2 to launch server via `./pm2.sh`).
 
 And adapt nginx to let pass web socket to node :
+
 ```
 location /persistent-chat-ws/ {
         proxy_pass http://127.0.0.1:6060;

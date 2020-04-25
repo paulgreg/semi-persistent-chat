@@ -1,45 +1,45 @@
 .MessagesRow {
-  margin: 0.2em 0.2em 0.5em 0.2em;
-  width: 100%;
+    margin: 0.2em 0.2em 0.5em 0.2em;
+    width: 100%;
 }
 
 .MessagesTime {
-  margin-right: 0.5em;
-  font-size: small;
+    margin-right: 0.5em;
+    font-size: small;
 }
 
 .MessagesUser {
-  margin-right: 0.5em;
+    margin-right: 0.5em;
 }
 
 .MessageSameUser {
-  color: cadetblue;
+    color: cadetblue;
 }
 
 .MessagesUuid {
-  display: none;
+    display: none;
 }
 
 .MessagesStatus {
-  margin: 0.2em;
+    margin: 0.2em;
 }
 
 .MessagesCheck {
-  color: green;
+    color: green;
 }
 
 .MessagesPending {
-  color: orange;
+    color: orange;
 }
 
 .UserStatus {
-  margin: auto .1em auto .25em;
+    margin: auto 0.1em auto 0.25em;
 }
 
 .online {
-  color: rgb(55, 165, 55);
+    color: rgb(55, 165, 55);
 }
 
 .offline {
-  color: rgb(196, 0, 0);
+    color: rgb(196, 0, 0);
 }

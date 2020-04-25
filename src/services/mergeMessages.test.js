@@ -1,7 +1,6 @@
-import mergeMessages from "./mergeMessages"
+import mergeMessages from './mergeMessages'
 
 describe('mergeMessages', () => {
-
     it('should return empty messages', () => {
         expect(mergeMessages([], [])).toEqual([])
     })
@@ -15,10 +14,15 @@ describe('mergeMessages', () => {
     })
 
     it('should merge old & new messages', () => {
-        expect(mergeMessages([{ old: true }], [{ new: true }])).toEqual([{ old: true }, { new: true }])
+        expect(mergeMessages([{ old: true }], [{ new: true }])).toEqual([
+            { old: true },
+            { new: true },
+        ])
     })
 
     it('should merge remove dupplicates and keep validate flag', () => {
-        expect(mergeMessages([{ uuid: 1 }], [{ uuid: 1, validated: true }])).toEqual([{ uuid: 1, validated: true }])
+        expect(
+            mergeMessages([{ uuid: 1 }], [{ uuid: 1, validated: true }])
+        ).toEqual([{ uuid: 1, validated: true }])
     })
 })
