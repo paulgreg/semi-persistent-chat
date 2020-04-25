@@ -151,8 +151,6 @@ function cleanupOldUsers() {
 
     clearTimeout(cleanupUsersTimeout)
 
-    console.log('cleanupOldUser')
-
     const timedOutUsers = users.filter(({ username, room, timestamp, s }) => {
         const timedOut = !isAlive(timestamp)
         if (timedOut) {
@@ -161,14 +159,14 @@ function cleanupOldUsers() {
         }
         return timedOut
     })
-
-    console.log('timedOutUsers nb', timedOutUsers.length)
+    if (timedOutUsers.length)
+        console.log('timedOutUsers nb', timedOutUsers.length)
 
     const roomsWhereUsersHaveTimedOut = Object.keys(
         getUsersByRoom(timedOutUsers)
     )
-
-    console.log('roomsWherUserHaveTimedOut', roomsWhereUsersHaveTimedOut)
+    if (roomsWhereUsersHaveTimedOut.length)
+        console.log('roomsWherUserHaveTimedOut', roomsWhereUsersHaveTimedOut)
 
     if (roomsWhereUsersHaveTimedOut.length > 0) {
         users.forEach(({ username, room, s }) => {
