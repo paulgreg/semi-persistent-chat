@@ -8,11 +8,9 @@ export default function Login(props) {
 
     return (
         <div className="login">
-            <label className="loginLabel" htmlFor="login">
-                Login :{' '}
-            </label>
+            <label htmlFor="login">Login : </label>
             <input
-                name="login"
+                id="login"
                 type="text"
                 placeholder="Superman"
                 value={props.login}

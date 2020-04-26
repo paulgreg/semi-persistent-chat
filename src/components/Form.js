@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Login from './Login'
 import Room from './Room'
 import useEffectOnce from '../services/useEffectOnce'
+import { cleanupTimeInHours } from '../config.json'
+import './Form.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substr(2, 6)
 
@@ -47,10 +49,33 @@ export default function Form(props) {
     }
 
     return (
-        <form name="loginAndRoom" autoComplete="off" onSubmit={onSubmit}>
-            <Login login={login} onLoginChange={onLoginChange} />
-            <Room room={room} onRoomChange={onRoomChange} />
-            <input type="submit" value="Login" />
-        </form>
+        <>
+            <h1>Semi Persistent Chat</h1>
+            <hr />
+            <form name="loginAndRoom" autoComplete="off" onSubmit={onSubmit}>
+                <Login login={login} onLoginChange={onLoginChange} />
+                <Room room={room} onRoomChange={onRoomChange} />
+                <input className="submit" type="submit" value="Login" />
+            </form>
+            <hr />
+            <p>
+                Share the room name (or the URL once logged in) to your friends
+                to chat together.
+            </p>
+            <p>
+                Messages will be deleted on server after {cleanupTimeInHours}{' '}
+                hours.
+            </p>
+            <p>
+                Do not use that service for confidential discussions.{' '}
+                <a
+                    href="https://github.com/paulgreg/semi-persistent-chat"
+                    target="blank"
+                >
+                    Host it yourself and look at source code
+                </a>{' '}
+                if you wan’t more privacy.
+            </p>
+        </>
     )
 }

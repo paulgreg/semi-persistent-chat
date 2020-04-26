@@ -10,3 +10,11 @@
     bottom: 1em;
     right: 1em;
 }
+
+footer {
+    font-size: 12px;
+    position: fixed;
+    padding: 0.25em;
+    bottom: 0;
+    right: 0;
+}

@@ -75,17 +75,31 @@ function App() {
 
     const ready = login && room
     return (
-        <div className="App">
-            {!ready && <Form onLogin={onLogin} />}
-            {ready && (
-                <>
-                    <Favicon url={logo512} alertCount={count} />
-                    <WriteBox login={login} onMessage={onMessage} />
-                    <Messages login={login} users={users} messages={messages} />
-                    <Users login={login} users={users} />
-                </>
-            )}
-        </div>
+        <>
+            <div className="App">
+                {!ready && <Form onLogin={onLogin} />}
+                {ready && (
+                    <>
+                        <Favicon url={logo512} alertCount={count} />
+                        <WriteBox login={login} onMessage={onMessage} />
+                        <Messages
+                            login={login}
+                            users={users}
+                            messages={messages}
+                        />
+                        <Users login={login} users={users} />
+                        <footer>
+                            <a
+                                href="https://github.com/paulgreg/semi-persistent-chat"
+                                target="blank"
+                            >
+                                info
+                            </a>
+                        </footer>
+                    </>
+                )}
+            </div>
+        </>
     )
 }
 

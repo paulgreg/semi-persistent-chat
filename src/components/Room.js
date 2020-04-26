@@ -8,11 +8,9 @@ export default function Room(props) {
 
     return (
         <div className="room">
-            <label className="roomLabel" htmlFor="room">
-                Room name :{' '}
-            </label>
+            <label htmlFor="room">Room : </label>
             <input
-                name="room"
+                id="room"
                 type="text"
                 placeholder="alphanumeric room name"
                 value={props.room}
