@@ -3,9 +3,19 @@
 That project is a simple semi-persistent PWA chat using web socket.
 Messages are kept in memory and purged after X hours (configurable).
 
-The `src/config.json` (that you need to copy from `src/config.json.dist`) is where you want to configure the app.
+Login scren: 
+
+![Screenshot of login screen](./semi-persistent-chat-login.png "Login screen")
+
+Chat Screen : 
+
+![Screenshot of a chat](./semi-persistent-chat.png "Chat")
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Configuration
+
+Copy `src/config.json.dist` into `src/config.json` and update values according your needs.
 
 ## To dev
 
