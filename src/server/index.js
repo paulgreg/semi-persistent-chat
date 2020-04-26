@@ -113,9 +113,10 @@ io.on('connection', function (socket) {
 })
 
 app.use('/', express.static(path.join(__dirname, '../../build')))
-server.listen(port)
-console.log(`Server listeming on port ${port}`)
-console.log('NODE_ENV=', process.env.NODE_ENV)
+const p = process.env.PORT || port
+server.listen(p)
+console.log(`Server listeming on port ${p}`)
+console.log(`NODE_ENV=${process.env.NODE_ENV}`)
 
 let cleanupMessagesTimeout
 
