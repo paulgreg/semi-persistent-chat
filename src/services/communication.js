@@ -8,9 +8,8 @@ import {
     USER_ONLINE,
 } from './messageTypes'
 
-const prod = process.env.NODE_ENV !== 'production'
-
-const portPart = prod ? `:${port}` : ''
+const prod = process.env.NODE_ENV === 'production'
+const portPart = `:${prod ? window.location.port : port}`
 const baseUrl = `${window.location.hostname}${portPart}`
 
 let socket

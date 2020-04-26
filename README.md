@@ -3,13 +3,13 @@
 That project is a simple semi-persistent PWA chat using web socket.
 Messages are kept in memory and purged after X hours (configurable).
 
-Login scren: 
+Login scren:
 
-![Screenshot of login screen](./semi-persistent-chat-login.png "Login screen")
+![Screenshot of login screen](./semi-persistent-chat-login.png 'Login screen')
 
-Chat Screen : 
+Chat Screen :
 
-![Screenshot of a chat](./semi-persistent-chat.png "Chat")
+![Screenshot of a chat](./semi-persistent-chat.png 'Chat')
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -19,13 +19,18 @@ Copy `src/config.json.dist` into `src/config.json` and update values according y
 
 ## To dev
 
-run `npm run start` and `node server`
+run `npm run start` to launch client code (with watch) and `node server` to launch server code
 
-## To deploy on production
+## To deploy on production using only node
+
+Run `./build.sh` to generate static files into `build` directory.
+Run `npm run server` which will serve static files.
+
+## To deploy on production using nginx to serve static file (recommanded)
 
 Run `./build.sh` to generate static files into `build` directory.
 
-Serve static files via a web server (node is not serving them).
+Serve static files via a web server like nginx.
 I’m using a symbolic link from `/var/www/semi-persistent-chat` to the `build` directory.
 
 Launch src/server code (I suggest you to use pm2 to launch server via `./pm2.sh`).
