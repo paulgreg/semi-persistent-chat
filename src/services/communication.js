@@ -11,7 +11,6 @@ import {
 const prod = process.env.NODE_ENV !== 'production'
 
 const portPart = prod ? `:${port}` : ''
-const secure = prod
 const baseUrl = `${window.location.hostname}${portPart}`
 
 let socket
@@ -22,7 +21,7 @@ const MINUTE = 60 * SECOND
 let onMessageCb, onUsersOnlineCb
 
 export function connect(login, room) {
-    socket = io.connect(baseUrl, { path: '/persistent-chat-ws', secure })
+    socket = io.connect(baseUrl, { path: '/persistent-chat-ws' })
     notifyUserOnline(login, room)
     socket.on(
         PUSH_MSG,
