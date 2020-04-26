@@ -1,5 +1,9 @@
 # Semi Persistent Chat
 
+You can try it here : https://semi-persistent-chat.herokuapp.com/.
+
+However, I strongly encourage you to host it yourself.
+
 That project is a simple semi-persistent PWA chat using web socket.
 Messages are kept in memory and purged after X hours (configurable).
 
