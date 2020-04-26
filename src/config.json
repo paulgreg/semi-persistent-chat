@@ -1,4 +1,4 @@
 {
     "port": 6060,
-    "cleanupTimeInHours": 96
+    "cleanupTimeInHours": 48
 }
