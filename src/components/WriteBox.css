@@ -1,15 +1,15 @@
 .WriteBox {
-  margin: 1em 0;
-  width: 100%;
-  display: flex;
+    margin: 1em 0;
+    width: 100%;
+    display: flex;
 }
 
 .WriteBoxLabel {
-  font-weight: bold;
-  margin-top: 0.2em;
+    font-weight: bold;
+    margin-top: 0.2em;
 }
 
 .WriteBoxInput {
-  margin: 0 1em 0 0.5em;
-  flex: 2;
+    margin: 0 1em 0 0.5em;
+    flex: 2;
 }

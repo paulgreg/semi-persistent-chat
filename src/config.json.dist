@@ -1,5 +1,4 @@
 {
   "port": 6060,
-  "maxLength": 10,
   "cleanupTimeInHours": 48
 }

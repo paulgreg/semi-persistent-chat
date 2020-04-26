@@ -1,60 +1,81 @@
-import { port } from "../config.json"
-import io from "socket.io-client"
+import { port } from '../config.json'
+import io from 'socket.io-client'
+import {
+    PUSH_MSG,
+    USERS_ONLINE,
+    INCOMING_MSG,
+    INITIAL_MSG,
+    USER_ONLINE,
+} from './messageTypes'
 
-const prod = process.env.NODE_ENV !== "production"
+const prod = process.env.NODE_ENV !== 'production'
 
-const portPart = prod ? `:${port}` : ""
+const portPart = prod ? `:${port}` : ''
 const secure = prod
 const baseUrl = `${window.location.hostname}${portPart}`
 
-const socket = io.connect(baseUrl, { path: "/persistent-chat-ws", secure })
+let socket
 
 const SECOND = 1000
 const MINUTE = 60 * SECOND
 
 let onMessageCb, onUsersOnlineCb
 
+export function connect(login, room) {
+    socket = io.connect(baseUrl, { path: '/persistent-chat-ws', secure })
+    notifyUserOnline(login, room)
+    socket.on(
+        PUSH_MSG,
+        (incomingMessage) => onMessageCb && onMessageCb(incomingMessage)
+    )
+
+    socket.on(
+        USERS_ONLINE,
+        (users) => onUsersOnlineCb && onUsersOnlineCb(users)
+    )
+}
+
 export function onIncomingMessage(cb) {
-  onMessageCb = cb
+    onMessageCb = cb
 }
 
 export function onUsersOnline(cb) {
-  onUsersOnlineCb = cb
+    onUsersOnlineCb = cb
 }
 
-socket.on("pushMessage", function (incomingMessage) {
-  if (onMessageCb) onMessageCb(incomingMessage)
-})
-
-socket.on("usersOnline", function (users) {
-  if (onUsersOnlineCb) onUsersOnlineCb(users)
-})
-
 export function sendMessage(message) {
-  socket.emit("incomingMessage", message)
+    if (socket) socket.emit(INCOMING_MSG, message)
 }
 
 export function getInitialMessages() {
-  return new Promise(resolve => {
-    socket.on("initialMessages", function (initialMessages) {
-      resolve(initialMessages)
+    if (!socket) return Promise.resolve()
+    return new Promise((resolve) => {
+        socket.on(INITIAL_MSG, function (initialMessages) {
+            resolve(initialMessages)
+        })
     })
-  })
 }
 
 export function checkMissingMessages(messages) {
-  socket.emit("checkMissingMessages", messages.map(({ uuid }) => uuid))
+    if (socket)
+        socket.emit(
+            checkMissingMessages,
+            messages.map(({ uuid }) => uuid)
+        )
 }
 
 let notifyTimeout
 
-export function notifyUserOnline(user) {
-  if (!user) return
-  clearTimeout(notifyTimeout)
-  socket.emit("userOnline", user)
-  notifyTimeout = setTimeout(notifyUserOnline.bind(this, user), MINUTE)
+export function notifyUserOnline(username, room) {
+    if (!socket || !username || !room) return
+    clearTimeout(notifyTimeout)
+    socket.emit(USER_ONLINE, { username, room })
+    notifyTimeout = setTimeout(
+        notifyUserOnline.bind(this, username, room),
+        MINUTE
+    )
 }
 
 export function disconnect() {
-  if (socket) socket.close()
+    if (socket) socket.close()
 }
