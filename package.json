@@ -15,6 +15,7 @@
     "scripts": {
         "start": "react-scripts start",
         "dev-server": "npx nodemon src/server",
+        "server": "NODE_ENV=production node src/server",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
