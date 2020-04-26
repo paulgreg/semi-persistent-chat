@@ -19,7 +19,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Configuration
 
-Copy `src/config.json.dist` into `src/config.json` and update values according your needs.
+Update values in `src/config.json` according your needs.
 
 ## To dev
 
