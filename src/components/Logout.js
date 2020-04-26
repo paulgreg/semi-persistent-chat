@@ -5,7 +5,7 @@ import { disconnect } from '../services/communication'
 export default function Logout(props) {
     function onClick(e) {
         localStorage.removeItem('login')
-        window.history.replaceState({}, 'Chat', './')
+        window.history.pushState({}, 'Chat', './')
         disconnect()
         window.location.reload()
     }

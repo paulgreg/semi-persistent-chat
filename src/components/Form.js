@@ -26,7 +26,7 @@ export default function Form(props) {
 
     const doLogin = (login, room) => {
         localStorage.setItem('login', login)
-        window.history.replaceState({}, `Chat in ${room}`, `?room=${room}`)
+        window.history.pushState({}, `Chat in ${room}`, `?room=${room}`)
         props.onLogin && props.onLogin(login, room)
     }
 
