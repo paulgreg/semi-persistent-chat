@@ -19,12 +19,12 @@ Copy `src/config.json.dist` into `src/config.json` and update values according y
 
 ## To dev
 
-run `npm run start` to launch client code (with watch) and `node server` to launch server code
+run `npm run dev:client` to launch client code (with watch) and `npm run dev:server` to launch server code
 
 ## To deploy on production using only node
 
 Run `./build.sh` to generate static files into `build` directory.
-Run `npm run server` which will serve static files.
+Run `npm run start` which will serve static files.
 
 ## To deploy on production using nginx to serve static file (recommanded)
 
