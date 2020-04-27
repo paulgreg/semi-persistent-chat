@@ -23,6 +23,8 @@ import logo512 from './logo512.png'
 import { arrayEquals } from './array'
 import Form from './components/Form'
 
+window.onpopstate = () => window.location.reload(false)
+
 function App() {
     const [login, setLogin] = useState('')
     const [room, setRoom] = useState('')
