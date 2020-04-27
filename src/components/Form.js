@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Login from './Login'
 import Room from './Room'
 import useEffectOnce from '../services/useEffectOnce'
-import { cleanupTimeInHours } from '../config.json'
+import { sleep, cleanupTimeInHours } from '../config.json'
 import './Form.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substr(2, 6)
@@ -64,7 +64,21 @@ export default function Form(props) {
             </p>
             <p>
                 Messages will be deleted on server after {cleanupTimeInHours}{' '}
-                hours.
+                hours
+                {sleep && (
+                    <>
+                        {' '}
+                        (and maybe sooner if{' '}
+                        <a
+                            href="https://blog.heroku.com/app_sleeping_on_heroku"
+                            target="blank"
+                        >
+                            app is put in sleep
+                        </a>
+                        )
+                    </>
+                )}
+                .
             </p>
             <p>
                 Do not use that service for confidential discussions.{' '}

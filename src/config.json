@@ -1,4 +1,5 @@
 {
     "port": 6060,
-    "cleanupTimeInHours": 48
+    "cleanupTimeInHours": 48,
+    "sleep": true
 }
