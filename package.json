@@ -19,7 +19,8 @@
         "start": "NODE_ENV=production node src/server",
         "dev:client": "react-scripts start",
         "dev:server": "npx nodemon src/server",
-        "build": "react-scripts build",
+        "config": "if [ ! -f ./src/config.json ]; then cp ./src/config.json.dist ./src/config.json; fi;",
+        "build": "npm run config && react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
