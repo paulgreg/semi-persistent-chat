@@ -48,7 +48,7 @@ function App() {
         })
     }, [messages, setMessages, count, setCount])
 
-    useEffectOnVisibilityChange(() => checkMissingMessages, messages)
+    useEffectOnVisibilityChange(checkMissingMessages, messages)
     useEffectOnVisibilityChange(() => setCount(0), setCount)
     useEffectOnVisibilityChange(
         () => login && room && notifyUserOnline(login, room),
