@@ -1,11 +1,12 @@
 import { port } from '../config.json'
 import io from 'socket.io-client'
 import {
-    PUSH_MSG,
-    USERS_ONLINE,
-    INCOMING_MSG,
     INITIAL_MSG,
+    INCOMING_MSG,
+    CHECK_MISSING_MSG,
+    PUSH_MSG,
     USER_ONLINE,
+    USERS_ONLINE,
 } from './messageTypes'
 
 const prod = process.env.NODE_ENV === 'production'
@@ -57,7 +58,7 @@ export function getInitialMessages() {
 export function checkMissingMessages(messages) {
     if (socket)
         socket.emit(
-            checkMissingMessages,
+            CHECK_MISSING_MSG,
             messages.map(({ uuid }) => uuid)
         )
 }
