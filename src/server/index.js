@@ -50,6 +50,7 @@ io.on('connection', function (socket) {
     socket.on(CHECK_MISSING_MSG, function (uuids) {
         const clientUuids = (uuids || []).sort()
         const user = findUserFromSocket(socket)
+        if (!user) return
         const missing = persistentMessages.filter(
             ({ uuid, room }) =>
                 !clientUuids.includes(uuid) && room === user.room
