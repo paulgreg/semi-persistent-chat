@@ -48,19 +48,19 @@ io.on('connection', function (socket) {
     })
 
     socket.on(CHECK_MISSING_MSG, function (uuids) {
-        const clientUuids = (uuids || []).sort()
+        const clientUuids = uuids || []
         const user = findUserFromSocket(socket)
         if (!user) return
-        const missing = persistentMessages.filter(
+        const missingMessageForUser = persistentMessages.filter(
             ({ uuid, room }) =>
-                !clientUuids.includes(uuid) && room === user.room
+                room === user.room && !clientUuids.includes(uuid)
         )
-        if (missing.length) {
+        if (missingMessageForUser.length) {
             console.log(
                 new Date(),
-                `Sending ${missing.length} missed messages to a client`
+                `Sending ${missingMessageForUser.length} missed messages to a client`
             )
-            missing.map((message) => socket.emit(PUSH_MSG, message))
+            socket.emit(PUSH_MSG, missingMessageForUser)
         }
     })
 
