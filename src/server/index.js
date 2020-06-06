@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server, { path: '/persistent-chat-ws' })
+const fs = require('fs')
 const { validateMessage } = require('./validation')
 const {
     INITIAL_MSG,
@@ -13,13 +14,15 @@ const {
     PUSH_MSG,
 } = require('../services/messageTypes')
 
+const SAVED_FILE = '/tmp/semi-persistent-chat-dump.json'
+
 const SECOND = 1000
 const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE
 
 const USER_TIMEOUT = 2 * MINUTE
 
-const { port, cleanupTimeInHours } = require('../config.json')
+const { port, cleanupTimeInHours, saveState } = require('../config.json')
 
 let persistentMessages = []
 let users = []
@@ -114,10 +117,36 @@ io.on('connection', function (socket) {
 })
 
 app.use('/', express.static(path.join(__dirname, '../../build')))
-const p = process.env.PORT || port
-server.listen(p)
-console.log(`Server listeming on port ${p}`)
-console.log(`NODE_ENV=${process.env.NODE_ENV}`)
+
+function start() {
+    const p = process.env.PORT || port
+    server.listen(p)
+    console.log(`Server listeming on port ${p}`)
+    console.log(`NODE_ENV=${process.env.NODE_ENV}`)
+}
+
+if (saveState && fs.existsSync(SAVED_FILE)) {
+    console.log('fs exists')
+    fs.readFile(SAVED_FILE, 'utf8', (err, data) => {
+        console.log('read file exists', data)
+        if (err) console.error('Failed to load file:', err)
+        let savedMsgs
+        try {
+            savedMsgs = data && JSON.parse(data)
+        } catch (e) {
+            console.error('failed to load messages:', e)
+        }
+        if (savedMsgs) {
+            console.log(
+                `Loading ${savedMsgs.length} messages from ${SAVED_FILE}`
+            )
+            persistentMessages = persistentMessages.concat(savedMsgs)
+        }
+        start()
+    })
+} else {
+    start()
+}
 
 let cleanupMessagesTimeout
 
@@ -201,3 +230,18 @@ const logOnlineUsers = () => {
     setTimeout(logOnlineUsers, 5 * MINUTE)
 }
 logOnlineUsers()
+
+process.on('SIGINT', function () {
+    console.log('Stopping gracefully')
+    if (!saveState) return process.exit(0)
+    fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
+        if (err) {
+            console.log(err)
+            process.exit(err)
+        }
+        console.log(
+            `${persistentMessages.length} messages saved in ${SAVED_FILE}`
+        )
+        process.exit(0)
+    })
+})
