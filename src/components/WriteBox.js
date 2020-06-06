@@ -10,7 +10,7 @@ export default function WriteBox(props) {
     }
 
     function onKeyUp(e) {
-        if (e.key === 'Enter' && message.length > 0) {
+        if (e.key === 'Enter' && message.trim().length > 0) {
             onMessage(message)
             setMessage('')
         }
@@ -30,6 +30,8 @@ export default function WriteBox(props) {
                     onChange={onChange}
                     onKeyUp={onKeyUp}
                     autoComplete="false"
+                    minLength="1"
+                    maxLength="2048"
                     autoFocus
                 ></input>
             </div>

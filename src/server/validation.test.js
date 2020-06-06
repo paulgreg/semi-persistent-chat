@@ -1,6 +1,62 @@
-const { validateMessage } = require('./validation')
+const {
+    validateMessage,
+    checkMessageValidity: isMessageValid,
+} = require('./validation')
 
-describe('validation', () => {
+describe('isMessageValid', () => {
+    it(`should return true if message if well formated`, () => {
+        expect(
+            isMessageValid({
+                user: 'user',
+                room: 'room',
+                message: 'msg',
+            })
+        ).toBe(true)
+    })
+    ;[
+        {
+            message: undefined,
+            title: 'message undefined',
+        },
+        {
+            message: {},
+            title: 'message empty',
+        },
+        {
+            message: {
+                room: 'room',
+                message: 'msg',
+            },
+            title: 'message has no user',
+        },
+        {
+            message: {
+                user: 'user',
+                message: 'msg',
+            },
+            title: 'message has no room',
+        },
+        {
+            message: {
+                user: 'user',
+                room: 'room',
+            },
+            title: 'message has no message',
+        },
+        {
+            message: {
+                user: ' ',
+                room: 'room',
+                message: 'msg',
+            },
+            title: 'message has empty user',
+        },
+    ].forEach(({ message, title }) =>
+        it(`should throw error if ${title}`, () =>
+            expect(() => isMessageValid(message)).toThrow())
+    )
+})
+describe('validateMessage', () => {
     it('validate correct message', () => {
         const m = validateMessage({
             uuid: 1,
@@ -19,24 +75,32 @@ describe('validation', () => {
     })
 
     it('should add uuid if missing', () => {
-        expect(validateMessage({ message: 'a' })).toHaveProperty('uuid')
+        expect(
+            validateMessage({ user: 'user', room: 'room', message: 'msg' })
+        ).toHaveProperty('uuid')
     })
 
-    it('should add user if missing', () => {
-        expect(validateMessage({ message: 'a' })).toMatchObject({
-            user: 'unknown',
-        })
-    })
-
-    it('should add room if missing', () => {
-        expect(validateMessage({ message: 'a' })).toMatchObject({
-            room: 'default',
+    it('should trim user, room and message', () => {
+        expect(
+            validateMessage({
+                user: '  user  ',
+                room: '  room  ',
+                message: '  msg  ',
+            })
+        ).toMatchObject({
+            user: 'user',
+            room: 'room',
+            message: 'msg',
         })
     })
 
     it('should trucate user ', () => {
         expect(
-            validateMessage({ user: '1234567890-1234567890', message: 'a' })
+            validateMessage({
+                user: '1234567890-1234567890',
+                room: 'room',
+                message: 'msg',
+            })
         ).toMatchObject({
             user: '1234567890',
         })
@@ -44,9 +108,5 @@ describe('validation', () => {
 
     it('should throw error if no message ', () => {
         expect(() => validateMessage()).toThrow()
-    })
-
-    it('should throw error if text is missing', () => {
-        expect(() => validateMessage({})).toThrow()
     })
 })

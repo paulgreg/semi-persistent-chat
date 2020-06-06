@@ -1,14 +1,29 @@
 const generateUuid = require('uuid/v1')
 
-module.exports.validateMessage = function validateMessage(m) {
-    if (!m || !m.message) throw new Error('no text or message')
+function checkMessageValidity(m) {
+    if (!m) throw new Error('no message')
+    if (!m.user || !m.room || !m.message)
+        throw new Error('mal formated message')
+    const { user, room, message } = m
+    if (!String(user).trim()) throw new Error('empty user')
+    if (!String(room).trim()) throw new Error('empty room')
+    if (!String(message).trim()) throw new Error('empty message')
+    return true
+}
+
+function validateMessage(m) {
+    checkMessageValidity(m)
     const { uuid, user, message, room } = m
     return {
         uuid: uuid ? String(uuid) : generateUuid(),
-        user: user ? String(user).substring(0, 10) : 'unknown',
-        room: room ? String(room).substring(0, 10) : 'default',
-        message: String(message).substring(0, 2048),
+        user: String(user).trim().substring(0, 10),
+        room: String(room).trim().substring(0, 10),
+        message: String(message).trim().substring(0, 2048),
         timestamp: Date.now(),
         validated: true,
     }
+}
+module.exports = {
+    checkMessageValidity,
+    validateMessage,
 }
