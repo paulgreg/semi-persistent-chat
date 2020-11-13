@@ -1,8 +1,10 @@
 # Semi Persistent Chat
 
-You can try it here : https://semi-persistent-chat.herokuapp.com/.
+You can try it here : https://semi-persistent-chat.herokuapp.com/
 
-However, I strongly encourage you to host it yourself.
+The app is hosted on an Heroku free account so it comes with limitations : app is put in sleep if inactive meaning messages will be lost and it will take some seconds to wake up.
+
+I strongly encourage you to host it yourself !
 
 That project is a simple semi-persistent PWA chat using web socket.
 Messages are kept in memory and purged after X hours (configurable).
@@ -14,6 +16,8 @@ Login scren:
 Chat Screen :
 
 ![Screenshot of a chat](./semi-persistent-chat.png 'Chat')
+
+URLs sent in chat will be transformed as links and, if it’s an image/audio/video file, a preview will be displayed.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -48,4 +52,10 @@ location /persistent-chat-ws/ {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
 }
+```
+
+## To deploy on heroku
+
+```
+git push heroku master
 ```
