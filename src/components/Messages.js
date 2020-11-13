@@ -1,7 +1,6 @@
 import React from 'react'
-import Linkify from 'react-linkify'
-import Link from './Link'
 import './Messages.css'
+import Message from './Message'
 
 const dateOptions = {
     month: 'numeric',
@@ -18,13 +17,6 @@ export default function Messages(props) {
     const { login, messages, users } = props
 
     const isUserOnline = isUserOnlineFromUsers(users)
-
-    const hightlightSameUser = (text) =>
-        text.includes(login) ? (
-            <span className="MessageSameUser">{text}</span>
-        ) : (
-            text
-        )
 
     return (
         login && (
@@ -47,8 +39,12 @@ export default function Messages(props) {
                                         dateOptions
                                     )}
                                 </span>
-                                <span className="MessagesUser">
-                                    {hightlightSameUser(user)}
+                                <span
+                                    className={`MessagesUser ${
+                                        user === login ? 'MessageSameUser' : ''
+                                    }`}
+                                >
+                                    {user}
                                     {login !== user && (
                                         <span
                                             className={`UserStatus ${userStatus}`}
@@ -59,11 +55,7 @@ export default function Messages(props) {
                                     )}{' '}
                                     :
                                 </span>
-                                <span className="MessagesText">
-                                    <Linkify componentDecorator={Link}>
-                                        {hightlightSameUser(message)}
-                                    </Linkify>
-                                </span>
+                                <Message message={message} login={login} />
                                 <span
                                     className={`MessagesStatus ${statusClassName}`}
                                 >

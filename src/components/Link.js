@@ -1,17 +1,14 @@
 import React from 'react'
+import { IMAGE_TYPES, AUDIO_TYPES, VIDEO_TYPES } from './media.constants'
 import './Link.css'
-
-const imagesTypes = ['png', 'gif', 'webp', 'jpg', 'jpeg', 'svg']
-const videoTypes = ['mp4', 'webm']
-const audioTypes = ['mp3', 'ogg', 'wav', 'aac', 'flac']
 
 const isValidMedia = (types) => (url) =>
     types.find((ext) => url.startsWith('https://') && url.endsWith(`.${ext}`))
 
 export default function Link(url) {
-    const isImage = isValidMedia(imagesTypes)(url)
-    const isVideo = isValidMedia(videoTypes)(url)
-    const isAudio = isValidMedia(audioTypes)(url)
+    const isImage = isValidMedia(IMAGE_TYPES)(url)
+    const isVideo = isValidMedia(VIDEO_TYPES)(url)
+    const isAudio = isValidMedia(AUDIO_TYPES)(url)
     return (
         <>
             {isImage && <img className="preview" src={url} alt="" />}
