@@ -1,0 +1,6 @@
+.preview {
+    display: block;
+    max-width: 800px;
+    max-height: 800px;
+    margin: 0.5em 0 0.25em 0;
+}

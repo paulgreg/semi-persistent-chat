@@ -1,5 +1,6 @@
 import React from 'react'
 import Linkify from 'react-linkify'
+import Link from './Link'
 import './Messages.css'
 
 const dateOptions = {
@@ -59,7 +60,7 @@ export default function Messages(props) {
                                     :
                                 </span>
                                 <span className="MessagesText">
-                                    <Linkify>
+                                    <Linkify componentDecorator={Link}>
                                         {hightlightSameUser(message)}
                                     </Linkify>
                                 </span>
