@@ -10,13 +10,16 @@ export default function WriteBox(props) {
     const [warning, setWarning] = useState('')
 
     function onChange(e) {
-        setMessage(e.target.value)
+        const msg = e.target.value
+        setWarning(msg.length >= maxMsgSize ? 'Characters limit reached' : '')
+        setMessage(msg)
     }
 
     function onKeyUp(e) {
         if (e.key === 'Enter' && message.trim().length > 0) {
             onMessage(message)
             setMessage('')
+            setWarning('')
         }
     }
 
