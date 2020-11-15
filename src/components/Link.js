@@ -3,7 +3,13 @@ import { IMAGE_TYPES, AUDIO_TYPES, VIDEO_TYPES } from './media.constants'
 import './Link.css'
 
 const isValidMedia = (types) => (url) =>
-    types.find((ext) => url.startsWith('https://') && url.endsWith(`.${ext}`))
+    types.find((ext) =>
+        new RegExp(`http(s?)://(?:.*)\\.(?:${ext})(\\?.*)?$`, 'gi').test(url)
+    ) !== undefined
+
+export const isImageFn = isValidMedia(IMAGE_TYPES)
+export const isVideoFn = isValidMedia(VIDEO_TYPES)
+export const isAudioFn = isValidMedia(AUDIO_TYPES)
 
 export default function Link(url) {
     const isImage = isValidMedia(IMAGE_TYPES)(url)
