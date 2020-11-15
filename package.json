@@ -21,7 +21,9 @@
         "dev:server": "npx nodemon src/server",
         "config": "if [ ! -f ./src/config.json ]; then cp ./src/config.json.dist ./src/config.json; fi;",
         "build": "npm run config && react-scripts build",
-        "test": "react-scripts test",
+        "tdd": "react-scripts test",
+        "test": "react-scripts test --watchAll=false",
+        "lint": "prettier -c src",
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
@@ -39,7 +41,12 @@
             "last 1 safari version"
         ]
     },
+    "pre-commit": [
+        "test",
+        "lint"
+    ],
     "devDependencies": {
+        "pre-commit": "^1.2.2",
         "prettier": "^2.0.5"
     }
 }
