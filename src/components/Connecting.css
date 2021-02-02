@@ -1,0 +1,41 @@
+.Connecting {
+    position: absolute;
+    background: royalblue;
+    border-radius: 4px;
+    font-size: 2em;
+    text-align: center;
+    padding: 1em;
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+}
+
+/* From https://codepen.io/FlorinPop17/pen/drJJzK */
+.Connecting-pulse {
+    border-radius: 50%;
+    margin: 40px auto;
+    height: 40px;
+    width: 40px;
+    transform: scale(1);
+    background: white;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
+    animation: pulse-white 2s infinite;
+}
+
+@keyframes pulse-white {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}

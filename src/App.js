@@ -13,6 +13,8 @@ import {
     notifyUserOnline,
     onUsersOnline,
     connect,
+    onConnect,
+    onDisconnect,
 } from './services/communication'
 import mergeMessages from './services/mergeMessages'
 import useEffectOnVisibilityChange, {
@@ -22,10 +24,12 @@ import Favicon from 'react-favicon'
 import logo512 from './logo512.png'
 import { arrayEquals } from './array'
 import Form from './components/Form'
+import Connecting from './components/Connecting'
 
 window.onpopstate = () => window.location.reload(false)
 
 function App() {
+    const [connected, setConnected] = useState(false)
     const [login, setLogin] = useState('')
     const [room, setRoom] = useState('')
     const [count, setCount] = useState(0)
@@ -35,6 +39,8 @@ function App() {
     const onLogin = (login, room) => {
         setLogin(login)
         setRoom(room)
+        onConnect(() => setConnected(true))
+        onDisconnect(() => setConnected(false))
         connect(login, room)
         getInitialMessages().then((initialMessages) => {
             setMessages(mergeMessages(messages, initialMessages))
@@ -82,6 +88,7 @@ function App() {
                 {!ready && <Form onLogin={onLogin} />}
                 {ready && (
                     <>
+                        {!connected && <Connecting />}
                         <Favicon url={logo512} alertCount={count} />
                         <WriteBox login={login} onMessage={onMessage} />
                         <Messages

@@ -18,11 +18,13 @@ let socket
 const SECOND = 1000
 const MINUTE = 60 * SECOND
 
-let onMessageCb, onUsersOnlineCb
+let onMessageCb, onUsersOnlineCb, onConnectCb, onDisconnectCb
 
 export function connect(login, room) {
     socket = io.connect(baseUrl, { path: '/persistent-chat-ws' })
     notifyUserOnline(login, room)
+    socket.on('connect', onConnectCb)
+    socket.on('disconnect', onDisconnectCb)
     socket.on(
         PUSH_MSG,
         (incomingMessage) => onMessageCb && onMessageCb(incomingMessage)
@@ -32,6 +34,14 @@ export function connect(login, room) {
         USERS_ONLINE,
         (users) => onUsersOnlineCb && onUsersOnlineCb(users)
     )
+}
+
+export function onConnect(cb) {
+    onConnectCb = cb
+}
+
+export function onDisconnect(cb) {
+    onDisconnectCb = cb
 }
 
 export function onIncomingMessage(cb) {
