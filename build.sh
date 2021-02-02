@@ -1,3 +1,4 @@
 #!/bin/bash
+sudo chown -R $USER build
 PUBLIC_URL=/spchat/ npm run build
-chown www-data: -R build
+sudo chown -R www-data: build
