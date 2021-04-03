@@ -11,32 +11,46 @@ export const isImageFn = isValidMedia(IMAGE_TYPES)
 export const isVideoFn = isValidMedia(VIDEO_TYPES)
 export const isAudioFn = isValidMedia(AUDIO_TYPES)
 
-export default function Link(url) {
-    const isImage = isValidMedia(IMAGE_TYPES)(url)
-    const isVideo = isValidMedia(VIDEO_TYPES)(url)
-    const isAudio = isValidMedia(AUDIO_TYPES)(url)
+const AnchorLink = ({ url }) => (
+    <a href={url} target="blank" rel="nofollow noopener">
+        {url}
+    </a>
+)
+const AudioLink = ({ url }) => (
+    <audio className="preview" src={url} controls="true" preload="none" />
+)
+
+const VideoLink = ({ url }) => (
+    <video className="preview" src={url} controls="true" preload="none" />
+)
+
+const ImgLink = ({ url }) => <img className="preview" src={url} alt="" />
+
+const DetailLink = ({ url, children }) => {
     return (
-        <>
-            {isImage && <img className="preview" src={url} alt="" />}
-            {isVideo && (
-                <video
-                    className="preview"
-                    src={url}
-                    controls="true"
-                    preload="none"
-                />
-            )}
-            {isAudio && (
-                <audio
-                    className="preview"
-                    src={url}
-                    controls="true"
-                    preload="none"
-                />
-            )}
-            <a href={url} target="blank" rel="nofollow noopener">
-                {url}
-            </a>
-        </>
+        <details open>
+            <summary>
+                <AnchorLink url={url} />
+            </summary>
+            {children}
+        </details>
     )
+}
+
+export default function Link(url) {
+    const isImage = isImageFn(url)
+    const isVideo = isVideoFn(url)
+    const isAudio = isAudioFn(url)
+
+    if (isImage || isVideo || isAudio) {
+        return (
+            <DetailLink url={url}>
+                {isImage && <ImgLink url={url} />}
+                {isVideo && <VideoLink url={url} />}
+                {isAudio && <AudioLink url={url} />}
+            </DetailLink>
+        )
+    }
+
+    return <AnchorLink url={url} />
 }
