@@ -126,9 +126,9 @@ function start() {
 }
 
 if (saveState && fs.existsSync(SAVED_FILE)) {
-    console.log('fs exists')
+    console.log('save file exists')
     fs.readFile(SAVED_FILE, 'utf8', (err, data) => {
-        console.log('read file exists', data)
+        console.log('read save file', data)
         if (err) console.error('Failed to load file:', err)
         let savedMsgs
         try {
