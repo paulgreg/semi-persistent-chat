@@ -52,6 +52,10 @@ location /persistent-chat-ws/ {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
 }
+location /persistent-chat/api/ {
+        proxy_pass http://127.0.0.1:6060/api;
+        proxy_http_version 1.1;
+}
 ```
 
 ## To deploy on heroku

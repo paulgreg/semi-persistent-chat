@@ -6,6 +6,11 @@
         "node": "10.16.0"
     },
     "dependencies": {
+        "axios": "^0.21.1",
+        "cheerio": "^1.0.0-rc.5",
+        "express": "^3.21.2",
+        "lru-cache": "^6.0.0",
+        "morgan": "^1.10.0",
         "react": "^16.10.2",
         "react-dom": "^16.10.2",
         "react-favicon": "0.0.18",

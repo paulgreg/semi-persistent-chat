@@ -1,4 +1,3 @@
-import { port } from '../config.json'
 import io from 'socket.io-client'
 import {
     INITIAL_MSG,
@@ -8,10 +7,8 @@ import {
     USER_ONLINE,
     USERS_ONLINE,
 } from './messageTypes'
-
-const prod = process.env.NODE_ENV === 'production'
-const portPart = `:${prod ? window.location.port : port}`
-const baseUrl = `${window.location.hostname}${portPart}`
+import { port } from '../config.json'
+import { isProd } from '../configuration.js'
 
 let socket
 
@@ -19,6 +16,9 @@ const SECOND = 1000
 const MINUTE = 60 * SECOND
 
 let onMessageCb, onUsersOnlineCb, onConnectCb, onDisconnectCb
+
+const portPart = `:${isProd() ? window.location.port : port}`
+const baseUrl = `${window.location.hostname}${portPart}`
 
 export function connect(login, room) {
     socket = io.connect(baseUrl, { path: '/persistent-chat-ws' })

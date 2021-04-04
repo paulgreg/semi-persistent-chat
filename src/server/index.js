@@ -2,6 +2,7 @@ const path = require('path')
 const express = require('express')
 const app = express()
 const server = require('http').Server(app)
+const morgan = require('morgan')
 const io = require('socket.io')(server, { path: '/persistent-chat-ws' })
 const fs = require('fs')
 const { validateMessage } = require('./validation')
@@ -13,6 +14,7 @@ const {
     USERS_ONLINE,
     PUSH_MSG,
 } = require('../services/messageTypes')
+const addSummaryEndPoint = require('./fetchSummary')
 
 const SAVED_FILE = '/tmp/semi-persistent-chat-dump.json'
 
@@ -116,7 +118,10 @@ io.on('connection', function (socket) {
     })
 })
 
+app.use(morgan('combined'))
 app.use('/', express.static(path.join(__dirname, '../../build')))
+
+addSummaryEndPoint(app)
 
 function start() {
     const p = process.env.PORT || port

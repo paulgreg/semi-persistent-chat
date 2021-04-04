@@ -1,6 +1,7 @@
 import React from 'react'
 import { IMAGE_TYPES, AUDIO_TYPES, VIDEO_TYPES } from './media.constants'
 import './Link.css'
+import AnchorTitleLink from './AnchorTitleLink'
 
 const isValidMedia = (types) => (url) =>
     types.find((ext) =>
@@ -11,11 +12,6 @@ export const isImageFn = isValidMedia(IMAGE_TYPES)
 export const isVideoFn = isValidMedia(VIDEO_TYPES)
 export const isAudioFn = isValidMedia(AUDIO_TYPES)
 
-const AnchorLink = ({ url }) => (
-    <a href={url} target="blank" rel="nofollow noopener">
-        {url}
-    </a>
-)
 const AudioLink = ({ url }) => (
     <audio className="preview" src={url} controls="true" preload="none" />
 )
@@ -30,7 +26,9 @@ const DetailLink = ({ url, children }) => {
     return (
         <details open>
             <summary>
-                <AnchorLink url={url} />
+                <a href={url} target="blank" rel="nofollow noopener">
+                    {url}
+                </a>
             </summary>
             {children}
         </details>
@@ -52,5 +50,5 @@ export default function Link(url) {
         )
     }
 
-    return <AnchorLink url={url} />
+    return <AnchorTitleLink url={url} />
 }
