@@ -13,9 +13,10 @@ export const hightlightSameUser = ({ login, message }) =>
 export default function Message({ login, message }) {
     if (message.startsWith(DATA_URL_IMG_PREFIX))
         return (
-            <>
+            <details open>
+                <summary>Image</summary>
                 <img className="preview" src={message} alt="" />
-            </>
+            </details>
         )
 
     return (
