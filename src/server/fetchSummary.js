@@ -15,7 +15,7 @@ const addSummaryEndPoint = (app) => {
                 responseType: 'arraybuffer',
                 headers: {
                     'User-Agent':
-                        'Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101 Firefox/78.0',
+                        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36',
                 },
             })
             .then(function (response = {}) {
@@ -44,14 +44,14 @@ const addSummaryEndPoint = (app) => {
             if (origin) {
                 // an origin means a request from another web site, so rejecting it
                 console.error(`request from origin (${origin})`)
-                return res.status(401).end('401 : Unauthorized')
+                return res.status(401).end('401 Unauthorized')
             }
         } else {
             // on dev, we’re using different port, so header is needed
             res.header('Access-Control-Allow-Origin', '*')
         }
 
-        if (!url) return res.status(404).end('404 : Missing url parameter')
+        if (!url) return res.status(404).end('404 Missing url parameter')
 
         return Promise.resolve()
             .then(() => {
@@ -66,6 +66,7 @@ const addSummaryEndPoint = (app) => {
             })
             .catch(function (error) {
                 console.error(error, url)
+                res.status(503).send('503 Error')
             })
     })
 }
