@@ -1,13 +1,9 @@
 # Semi Persistent Chat
 
-You can try it here : https://semi-persistent-chat.herokuapp.com/
-
-The app is hosted on an Heroku free account so it comes with limitations : app is put in sleep if inactive meaning messages will be lost and it will take some seconds to wake up.
-
-I strongly encourage you to host it yourself !
-
 That project is a simple semi-persistent PWA chat using web socket.
-Messages are kept in memory and purged after X hours (configurable).
+Messages are kept in memory and purged after X hours on the server (configurable).
+
+URLs sent in chat will be transformed as links. For media (image, audio or video), a preview will be displayed.
 
 Login scren:
 
@@ -17,33 +13,56 @@ Chat Screen :
 
 ![Screenshot of a chat](./semi-persistent-chat.png 'Chat')
 
-URLs sent in chat will be transformed as links and, if it’s an image/audio/video file, a preview will be displayed.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Features
+
+ - multi-room chat
+ - show media preview (image, video, audio)
+ - display web page title
+ - works on mobile
+
+
+## Demo
+
+You can try it here : https://semi-persistent-chat.herokuapp.com/
+
+That demo is hosted on an Heroku free account so it comes with limitations : 
+
+  - app will take some seconds to wake up
+  - app is put in sleep if inactive meaning messages will be lost.
+
+I strongly encourage you to host it yourself !
+
 
 ## Configuration
 
 Launch `npm run config` to create `src/config.json` (from `src/config.json.dist`) and update it according your needs.
 
+
 ## To dev
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 run `npm run dev:client` to launch client code (with watch) and `npm run dev:server` to launch server code
 
+Webapp is served on port 3000 by devtools while node is launched on port 6060 (explaining while websocket and api calls are made on that port on non production env).
+
+
 ## To deploy on production using only node
 
-Run `./build.sh` to generate static files into `build` directory.
-Run `npm run start` which will serve static files.
+Run `npm run build` to generate static files into `build` directory, then run `npm run start` which will serve static files.
+
 
 ## To deploy on production using nginx to serve static file (recommanded)
 
-Run `./build.sh` to generate static files into `build` directory.
+Run `./build.sh` to generate static files into `build` directory (change `PUBLIC_URL` in that file if needed).
 
 Serve static files via a web server like nginx.
 I’m using a symbolic link from `/var/www/semi-persistent-chat` to the `build` directory.
 
-Launch src/server code (I suggest you to use pm2 to launch server via `./pm2.sh`).
+Launch src/server file (I suggest you to use pm2 to launch server via `./pm2.sh`).
 
-And adapt nginx to let pass web socket to node and let nginx pass `/api` to node :
+Finally, adapt nginx to let pass web socket and `/api` to node :
 
 ```
 location /persistent-chat-ws/ {
