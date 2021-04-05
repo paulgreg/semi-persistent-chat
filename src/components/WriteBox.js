@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { maxMsgSize } from '../config.json'
-import { DATA_URL_IMG_PREFIX } from './media.constants'
+import { isDataUrlImg } from '../media'
 import Warning from './Warning'
 import './WriteBox.css'
 
@@ -39,7 +39,7 @@ export default function WriteBox(props) {
                 const reader = new FileReader()
                 reader.onload = (event) => {
                     const dataUrl = event.target.result
-                    if (!dataUrl.startsWith(DATA_URL_IMG_PREFIX)) {
+                    if (!isDataUrlImg(dataUrl)) {
                         setTemporaryWarning(
                             'Pasted object is not an image (only images are supported)'
                         )

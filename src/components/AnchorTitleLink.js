@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './AnchorTitleLink.css'
 import { port } from '../config.json'
 import { isProd } from '../configuration.js'
+import { mayUrlHaveATitle } from '../media'
 
 const baseUrl = isProd() ? '.' : `http://localhost:${port}`
 
@@ -15,7 +16,7 @@ export default function AnchorTitleLink({ url }) {
     }
 
     useEffect(() => {
-        fetchTitle(url)
+        if (mayUrlHaveATitle(url)) fetchTitle(url)
     }, [url])
 
     return (

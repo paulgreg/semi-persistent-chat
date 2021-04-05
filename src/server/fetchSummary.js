@@ -2,6 +2,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const LRU = require('lru-cache')
 const { isProd } = require('../configuration')
+const { mayUrlHaveATitle } = require('../media')
 
 const MAX_TITLE_LENGTH = 1024
 
@@ -39,6 +40,13 @@ const addSummaryEndPoint = (app) => {
     app.get('/api/fetchSummary', (req, res) => {
         const url = req.query.url
 
+        if (!url) return res.status(404).end('404 Missing url parameter')
+
+        if (!mayUrlHaveATitle(url)) {
+            console.error('URL doesn’t seems to have a title')
+            res.send(404).send('404 No title')
+        }
+
         if (isProd()) {
             const origin = req.header('origin')
             if (origin) {
@@ -50,8 +58,6 @@ const addSummaryEndPoint = (app) => {
             // on dev, we’re using different port, so header is needed
             res.header('Access-Control-Allow-Origin', '*')
         }
-
-        if (!url) return res.status(404).end('404 Missing url parameter')
 
         return Promise.resolve()
             .then(() => {

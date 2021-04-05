@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from './Link'
 import Linkify from 'react-linkify'
-import { DATA_URL_IMG_PREFIX } from './media.constants'
+import { isDataUrlImg } from '../media'
 
 export const hightlightSameUser = ({ login, message }) =>
     new RegExp(`\\b(${login})\\b`, 'gi').test(message) ? (
@@ -11,7 +11,7 @@ export const hightlightSameUser = ({ login, message }) =>
     )
 
 export default function Message({ login, message }) {
-    if (message.startsWith(DATA_URL_IMG_PREFIX))
+    if (isDataUrlImg(message))
         return (
             <details open>
                 <summary>Image</summary>
