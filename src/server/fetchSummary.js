@@ -27,12 +27,24 @@ const addSummaryEndPoint = (app) => {
                         xmlMode: false,
                         decodeEntities: true,
                     })
-                    const title = String($('head title').text()).substring(
+                    const titleFromPage =
+                        $('head title').text() || $('body title').text()
+                    const title = String(titleFromPage).substring(
                         0,
                         MAX_TITLE_LENGTH
                     )
-                    cache.set(url, title)
                     return title
+                }
+            })
+            .catch((e = {}) => {
+                const { response = {} } = e
+                const { status } = response
+                if (status === 404) {
+                    console.log(url, status)
+                    return undefined
+                } else {
+                    console.log('error')
+                    throw e
                 }
             })
     }
@@ -44,7 +56,7 @@ const addSummaryEndPoint = (app) => {
 
         if (!mayUrlHaveATitle(url)) {
             console.error('URL doesn’t seems to have a title')
-            res.send(404).send('404 No title')
+            res.status(404).end('404 No title')
         }
 
         if (isProd()) {
@@ -60,19 +72,21 @@ const addSummaryEndPoint = (app) => {
         }
 
         return Promise.resolve()
-            .then(() => {
-                if (cache.has(url)) return cache.get(url)
-                else return fetchSummary(url)
-            })
+            .then(() => (cache.has(url) ? cache.get(url) : fetchSummary(url)))
             .then((title) => {
-                res.set('Cache-control', 'public, max-age=3600')
-                res.status(200).json({
-                    title,
-                })
+                if (!title) {
+                    res.send(404).end('404 No title')
+                } else {
+                    cache.set(url, title)
+                    res.set('Cache-control', 'public, max-age=3600')
+                    res.status(200).json({
+                        title,
+                    })
+                }
             })
-            .catch(function (error) {
-                console.error(error, url)
-                res.status(503).send('503 Error')
+            .catch(function (error = '') {
+                console.error(url, error.toString())
+                res.status(503).end('503 Error')
             })
     })
 }
