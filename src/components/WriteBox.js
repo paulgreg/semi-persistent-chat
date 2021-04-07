@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { maxMsgSize } from '../config.json'
 import { isDataUrlImg } from '../media'
+import { EmojiPicker } from './EmojiPicker'
 import Warning from './Warning'
 import './WriteBox.css'
 
 export default function WriteBox(props) {
+    const inputRef = useRef()
     const { login, onMessage } = props
     const [message, setMessage] = useState('')
     const [warning, setWarning] = useState('')
@@ -59,6 +61,14 @@ export default function WriteBox(props) {
         }
     }
 
+    function onSelectEmoji(emoji = {}) {
+        const { native } = emoji
+        if (native) {
+            setMessage(message + native)
+            inputRef.current.focus()
+        }
+    }
+
     return (
         login && (
             <>
@@ -70,6 +80,7 @@ export default function WriteBox(props) {
                         type="text"
                         name="msg"
                         className="WriteBoxInput"
+                        ref={inputRef}
                         value={message}
                         onChange={onChange}
                         onKeyUp={onKeyUp}
@@ -80,6 +91,7 @@ export default function WriteBox(props) {
                         onPaste={onPaste}
                     ></input>
                 </div>
+                <EmojiPicker onSelectEmoji={onSelectEmoji} />
                 {warning && <Warning text={warning} />}
             </>
         )

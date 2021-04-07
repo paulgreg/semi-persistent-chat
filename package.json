@@ -8,6 +8,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "cheerio": "^1.0.0-rc.5",
+        "emoji-mart": "^3.0.1",
         "express": "^3.21.2",
         "lru-cache": "^6.0.0",
         "morgan": "^1.10.0",

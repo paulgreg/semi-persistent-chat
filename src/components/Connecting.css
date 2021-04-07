@@ -9,6 +9,7 @@
     bottom: 8px;
     left: 8px;
     right: 8px;
+    z-index: 1;
 }
 
 /* From https://codepen.io/FlorinPop17/pen/drJJzK */
