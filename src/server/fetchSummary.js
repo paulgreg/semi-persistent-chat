@@ -51,7 +51,6 @@ const addSummaryEndPoint = (app) => {
 
     app.get('/api/fetchSummary', (req, res) => {
         const url = req.query.url
-
         if (!url) return res.status(404).end('404 Missing url parameter')
 
         if (!mayUrlHaveATitle(url)) {
@@ -75,7 +74,7 @@ const addSummaryEndPoint = (app) => {
             .then(() => (cache.has(url) ? cache.get(url) : fetchSummary(url)))
             .then((title) => {
                 if (!title) {
-                    res.send(404).end('404 No title')
+                    res.status(404).end('404 No title')
                 } else {
                     cache.set(url, title)
                     res.set('Cache-control', 'public, max-age=3600')
