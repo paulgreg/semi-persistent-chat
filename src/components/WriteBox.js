@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { maxMsgSize } from '../config.json'
 import { isDataUrlImg } from '../media'
 import { EmojiPicker } from './EmojiPicker'
+import { insertAt } from './strings'
 import Warning from './Warning'
 import './WriteBox.css'
 
@@ -10,6 +11,7 @@ export default function WriteBox(props) {
     const { login, onMessage } = props
     const [message, setMessage] = useState('')
     const [warning, setWarning] = useState('')
+    const [cursorPosition, setCursorPosition] = useState(0)
 
     function onChange(e) {
         const msg = e.target.value
@@ -18,11 +20,16 @@ export default function WriteBox(props) {
     }
 
     function onKeyUp(e) {
+        setCursorPosition(e.target.selectionStart)
         if (e.key === 'Enter' && message.trim().length > 0) {
             onMessage(message)
             setMessage('')
             setWarning('')
+            setCursorPosition(0)
         }
+    }
+    function onClick(e) {
+        setCursorPosition(e.target.selectionStart)
     }
 
     let timeoutWarning
@@ -64,9 +71,15 @@ export default function WriteBox(props) {
     function onSelectEmoji(emoji = {}) {
         const { native } = emoji
         if (native) {
-            setMessage(message + native)
-            inputRef.current.focus()
+            setMessage(insertAt(message, cursorPosition, native))
+            const newPos = cursorPosition + 2
+            setCursorPosition(newPos) // Move cursor after emoji
+            setTimeout(
+                () => inputRef.current.setSelectionRange(newPos, newPos),
+                0 // Let time to rerender react component before setting cursor position
+            )
         }
+        inputRef.current.focus()
     }
 
     return (
@@ -84,11 +97,12 @@ export default function WriteBox(props) {
                         value={message}
                         onChange={onChange}
                         onKeyUp={onKeyUp}
+                        onPaste={onPaste}
+                        onClick={onClick}
                         autoComplete="false"
                         minLength="1"
                         maxLength={maxMsgSize || 2048}
                         autoFocus
-                        onPaste={onPaste}
                     ></input>
                 </div>
                 <EmojiPicker onSelectEmoji={onSelectEmoji} />
