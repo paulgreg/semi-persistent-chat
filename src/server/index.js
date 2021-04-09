@@ -232,7 +232,7 @@ const logOnlineUsers = () => {
     clearTimeout(logOnlineUsersTimeout)
     if (users.length > 0)
         console.log(new Date(), 'current users : ', getUsersByRoom(users))
-    setTimeout(logOnlineUsers, 5 * MINUTE)
+    setTimeout(logOnlineUsers, HOUR)
 }
 logOnlineUsers()
 
