@@ -3,6 +3,8 @@ import { maxMsgSize } from '../config.json'
 import { isDataUrlImg } from '../media'
 import { EmojiPicker } from './EmojiPicker'
 import { insertAt } from './strings'
+import { useTemporaryWarning } from './temporaryWarning'
+import useTimeout from './useTimeout'
 import Warning from './Warning'
 import './WriteBox.css'
 
@@ -10,8 +12,9 @@ export default function WriteBox(props) {
     const inputRef = useRef()
     const { login, onMessage } = props
     const [message, setMessage] = useState('')
-    const [warning, setWarning] = useState('')
+    const [warning, setWarning, setTemporaryWarning] = useTemporaryWarning()
     const [cursorPosition, setCursorPosition] = useState(0)
+    const [launch] = useTimeout()
 
     function onChange(e) {
         const msg = e.target.value
@@ -21,7 +24,9 @@ export default function WriteBox(props) {
 
     function onKeyUp(e) {
         setCursorPosition(e.target.selectionStart)
-        if (e.key === 'Enter' && message.trim().length > 0) {
+        const trimmedMessage = message.trim()
+        const length = trimmedMessage.length
+        if (e.key === 'Enter' && length > 0 && length < maxMsgSize) {
             onMessage(message)
             setMessage('')
             setWarning('')
@@ -30,13 +35,6 @@ export default function WriteBox(props) {
     }
     function onClick(e) {
         setCursorPosition(e.target.selectionStart)
-    }
-
-    let timeoutWarning
-    function setTemporaryWarning(text) {
-        setWarning(text)
-        clearTimeout(timeoutWarning)
-        timeoutWarning = setTimeout(() => setWarning(''), 4 * 1000)
     }
 
     function onPaste(event) {
@@ -57,7 +55,7 @@ export default function WriteBox(props) {
                     if (dataUrl.length > maxMsgSize) {
                         const diff = dataUrl.length - maxMsgSize
                         setTemporaryWarning(
-                            `Pasted image is too big : ${diff} above limit (${maxMsgSize})`
+                            `Pasted image is too big : ${diff} bytes above limit (${maxMsgSize})`
                         )
                         return
                     }
@@ -74,10 +72,8 @@ export default function WriteBox(props) {
             setMessage(insertAt(message, cursorPosition, native))
             const newPos = cursorPosition + 2
             setCursorPosition(newPos) // Move cursor after emoji
-            setTimeout(
-                () => inputRef.current.setSelectionRange(newPos, newPos),
-                0 // Let time to rerender react component before setting cursor position
-            )
+            // Let time to rerender react component before setting cursor position
+            launch(() => inputRef.current.setSelectionRange(newPos, newPos))
         }
         inputRef.current.focus()
     }
