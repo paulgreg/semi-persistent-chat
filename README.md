@@ -82,3 +82,7 @@ location /persistent-chat/api/ {
 ```
 git push heroku master
 ```
+
+## License
+
+MIT
