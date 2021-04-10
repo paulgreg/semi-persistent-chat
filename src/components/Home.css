@@ -1,26 +1,30 @@
-h1 {
+.Home {
+    margin: 0.5em;
+}
+
+.Home h1 {
     margin: 0.5em;
     text-align: center;
 }
 
-hr {
-    margin: 1em 0.5em;
+.Home hr {
+    margin: 1em 0;
     border: 1px solid lightskyblue;
 }
 
-form {
+.Home form {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-label {
+.Home label {
     display: inline-block;
     text-align: right;
     margin-right: 0.5em;
 }
 
-.submit {
+.Home .submit {
     width: 18%;
     color: black;
     font-weight: bold;

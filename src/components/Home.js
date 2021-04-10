@@ -3,7 +3,7 @@ import Login from './Login'
 import Room from './Room'
 import useEffectOnce from '../services/useEffectOnce'
 import { sleep, cleanupTimeInHours } from '../config.json'
-import './Form.css'
+import './Home.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substr(2, 6)
 
@@ -21,7 +21,7 @@ const clean = (s) => s.replace(/ /g, '-')
 const isValidated = (login, room) =>
     login && room && login.length > 2 && room.length > 2
 
-export default function Form(props) {
+export default function Home(props) {
     const roomFromLocation = getRoomFromLocation(window.location)
     const [room, setRoom] = useState(roomFromLocation || generateRandomRoom())
     const [login, setLogin] = useState(localStorage.login || '')
@@ -49,7 +49,7 @@ export default function Form(props) {
     }
 
     return (
-        <>
+        <div className="Home">
             <h1>Semi Persistent Chat</h1>
             <hr />
             <form name="loginAndRoom" autoComplete="off" onSubmit={onSubmit}>
@@ -90,6 +90,6 @@ export default function Form(props) {
                 </a>{' '}
                 if you wan’t more privacy.
             </p>
-        </>
+        </div>
     )
 }

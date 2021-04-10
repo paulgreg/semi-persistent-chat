@@ -83,7 +83,7 @@ export default function WriteBox(props) {
             <>
                 <div className="WriteBox">
                     <label className="WriteBoxLabel" htmlFor="msg">
-                        {props.login} :
+                        {props.login}&nbsp;:
                     </label>
                     <input
                         type="text"
@@ -100,8 +100,8 @@ export default function WriteBox(props) {
                         maxLength={maxMsgSize || 2048}
                         autoFocus
                     ></input>
+                    <EmojiPicker onSelectEmoji={onSelectEmoji} />
                 </div>
-                <EmojiPicker onSelectEmoji={onSelectEmoji} />
                 {warning && <Warning text={warning} />}
             </>
         )

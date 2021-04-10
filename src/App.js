@@ -23,7 +23,7 @@ import useEffectOnVisibilityChange, {
 import Favicon from 'react-favicon'
 import logo512 from './logo512.png'
 import { arrayEquals } from './array'
-import Form from './components/Form'
+import Home from './components/Home'
 import Connecting from './components/Connecting'
 
 window.onpopstate = () => window.location.reload(false)
@@ -83,32 +83,26 @@ function App() {
 
     const ready = login && room
     return (
-        <>
-            <div className="App">
-                {!ready && <Form onLogin={onLogin} />}
-                {ready && (
-                    <>
-                        {!connected && <Connecting />}
-                        <Favicon url={logo512} alertCount={count} />
-                        <WriteBox login={login} onMessage={onMessage} />
-                        <Messages
-                            login={login}
-                            users={users}
-                            messages={messages}
-                        />
-                        <Users login={login} users={users} />
-                        <footer>
-                            <a
-                                href="https://github.com/paulgreg/semi-persistent-chat"
-                                target="blank"
-                            >
-                                info
-                            </a>
-                        </footer>
-                    </>
-                )}
-            </div>
-        </>
+        <div className="App">
+            {!ready && <Home onLogin={onLogin} />}
+            {ready && (
+                <div className="chat">
+                    {!connected && <Connecting />}
+                    {connected && (
+                        <>
+                            <Favicon url={logo512} alertCount={count} />
+                            <Users login={login} users={users} />
+                            <WriteBox login={login} onMessage={onMessage} />
+                            <Messages
+                                login={login}
+                                users={users}
+                                messages={messages}
+                            />
+                        </>
+                    )}
+                </div>
+            )}
+        </div>
     )
 }
 

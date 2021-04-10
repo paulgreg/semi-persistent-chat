@@ -1,8 +1,5 @@
 .emojiButton {
-    position: absolute;
     z-index: 0;
-    top: 22px;
-    right: 14px;
     background: transparent;
     border: 1px solid darkgoldenrod;
     border-radius: 16px;
@@ -11,5 +8,7 @@
 }
 
 .emojiPicker {
-    float: right;
+    position: absolute;
+    top: 70px;
+    right: 10px;
 }
