@@ -14,13 +14,14 @@ export function EmojiPicker({ style, onSelectEmoji }) {
         [setOpen, onSelectEmoji]
     )
 
+    const onClick = useCallback(() => {
+        if (open) onSelectEmoji()
+        setOpen(!open)
+    }, [open, setOpen, onSelectEmoji])
+
     return (
         <>
-            <button
-                type="button"
-                onClick={() => setOpen(!open)}
-                className="emojiButton"
-            >
+            <button type="button" onClick={onClick} className="emojiButton">
                 <span role="img" aria-label="Emoji picker">
                     😀
                 </span>
