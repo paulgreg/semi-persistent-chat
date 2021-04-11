@@ -1,7 +1,7 @@
 .UsersCount {
     position: fixed;
-    bottom: 0.8em;
-    transition: bottom 1s;
+    transition: top 1s;
+    top: 0.4em;
     right: 1em;
     cursor: pointer;
     display: flex;
@@ -13,6 +13,7 @@
     fill: white;
     background: black;
     padding: 0.6em;
+    z-index: 1;
 }
 
 .UsersCountText {
@@ -25,18 +26,19 @@
 }
 
 .UsersCountVisible {
-    bottom: 16%;
+    top: 16%;
 }
 
 .UsersList {
     position: fixed;
-    bottom: -20%;
-    transition: bottom 1s;
+    top: -20%;
+    transition: top 1s;
     left: 0;
     right: 0;
     height: 20%;
-    border-top: 1px solid white;
+    border-bottom: 1px solid white;
     background-color: #282c34;
+    z-index: 1;
 }
 
 .UsersListContent {
@@ -50,7 +52,7 @@
 }
 
 .UsersVisible {
-    bottom: 0;
+    top: 0;
 }
 
 .UsersYourself {

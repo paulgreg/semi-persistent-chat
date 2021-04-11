@@ -1,6 +1,12 @@
 .App {
     padding: 0.5em;
     margin: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
+}
+
+.chat {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

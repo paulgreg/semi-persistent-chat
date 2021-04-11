@@ -1,6 +1,8 @@
 .WriteBox {
-    margin: 0.5em 0 1em 0;
-    width: 100%;
+    position: absolute;
+    bottom: 20px;
+    left: 0px;
+    right: 0px;
     display: flex;
 }
 

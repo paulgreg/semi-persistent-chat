@@ -86,21 +86,21 @@ function App() {
         <div className="App">
             {!ready && <Home onLogin={onLogin} />}
             {ready && (
-                <div className="chat">
+                <>
                     {!connected && <Connecting />}
                     {connected && (
-                        <>
+                        <div className="chat">
                             <Favicon url={logo512} alertCount={count} />
                             <Users login={login} users={users} />
-                            <WriteBox login={login} onMessage={onMessage} />
                             <Messages
                                 login={login}
                                 users={users}
                                 messages={messages}
                             />
-                        </>
+                            <WriteBox login={login} onMessage={onMessage} />
+                        </div>
                     )}
-                </div>
+                </>
             )}
         </div>
     )

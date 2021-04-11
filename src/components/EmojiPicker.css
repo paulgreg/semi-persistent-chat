@@ -9,6 +9,6 @@
 
 .emojiPicker {
     position: absolute;
-    top: 70px;
+    bottom: 70px;
     right: 10px;
 }

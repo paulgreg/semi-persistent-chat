@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import './Messages.css'
 import Message from './Message'
 
@@ -15,14 +15,20 @@ const isUserOnlineFromUsers = (users) => (user) =>
 
 export default function Messages(props) {
     const { login, messages, users } = props
+    const divRef = useRef()
 
     const isUserOnline = isUserOnlineFromUsers(users)
 
+    useEffect(() => {
+        if (divRef.current)
+            divRef.current.scrollTop = divRef.current.scrollHeight
+    })
+
     return (
         login && (
-            <div className="Messages">
+            <div className="Messages" ref={divRef}>
                 {messages
-                    .sort(({ timestamp: ts1 }, { timestamp: ts2 }) => ts2 - ts1)
+                    .sort(({ timestamp: ts1 }, { timestamp: ts2 }) => ts1 - ts2)
                     .map(({ uuid, timestamp, user, message, validated }) => {
                         const statusClassName = validated
                             ? 'MessagesCheck'
