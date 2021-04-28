@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const server = require('http').Server(app)
 const morgan = require('morgan')
-const io = require('socket.io')(server, { path: '/persistent-chat-ws' })
+const socketio = require('socket.io')
 const fs = require('fs')
 const { validateMessage } = require('./validation')
 const {
@@ -15,6 +15,21 @@ const {
     PUSH_MSG,
 } = require('../services/messageTypes')
 const addSummaryEndPoint = require('./fetchSummary')
+const { isProd } = require('../configuration')
+const {
+    port,
+    cleanupTimeInHours,
+    saveState,
+    origin,
+} = require('../config.json')
+
+const io = socketio(server, {
+    path: '/persistent-chat-ws',
+    cors: {
+        origin: isProd() ? origin : 'http://localhost:3000',
+        credentials: true,
+    },
+})
 
 const SAVED_FILE = '/tmp/semi-persistent-chat-dump.json'
 
@@ -23,8 +38,6 @@ const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE
 
 const USER_TIMEOUT = 2 * MINUTE
-
-const { port, cleanupTimeInHours, saveState } = require('../config.json')
 
 let persistentMessages = []
 let users = []
@@ -45,7 +58,7 @@ io.on('connection', function (socket) {
             const validatedMessage = validateMessage(incomingMessage)
             const { room } = validatedMessage
             persistentMessages.push(validatedMessage)
-            socket.to(room).broadcast.emit(PUSH_MSG, validatedMessage)
+            socket.to(room).emit(PUSH_MSG, validatedMessage)
             socket.emit(PUSH_MSG, validatedMessage)
         } catch (e) {
             console.error('error on incoming message', e)
@@ -95,7 +108,7 @@ io.on('connection', function (socket) {
 
             socket
                 .to(incomingRoom)
-                .broadcast.emit(USERS_ONLINE, getUsernames(incomingRoom))
+                .emit(USERS_ONLINE, getUsernames(incomingRoom))
             socket.emit(USERS_ONLINE, getUsernames(incomingRoom))
         }
     })
@@ -112,7 +125,7 @@ io.on('connection', function (socket) {
                     new Date(),
                     `user "${username}" in room "${room}" is offline`
                 )
-                socket.to(room).broadcast.emit(USERS_ONLINE, getUsernames(room))
+                socket.to(room).emit(USERS_ONLINE, getUsernames(room))
             }
         }
     })
