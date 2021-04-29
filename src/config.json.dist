@@ -3,5 +3,6 @@
     "cleanupTimeInHours": 48,
     "maxMsgSize": 65535,
     "sleep": true,
-    "saveState": false
+    "saveState": false,
+    "origin": "https://semi-persistent-chat.herokuapp.com/"
 }
