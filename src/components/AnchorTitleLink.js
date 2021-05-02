@@ -10,9 +10,17 @@ export default function AnchorTitleLink({ url }) {
     const [title, setTitle] = useState()
 
     const fetchTitle = async (url) => {
-        const response = await fetch(`${baseUrl}/api/fetchSummary?url=${url}`)
-        const json = await response.json()
-        setTitle(json && json.title)
+        try {
+            const response = await fetch(
+                `${baseUrl}/api/fetchSummary?url=${url}`
+            )
+            if (response.status === 200) {
+                const json = await response.json()
+                setTitle(json && json.title)
+            }
+        } catch (e) {
+            console.warn(`failed to load title for ${url}`, e)
+        }
     }
 
     useEffect(() => {
