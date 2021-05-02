@@ -88,18 +88,16 @@ function App() {
             {ready && (
                 <div className="chat">
                     {!connected && <Connecting />}
-                    {connected && (
-                        <>
-                            <Favicon url={logo512} alertCount={count} />
-                            <Users login={login} users={users} />
-                            <WriteBox login={login} onMessage={onMessage} />
-                            <Messages
-                                login={login}
-                                users={users}
-                                messages={messages}
-                            />
-                        </>
-                    )}
+                    <div style={{ display: connected ? 'block' : 'none' }}>
+                        <Favicon url={logo512} alertCount={count} />
+                        <Users login={login} users={users} />
+                        <WriteBox login={login} onMessage={onMessage} />
+                        <Messages
+                            login={login}
+                            users={users}
+                            messages={messages}
+                        />
+                    </div>
                 </div>
             )}
         </div>
