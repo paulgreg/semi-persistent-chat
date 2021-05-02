@@ -26,7 +26,7 @@ import { arrayEquals } from './array'
 import Home from './components/Home'
 import Connecting from './components/Connecting'
 
-window.onpopstate = () => window.location.reload(false)
+window.onpopstate = () => window.location.reload()
 
 function App() {
     const [connected, setConnected] = useState(false)
