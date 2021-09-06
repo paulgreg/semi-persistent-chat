@@ -249,17 +249,22 @@ const logOnlineUsers = () => {
 }
 logOnlineUsers()
 
-process.on('SIGINT', function () {
-    console.log('Stopping gracefully')
-    if (!saveState) return process.exit(0)
-    fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
-        if (err) {
-            console.log(err)
-            process.exit(err)
-        }
-        console.log(
-            `${persistentMessages.length} messages saved in ${SAVED_FILE}`
-        )
-        process.exit(0)
+const registerGracefullShutdownOn = (signal) => {
+    process.on(signal, function () {
+        console.log(`received ${signal}, saving and stopping gracefully`)
+        if (!saveState) return process.exit(0)
+        fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
+            if (err) {
+                console.log(err)
+                process.exit(err)
+            }
+            console.log(
+                `${persistentMessages.length} messages saved in ${SAVED_FILE}`
+            )
+            process.exit(0)
+        })
     })
-})
+}
+registerGracefullShutdownOn('SIGINT')
+registerGracefullShutdownOn('SIGHUP')
+registerGracefullShutdownOn('SIGTERM')
