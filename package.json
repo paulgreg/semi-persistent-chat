@@ -6,7 +6,7 @@
         "node": ">=14.16.0 <15.0.0"
     },
     "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.21.4",
         "cheerio": "^1.0.0-rc.10",
         "emoji-mart": "^3.0.1",
         "express": "^4.17.1",
@@ -17,9 +17,9 @@
         "react-favicon": "0.0.23",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^4.0.3",
-        "socket.io": "^4.0.1",
-        "socket.io-client": "^4.0.1",
-        "uuid": "^3.3.3"
+        "socket.io": "^4.2.0",
+        "socket.io-client": "^4.2.0",
+        "uuid": "^8.3.2"
     },
     "scripts": {
         "start": "NODE_ENV=production node src/server",
@@ -53,6 +53,6 @@
     ],
     "devDependencies": {
         "pre-commit": "^1.2.2",
-        "prettier": "^2.0.5"
+        "prettier": "^2.3.2"
     }
 }

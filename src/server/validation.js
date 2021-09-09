@@ -1,4 +1,4 @@
-const generateUuid = require('uuid/v1')
+const { v1 } = require('uuid')
 const { maxMsgSize = 2048 } = require('../config.json')
 
 function checkMessageValidity(m) {
@@ -16,7 +16,7 @@ function validateMessage(m) {
     checkMessageValidity(m)
     const { uuid, user, message, room } = m
     return {
-        uuid: uuid ? String(uuid) : generateUuid(),
+        uuid: uuid ? String(uuid) : v1(),
         user: String(user).trim().substring(0, 10),
         room: String(room).trim().substring(0, 10),
         message: String(message).trim().substring(0, maxMsgSize),

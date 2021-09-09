@@ -4,7 +4,7 @@ import './App.css'
 import WriteBox from './components/WriteBox'
 import Messages from './components/Messages'
 import Users from './components/Users'
-import uuid from 'uuid/v1'
+import { v1 as uuid } from 'uuid'
 import {
     sendMessage,
     onIncomingMessage,
