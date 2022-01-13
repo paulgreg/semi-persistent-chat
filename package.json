@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "license": "MIT",
     "engines": {
-        "node": ">=14.16.0 <15.0.0"
+        "node": ">=16.0.0 <17.0.0"
     },
     "dependencies": {
         "axios": "^0.21.4",
