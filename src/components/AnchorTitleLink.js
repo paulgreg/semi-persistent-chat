@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './AnchorTitleLink.css'
-import { port } from '../config.json'
+import config from '../config.json'
 import { isProd } from '../configuration.js'
 import { mayUrlHaveATitle } from '../media'
 
-const baseUrl = isProd() ? '.' : `http://localhost:${port}`
+const baseUrl = isProd() ? '.' : `http://localhost:${config.port}`
 
 export default function AnchorTitleLink({ url }) {
     const [title, setTitle] = useState()

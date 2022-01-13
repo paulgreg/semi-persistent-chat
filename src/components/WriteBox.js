@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { maxMsgSize } from '../config.json'
+import config from '../config.json'
 import { isDataUrlImg } from '../media'
 import { EmojiPicker } from './EmojiPicker'
 import { insertAt } from './strings'
@@ -18,7 +18,9 @@ export default function WriteBox(props) {
 
     function onChange(e) {
         const msg = e.target.value
-        setWarning(msg.length >= maxMsgSize ? 'Characters limit reached' : '')
+        setWarning(
+            msg.length >= config.maxMsgSize ? 'Characters limit reached' : ''
+        )
         setMessage(msg)
     }
 
@@ -26,7 +28,7 @@ export default function WriteBox(props) {
         setCursorPosition(e.target.selectionStart)
         const trimmedMessage = message.trim()
         const length = trimmedMessage.length
-        if (e.key === 'Enter' && length > 0 && length < maxMsgSize) {
+        if (e.key === 'Enter' && length > 0 && length < config.maxMsgSize) {
             onMessage(message)
             setMessage('')
             setWarning('')
@@ -52,10 +54,10 @@ export default function WriteBox(props) {
                         )
                         return
                     }
-                    if (dataUrl.length > maxMsgSize) {
-                        const diff = dataUrl.length - maxMsgSize
+                    if (dataUrl.length > config.maxMsgSize) {
+                        const diff = dataUrl.length - config.maxMsgSize
                         setTemporaryWarning(
-                            `Pasted image is too big : ${diff} bytes above limit (${maxMsgSize})`
+                            `Pasted image is too big : ${diff} bytes above limit (${config.maxMsgSize})`
                         )
                         return
                     }
@@ -97,7 +99,7 @@ export default function WriteBox(props) {
                         onClick={onClick}
                         autoComplete="false"
                         minLength="1"
-                        maxLength={maxMsgSize || 2048}
+                        maxLength={config.maxMsgSize || 2048}
                         autoFocus
                     ></input>
                     <EmojiPicker onSelectEmoji={onSelectEmoji} />

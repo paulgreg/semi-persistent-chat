@@ -7,7 +7,7 @@ import {
     USER_ONLINE,
     USERS_ONLINE,
 } from './messageTypes'
-import { port } from '../config.json'
+import config from '../config.json'
 import { isProd } from '../configuration.js'
 
 let socket
@@ -17,7 +17,7 @@ const MINUTE = 60 * SECOND
 
 let onMessageCb, onUsersOnlineCb, onConnectCb, onDisconnectCb
 
-const portPart = `:${isProd() ? window.location.port : port}`
+const portPart = `:${isProd() ? window.location.port : config.port}`
 const baseUrl = `${window.location.hostname}${portPart}`
 
 export function connect(login, room) {

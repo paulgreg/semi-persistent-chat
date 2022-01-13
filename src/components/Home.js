@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Login from './Login'
 import Room from './Room'
 import useEffectOnce from '../services/useEffectOnce'
-import { sleep, cleanupTimeInHours } from '../config.json'
+import config from '../config.json'
 import './Home.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substr(2, 6)
@@ -63,9 +63,9 @@ export default function Home(props) {
                 to chat together.
             </p>
             <p>
-                Messages will be deleted on server after {cleanupTimeInHours}{' '}
-                hours
-                {sleep && (
+                Messages will be deleted on server after{' '}
+                {config.cleanupTimeInHours} hours
+                {config.sleep && (
                     <>
                         {' '}
                         (and maybe sooner if{' '}
