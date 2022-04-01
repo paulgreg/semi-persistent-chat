@@ -209,7 +209,7 @@ function cleanupOldUsers() {
         const timedOut = !isAlive(timestamp)
         if (timedOut) {
             console.log(`User "${username}" in room "${room}" has timedout`)
-            if (s) s.close()
+            if (s && s.close) s.close()
         }
         return timedOut
     })
