@@ -9,7 +9,7 @@
         "axios": "^0.26.1",
         "cheerio": "^1.0.0-rc.10",
         "emoji-mart": "^3.0.1",
-        "express": "^4.17.1",
+        "express": "^4.17.3",
         "lru-cache": "^7.8.1",
         "morgan": "^1.10.0",
         "react": "^17.0.2",
