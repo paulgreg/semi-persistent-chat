@@ -17,8 +17,8 @@
         "react-favicon": "0.0.23",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.0",
-        "socket.io": "^4.2.0",
-        "socket.io-client": "^4.2.0",
+        "socket.io": "^4.5.0",
+        "socket.io-client": "^4.5.0",
         "uuid": "^8.3.2"
     },
     "scripts": {
