@@ -24,6 +24,7 @@ const {
 } = require('../config.json')
 
 const io = socketio(server, {
+    allowEIO3: true,
     path: '/persistent-chat-ws',
     cors: {
         origin: isProd() ? origin : 'http://localhost:3000',
