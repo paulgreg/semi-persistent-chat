@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Logout from './Logout'
 import './Users.css'
 
-export default function Users({ users, login }) {
+export default function Users({ users, login, room }) {
     const [visible, setVisible] = useState(false)
 
     const onClick = (e) => setVisible(!visible)
@@ -11,7 +11,7 @@ export default function Users({ users, login }) {
         username === login ? (
             <>
                 <span className="UsersYourself">{username}</span>
-                <Logout />
+                <Logout room={room} />
             </>
         ) : (
             username

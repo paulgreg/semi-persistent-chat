@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Login from './Login'
 import Room from './Room'
-import useEffectOnce from '../services/useEffectOnce'
 import config from '../config.json'
 import './Home.css'
 
@@ -21,20 +20,23 @@ const clean = (s) => s.replace(/ /g, '-')
 const isValidated = (login, room) =>
     login && room && login.length > 2 && room.length > 2
 
-export default function Home(props) {
+export default function Home({ onLogin }) {
     const roomFromLocation = getRoomFromLocation(window.location)
     const [room, setRoom] = useState(roomFromLocation || generateRandomRoom())
     const [login, setLogin] = useState(localStorage.login || '')
 
-    const doLogin = (login, room) => {
-        localStorage.setItem('login', login)
-        window.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
-        props.onLogin && props.onLogin(login, room)
-    }
+    const doLogin = useCallback(
+        (login, room) => {
+            localStorage.setItem('login', login)
+            window.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
+            onLogin && onLogin(login, room)
+        },
+        [onLogin]
+    )
 
-    useEffectOnce(() => {
+    useEffect(() => {
         roomFromLocation && isValidated(room, login) && doLogin(login, room)
-    })
+    }, [])
 
     const onLoginChange = (l) => {
         setLogin(clean(l))

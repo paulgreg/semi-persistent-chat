@@ -90,7 +90,7 @@ function App() {
                     {!connected && <Connecting />}
                     <div style={{ display: connected ? 'block' : 'none' }}>
                         <Favicon url={logo512} alertCount={count} />
-                        <Users login={login} users={users} />
+                        <Users login={login} users={users} room={room} />
                         <WriteBox login={login} onMessage={onMessage} />
                         <Messages
                             login={login}
