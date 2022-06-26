@@ -1,6 +1,6 @@
 {
     "port": 6060,
-    "cleanupTimeInHours": 48,
+    "cleanupTimeInHours": 2,
     "maxMsgSize": 65535,
     "sleep": true,
     "saveState": false,
