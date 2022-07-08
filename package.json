@@ -1,6 +1,7 @@
 {
     "name": "semi-persistent-chat",
     "version": "0.1.0",
+    "main": "src/server",
     "license": "MIT",
     "engines": {
         "node": ">=16.0.0 <17.0.0"
