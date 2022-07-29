@@ -20,6 +20,7 @@ Chat Screen :
  - show media preview (image, video, audio)
  - display web page title
  - works on mobile
+ - messages are saved in `tmp-data/semi-persistent-chat-dump.json` when server is halted and restored on next startup (to keep messages duging system update)
 
 
 ## Demo

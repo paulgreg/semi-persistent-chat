@@ -32,7 +32,10 @@ const io = socketio(server, {
     },
 })
 
-const SAVED_FILE = '/tmp/semi-persistent-chat-dump.json'
+const SAVED_FILE = path.join(
+    __dirname,
+    '../../tmp-data/semi-persistent-chat-dump.json'
+)
 
 const SECOND = 1000
 const MINUTE = 60 * SECOND
@@ -161,6 +164,10 @@ if (saveState && fs.existsSync(SAVED_FILE)) {
             )
             persistentMessages = persistentMessages.concat(savedMsgs)
         }
+        console.log('deleting save file')
+        fs.unlink(SAVED_FILE, (err) => {
+            if (err) console.error('Failed to delete save file:', err)
+        })
         start()
     })
 } else {
