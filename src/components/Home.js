@@ -4,7 +4,7 @@ import Room from './Room'
 import config from '../config.json'
 import './Home.css'
 
-const generateRandomRoom = () => Math.random().toString(36).substr(2, 6)
+const generateRandomRoom = () => Math.random().toString(36).substring(2, 6)
 
 const getRoomFromLocation = (location) => {
     const params = location.search.replace(/\?/, '').split('&')
