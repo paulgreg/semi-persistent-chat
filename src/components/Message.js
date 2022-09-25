@@ -10,7 +10,7 @@ export const hightlightSameUser = ({ login, message }) =>
         message
     )
 
-export default function Message({ login, message }) {
+export default function Message({ login, message, validated }) {
     if (isDataUrlImg(message))
         return (
             <details open>
@@ -20,7 +20,9 @@ export default function Message({ login, message }) {
         )
 
     return (
-        <span className="MessagesText">
+        <span
+            className={`MessagesText ${validated ? '' : 'MessagesTextPending'}`}
+        >
             <Linkify componentDecorator={Link}>
                 {hightlightSameUser({ login, message })}
             </Linkify>

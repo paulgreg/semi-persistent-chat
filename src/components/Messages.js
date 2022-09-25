@@ -55,9 +55,14 @@ export default function Messages(props) {
                                     )}{' '}
                                     :
                                 </span>
-                                <Message message={message} login={login} />
+                                <Message
+                                    message={message}
+                                    login={login}
+                                    validated={validated}
+                                />
                                 <span
                                     className={`MessagesStatus ${statusClassName}`}
+                                    title={validated ? 'sent' : 'pending'}
                                 >
                                     {statusSign}
                                 </span>
