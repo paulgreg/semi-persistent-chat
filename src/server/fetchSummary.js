@@ -10,7 +10,7 @@ const addSummaryEndPoint = (app) => {
     const cache = new LRU({ max: 100 })
 
     const fetchSummary = (url) => {
-        console.log(`fetch ${url}`)
+        console.log(`fetchSummary(${url})`)
         return axios
             .get(encodeURI(url), {
                 responseType: 'arraybuffer',
@@ -21,31 +21,32 @@ const addSummaryEndPoint = (app) => {
             })
             .then(function (response = {}) {
                 const { status, data } = response
-                if (status === 200) {
-                    const $ = cheerio.load(data, {
-                        normalizeWhitespace: true,
-                        xmlMode: false,
-                        decodeEntities: true,
-                    })
-                    const titleFromPage =
-                        $('head title').text() || $('body title').text()
-                    const title = String(titleFromPage).substring(
-                        0,
-                        MAX_TITLE_LENGTH
+                const $ = cheerio.load(data, {
+                    normalizeWhitespace: true,
+                    xmlMode: false,
+                    decodeEntities: true,
+                })
+                const titleFromPage =
+                    $('head title').text() || $('body title').text()
+                const title = String(titleFromPage).substring(
+                    0,
+                    MAX_TITLE_LENGTH
+                )
+                if (!title) {
+                    console.log(
+                        'fetchSummary',
+                        status,
+                        '- no title found for',
+                        url
                     )
-                    return title
                 }
+                return title
             })
             .catch((e = {}) => {
                 const { response = {} } = e
                 const { status } = response
-                if (status === 404) {
-                    console.log(url, status)
-                    return undefined
-                } else {
-                    console.log('error')
-                    throw e
-                }
+                console.log('fetchSummary error', status, 'fetching', url)
+                return undefined
             })
     }
 
@@ -71,19 +72,21 @@ const addSummaryEndPoint = (app) => {
         }
 
         return Promise.resolve()
-            .then(() => (cache.has(url) ? cache.get(url) : fetchSummary(url)))
-            .then((title) => {
-                if (!title) {
-                    res.status(404).end('404 No title')
-                } else {
-                    cache.set(url, title)
-                    res.set('Cache-control', 'public, max-age=3600')
-                    res.status(200).json({
-                        title,
-                    })
+            .then(() => {
+                if (cache.has(url)) {
+                    return cache.get(url)
                 }
+                return fetchSummary(url).then((title) => {
+                    if (title?.length) cache.set(url, title)
+                })
             })
-            .catch(function (error = '') {
+            .then((title) => {
+                res.set('Cache-control', 'public, max-age=3600')
+                res.status(200).json({
+                    title,
+                })
+            })
+            .catch((error = '') => {
                 console.error(url, error.toString())
                 res.status(503).end('503 Error')
             })
