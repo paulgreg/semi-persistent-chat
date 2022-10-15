@@ -18,6 +18,7 @@
         "react-favicon": "^1.0.1",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.1",
+        "smile2emoji": "^3.2.0",
         "socket.io": "^4.5.2",
         "socket.io-client": "^4.5.2",
         "uuid": "^8.3.2"
