@@ -2,7 +2,6 @@
     "port": 6060,
     "cleanupTimeInHours": 2,
     "maxMsgSize": 65535,
-    "sleep": true,
     "saveState": false,
-    "origin": "https://semi-persistent-chat.herokuapp.com/"
+    "origin": "https://example.com/"
 }

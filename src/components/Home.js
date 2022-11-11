@@ -66,21 +66,7 @@ export default function Home({ onLogin }) {
             </p>
             <p>
                 Messages will be deleted on server after{' '}
-                {config.cleanupTimeInHours} hours
-                {config.sleep && (
-                    <>
-                        {' '}
-                        (and maybe sooner if{' '}
-                        <a
-                            href="https://blog.heroku.com/app_sleeping_on_heroku"
-                            target="blank"
-                        >
-                            app is put in sleep
-                        </a>
-                        )
-                    </>
-                )}
-                .
+                {config.cleanupTimeInHours} hours.
             </p>
             <p>
                 Do not use that service for confidential discussions.{' '}

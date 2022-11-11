@@ -23,18 +23,6 @@ Chat Screen :
  - messages are saved in `tmp-data/semi-persistent-chat-dump.json` when server is halted and restored on next startup (to keep messages duging system update)
 
 
-## Demo
-
-You can try it here : https://semi-persistent-chat.herokuapp.com/
-
-That demo is hosted on an Heroku free account so it comes with limitations : 
-
-  - app will take some seconds to wake up
-  - app is put in sleep if inactive meaning messages will be lost.
-
-I strongly encourage you to host it yourself !
-
-
 ## Configuration
 
 Launch `npm run config` to create `src/config.json` (from `src/config.json.dist`) and update it according your needs.
@@ -76,12 +64,6 @@ location /persistent-chat/api/ {
         proxy_pass http://127.0.0.1:6060/api/;
         proxy_http_version 1.1;
 }
-```
-
-## To deploy on heroku
-
-```
-git push heroku master
 ```
 
 ## License
