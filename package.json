@@ -4,7 +4,7 @@
     "main": "src/server",
     "license": "MIT",
     "engines": {
-        "node": ">=16.0.0 <17.0.0"
+        "node": ">=16.0.0"
     },
     "dependencies": {
         "axios": "^0.26.1",
