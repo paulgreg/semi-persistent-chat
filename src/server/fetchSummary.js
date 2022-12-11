@@ -78,6 +78,7 @@ const addSummaryEndPoint = (app) => {
                 }
                 return fetchSummary(url).then((title) => {
                     if (title?.length) cache.set(url, title)
+                    return title
                 })
             })
             .then((title) => {
