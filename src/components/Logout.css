@@ -8,3 +8,9 @@
     margin: 0.1em;
     text-decoration: underline;
 }
+
+@media (prefers-color-scheme: light) {
+    .Logout {
+        color: #333;
+    }
+}

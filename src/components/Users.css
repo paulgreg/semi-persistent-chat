@@ -18,6 +18,7 @@
 .UsersCountText {
     margin: auto;
     text-align: center;
+    color: white;
 }
 
 .UsersCountIcon {
@@ -37,6 +38,7 @@
     height: 20%;
     border-top: 1px solid white;
     background-color: #282c34;
+    color: white;
 }
 
 .UsersListContent {
@@ -60,4 +62,25 @@
 .UsersListTitle {
     font-size: 16px;
     margin: 0.6em;
+}
+
+@media (prefers-color-scheme: light) {
+    .UsersCount {
+        background-color: #e7f2f4;
+        border-color: darkblue;
+    }
+
+    .UsersCountText {
+        color: darkblue;
+    }
+
+    .UsersList {
+        border-top: 1px solid black;
+        background-color: #e7f2f4;
+        color: black;
+    }
+
+    .UsersYourself {
+        color: blue;
+    }
 }

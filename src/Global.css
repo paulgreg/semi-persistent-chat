@@ -26,3 +26,39 @@ a {
 a:visited {
     color: lightgrey;
 }
+
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: grayscale(20%);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #eef6f8;
+    }
+
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    input {
+        color: black;
+    }
+
+    input {
+        border: 1px solid darkblue;
+    }
+
+    a,
+    a:hover,
+    h4 a,
+    h4 a:hover {
+        color: black;
+    }
+
+    a:visited {
+        color: #333;
+    }
+}

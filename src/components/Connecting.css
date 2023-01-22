@@ -1,6 +1,6 @@
 .Connecting {
     position: absolute;
-    background: royalblue;
+    background-color: royalblue;
     border-radius: 4px;
     font-size: 2em;
     text-align: center;
@@ -38,5 +38,32 @@
     100% {
         transform: scale(0.95);
         box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .Connecting {
+        background-color: #e7f2f4;
+    }
+
+    .Connecting-pulse {
+        background: royalblue;
+    }
+
+    @keyframes pulse-white {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(68, 0, 255, 0.815);
+        }
+
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(68, 0, 255, 0);
+        }
+
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(68, 0, 255, 0);
+        }
     }
 }

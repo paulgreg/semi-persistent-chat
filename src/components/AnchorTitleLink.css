@@ -1,3 +1,9 @@
 .linkTitle {
     color: lightcyan;
 }
+
+@media (prefers-color-scheme: light) {
+    .linkTitle {
+        color: darkblue;
+    }
+}

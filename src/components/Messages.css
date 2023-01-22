@@ -16,6 +16,12 @@
     color: cyan;
 }
 
+@media (prefers-color-scheme: light) {
+    .MessageSameUser {
+        color: blue;
+    }
+}
+
 .MessagesUuid {
     display: none;
 }
