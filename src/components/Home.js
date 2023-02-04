@@ -22,12 +22,15 @@ const isValidated = (login, room) =>
 
 export default function Home({ onLogin }) {
     const roomFromLocation = getRoomFromLocation(window.location)
-    const [room, setRoom] = useState(roomFromLocation || generateRandomRoom())
+    const [room, setRoom] = useState(
+        roomFromLocation || localStorage.room || generateRandomRoom()
+    )
     const [login, setLogin] = useState(localStorage.login || '')
 
     const doLogin = useCallback(
         (login, room) => {
             localStorage.setItem('login', login)
+            localStorage.setItem('room', room)
             window.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
             onLogin && onLogin(login, room)
         },
