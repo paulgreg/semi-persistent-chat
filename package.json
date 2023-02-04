@@ -27,6 +27,7 @@
         "start": "NODE_ENV=production node src/server",
         "dev:client": "react-scripts start",
         "dev:server": "npx nodemon src/server",
+        "browserlist": "./node_modules/.bin/browserslist --update-db",
         "config": "if [ ! -f ./src/config.json ]; then cp ./src/config.json.dist ./src/config.json; fi;",
         "build": "npm run config && react-scripts build",
         "tdd": "react-scripts test",
