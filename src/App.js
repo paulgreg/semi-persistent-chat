@@ -21,7 +21,7 @@ import useEffectOnVisibilityChange, {
     isDocumentVisible,
 } from './services/useEffectOnVisibilityChange'
 import Favicon from 'react-favicon'
-import logo512 from './logo512.png'
+import logo192 from './logo192.png'
 import { arrayEquals } from './array'
 import Home from './components/Home'
 import Connecting from './components/Connecting'
@@ -89,7 +89,7 @@ function App() {
                 <div className="chat">
                     {!connected && <Connecting />}
                     <div style={{ display: connected ? 'block' : 'none' }}>
-                        <Favicon url={logo512} alertCount={count} />
+                        <Favicon url={logo192} alertCount={count} />
                         <Users login={login} users={users} room={room} />
                         <WriteBox login={login} onMessage={onMessage} />
                         <Messages
