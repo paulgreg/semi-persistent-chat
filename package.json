@@ -10,8 +10,8 @@
         "axios": "^0.26.1",
         "cheerio": "^1.0.0-rc.10",
         "emoji-mart": "^3.0.1",
-        "express": "^4.18.1",
-        "lru-cache": "^7.14.0",
+        "express": "^4.18.2",
+        "lru-cache": "^10.0.0",
         "morgan": "^1.10.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
@@ -19,8 +19,8 @@
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.1",
         "smile2emoji": "^3.2.0",
-        "socket.io": "^4.6.1",
-        "socket.io-client": "^4.5.2",
+        "socket.io": "^4.7.2",
+        "socket.io-client": "^4.7.2",
         "uuid": "^8.3.2"
     },
     "scripts": {
@@ -56,6 +56,6 @@
     ],
     "devDependencies": {
         "pre-commit": "^1.2.2",
-        "prettier": "^2.7.1"
+        "prettier": "^3.0.1"
     }
 }

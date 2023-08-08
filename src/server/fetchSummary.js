@@ -1,13 +1,13 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
-const LRU = require('lru-cache')
+const { LRUCache } = require('lru-cache')
 const { isProd } = require('../configuration')
 const { mayUrlHaveATitle } = require('../media')
 
 const MAX_TITLE_LENGTH = 1024
 
 const addSummaryEndPoint = (app) => {
-    const cache = new LRU({ max: 100 })
+    const cache = new LRUCache({ max: 100 })
 
     const fetchSummary = (url) => {
         console.log(`fetchSummary(${url})`)
