@@ -17,7 +17,7 @@
         "morgan": "^1.10.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-favicon": "^1.0.1",
+        "react-favicon": "^2.0.3",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.1",
         "smile2emoji": "^3.8.2",
