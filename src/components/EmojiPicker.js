@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { Picker } from 'emoji-mart'
-import 'emoji-mart/css/emoji-mart.css'
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
 import './EmojiPicker.css'
 
-export function EmojiPicker({ style, onSelectEmoji }) {
+export function EmojiPicker({ onSelectEmoji }) {
     const [open, setOpen] = useState(false)
 
     const onSelect = useCallback(
@@ -26,15 +26,15 @@ export function EmojiPicker({ style, onSelectEmoji }) {
                     😀
                 </span>
             </button>
-            <div className="emojiPicker">
+            <div
+                className="emojiPicker"
+                style={{ display: open ? 'block' : 'none' }}
+            >
                 <Picker
-                    onSelect={onSelect}
-                    style={{ display: open ? 'block' : 'none' }}
-                    enableFrequentEmojiSort={true}
-                    showPreview={false}
-                    native={true}
+                    data={data}
+                    onEmojiSelect={onSelect}
+                    set="native"
                     theme="dark"
-                    title="Emoji"
                 />
             </div>
         </>
