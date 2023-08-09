@@ -82,23 +82,18 @@ function App() {
     }
 
     const ready = login && room
+
     return (
         <div className="App">
             {!ready && <Home onLogin={onLogin} />}
             {ready && (
-                <div className="chat">
+                <>
                     {!connected && <Connecting />}
-                    <div style={{ display: connected ? 'block' : 'none' }}>
-                        <Favicon url={logo192} alertCount={count} />
-                        <Users login={login} users={users} room={room} />
-                        <WriteBox login={login} onMessage={onMessage} />
-                        <Messages
-                            login={login}
-                            users={users}
-                            messages={messages}
-                        />
-                    </div>
-                </div>
+                    <Messages login={login} users={users} messages={messages} />
+                    <WriteBox login={login} onMessage={onMessage} />
+                    <Favicon url={logo192} alertCount={count} />
+                    <Users login={login} users={users} room={room} />
+                </>
             )}
         </div>
     )

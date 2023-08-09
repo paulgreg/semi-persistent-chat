@@ -1,6 +1,6 @@
-import React from 'react'
-import './Messages.css'
+import React, { useRef, useEffect } from 'react'
 import Message from './Message'
+import './Messages.css'
 
 const dateOptions = {
     month: 'numeric',
@@ -13,16 +13,22 @@ const dateOptions = {
 const isUserOnlineFromUsers = (users) => (user) =>
     users.findIndex((entry) => entry === user) !== -1
 
-export default function Messages(props) {
-    const { login, messages, users } = props
+export default function Messages({ login, messages, users }) {
+    const messagesRef = useRef()
 
     const isUserOnline = isUserOnlineFromUsers(users)
 
+    useEffect(() => {
+        if (messagesRef.current) {
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+        }
+    }, [messagesRef, messages])
+
     return (
         login && (
-            <div className="Messages">
+            <div className="Messages" ref={messagesRef}>
                 {messages
-                    .sort(({ timestamp: ts1 }, { timestamp: ts2 }) => ts2 - ts1)
+                    .sort(({ timestamp: ts1 }, { timestamp: ts2 }) => ts1 - ts2)
                     .map(({ uuid, timestamp, user, message, validated }) => {
                         const statusClassName = validated
                             ? 'MessagesCheck'

@@ -3,5 +3,6 @@
     "cleanupTimeInHours": 2,
     "maxMsgSize": 65535,
     "saveState": false,
+    "urlCache": 100,
     "origin": "https://example.com/"
 }

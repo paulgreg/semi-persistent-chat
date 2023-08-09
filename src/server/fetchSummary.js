@@ -2,12 +2,15 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const { LRUCache } = require('lru-cache')
 const { isProd } = require('../configuration')
+const { urlCache = 100 } = require('../config.json')
 const { mayUrlHaveATitle } = require('../media')
 
 const MAX_TITLE_LENGTH = 1024
 
 const addSummaryEndPoint = (app) => {
-    const cache = new LRUCache({ max: 100 })
+    const lruCacheConfig = { max: urlCache ?? 100 }
+    console.log('url cache configuration', lruCacheConfig)
+    const cache = new LRUCache(lruCacheConfig)
 
     const fetchSummary = (url) => {
         console.log(`fetchSummary(${url})`)
@@ -18,6 +21,7 @@ const addSummaryEndPoint = (app) => {
                     'User-Agent':
                         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36',
                 },
+                timeout: 5_000,
             })
             .then(function (response = {}) {
                 const { status, data } = response
