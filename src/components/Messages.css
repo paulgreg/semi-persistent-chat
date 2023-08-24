@@ -1,10 +1,14 @@
 .Messages {
     display: flex;
-    flex: auto;
     flex-direction: column;
-    overflow-y: scroll;
+    flex-grow: 1;
+    overflow-y: auto;
     overflow-x: hidden;
-    justify-content: flex-end;
+}
+
+/* https://stackoverflow.com/questions/36130760/use-justify-content-flex-end-and-to-have-vertical-scrollbar */
+.Messages > :first-child {
+    margin-top: auto !important;
 }
 
 .MessagesRow {
