@@ -37,10 +37,6 @@ export default function Home({ onLogin }) {
         [onLogin]
     )
 
-    useEffect(() => {
-        roomFromLocation && isValidated(room, login) && doLogin(login, room)
-    }, [roomFromLocation, room, login, doLogin])
-
     const onLoginChange = (l) => {
         setLogin(clean(l))
     }
