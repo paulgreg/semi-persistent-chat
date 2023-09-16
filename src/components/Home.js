@@ -39,7 +39,8 @@ export default function Home({ onLogin }) {
 
     useEffect(() => {
         roomFromLocation && isValidated(room, login) && doLogin(login, room)
-    }, [roomFromLocation, room, login, doLogin])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []) // should only been done once
 
     const onLoginChange = (l) => {
         setLogin(clean(l))
