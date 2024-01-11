@@ -9,20 +9,20 @@
     "dependencies": {
         "@emoji-mart/data": "^1.1.2",
         "@emoji-mart/react": "^1.1.1",
-        "axios": "^1.4.0",
+        "axios": "^1.6.5",
         "cheerio": "^1.0.0-rc.10",
         "emoji-mart": "^5.5.2",
         "express": "^4.18.2",
-        "lru-cache": "^10.0.2",
+        "lru-cache": "^10.1.0",
         "morgan": "^1.10.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-favicon": "^2.0.3",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.1",
-        "smile2emoji": "^3.8.5",
-        "socket.io": "^4.7.2",
-        "socket.io-client": "^4.7.2",
+        "smile2emoji": "^3.9.0",
+        "socket.io": "^4.7.3",
+        "socket.io-client": "^4.7.3",
         "uuid": "^9.0.1"
     },
     "scripts": {
@@ -58,6 +58,6 @@
     ],
     "devDependencies": {
         "pre-commit": "^1.2.2",
-        "prettier": "^3.0.3"
+        "prettier": "^3.1.1"
     }
 }
