@@ -20,7 +20,7 @@
         "react-favicon": "^2.0.3",
         "react-linkify": "^1.0.0-alpha",
         "react-scripts": "^5.0.1",
-        "smile2emoji": "^3.9.0",
+        "smile2emoji": "^3.8.5",
         "socket.io": "^4.7.3",
         "socket.io-client": "^4.7.3",
         "uuid": "^9.0.1"
