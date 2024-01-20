@@ -1,4 +1,4 @@
-const { insertAt } = require('./strings')
+import { insertAt } from './strings'
 
 describe('strings', () => {
     describe('insertAt', () => {

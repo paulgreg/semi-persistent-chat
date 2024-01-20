@@ -6,9 +6,9 @@ import {
     PUSH_MSG,
     USER_ONLINE,
     USERS_ONLINE,
-} from './messageTypes'
-import config from '../config.json'
-import { isProd } from '../configuration.js'
+} from './messageTypes.mjs'
+import { isProd } from '../configuration.mjs'
+import config from '../config.mjs'
 
 let socket
 

@@ -9,26 +9,17 @@ const isValidMedia = (types) => (url) =>
         new RegExp(`http(s?)://(?:.*)\\.(?:${ext})(\\?.*)?$`, 'gi').test(url)
     ) !== undefined
 
-const isImage = isValidMedia(IMAGE_TYPES)
-const isVideo = isValidMedia(VIDEO_TYPES)
-const isAudio = isValidMedia(AUDIO_TYPES)
+export const isImage = isValidMedia(IMAGE_TYPES)
+export const isVideo = isValidMedia(VIDEO_TYPES)
+export const isAudio = isValidMedia(AUDIO_TYPES)
 
-const isMedia = (url) => isImage(url) || isVideo(url) || isAudio(url)
+export const isMedia = (url) => isImage(url) || isVideo(url) || isAudio(url)
 
-const isDataUrlImg = (url = '') => url.startsWith(DATA_URL_IMG_PREFIX)
+export const isDataUrlImg = (url = '') => url.startsWith(DATA_URL_IMG_PREFIX)
 
-const mayUrlHaveATitle = (url) => {
+export const mayUrlHaveATitle = (url) => {
     if (!url) return false
     if (url.startsWith('mailto:')) return false
     if (isMedia(url)) return false
     return true
-}
-
-module.exports = {
-    isDataUrlImg,
-    isImage,
-    isAudio,
-    isVideo,
-    isMedia,
-    mayUrlHaveATitle,
 }

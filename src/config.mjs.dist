@@ -1,4 +1,4 @@
-{
+const CONFIG = {
     "port": 6060,
     "cleanupTimeInHours": 2,
     "maxMsgSize": 65535,
@@ -6,3 +6,5 @@
     "urlCache": 100,
     "origin": "https://example.com/"
 }
+
+export default CONFIG

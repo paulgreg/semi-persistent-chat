@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './AnchorTitleLink.css'
-import config from '../config.json'
-import { isProd } from '../configuration.js'
+import { isProd } from '../configuration.mjs'
 import { mayUrlHaveATitle } from '../media'
+import config from '../config.mjs'
 
 const baseUrl = isProd() ? '.' : `http://localhost:${config.port}`
 

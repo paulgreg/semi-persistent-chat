@@ -25,7 +25,7 @@ Chat Screen :
 
 ## Configuration
 
-Launch `npm run config` to create `src/config.json` (from `src/config.json.dist`) and update it according your needs.
+Launch `npm run config` to create `src/config.mjs` (from `src/config.mjs.dist`) and update it according your needs.
 
 
 ## To dev

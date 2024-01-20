@@ -1,11 +1,11 @@
-const {
+import {
     isImage,
     isVideo,
     isAudio,
     mayUrlHaveATitle,
     isMedia,
     isDataUrlImg,
-} = require('./media')
+} from './media'
 
 const images = [
     'https://upload.wikimedia.org/wikipedia/commons/9/9a/PNG_transparency_demonstration_2.png',

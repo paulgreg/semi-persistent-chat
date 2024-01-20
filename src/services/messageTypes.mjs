@@ -1,0 +1,6 @@
+export const INITIAL_MSG = 'init'
+export const INCOMING_MSG = 'incom'
+export const CHECK_MISSING_MSG = 'check'
+export const PUSH_MSG = 'push'
+export const USER_ONLINE = 'uOn'
+export const USERS_ONLINE = 'usOn'

@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react'
-import config from '../config.json'
 import { isDataUrlImg } from '../media'
 import { EmojiPicker } from './EmojiPicker'
 import { insertAt } from './strings'
 import { useTemporaryWarning } from './temporaryWarning'
 import useTimeout from './useTimeout'
 import Warning from './Warning'
+import config from '../config.mjs'
 import './WriteBox.css'
 
 export default function WriteBox(props) {

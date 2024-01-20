@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import Login from './Login'
 import Room from './Room'
-import config from '../config.json'
+import config from '../config.mjs'
 import './Home.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substring(2, 6)

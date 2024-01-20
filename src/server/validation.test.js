@@ -1,12 +1,9 @@
-const {
-    validateMessage,
-    checkMessageValidity: isMessageValid,
-} = require('./validation')
+import { validateMessage, checkMessageValidity } from './validation'
 
-describe('isMessageValid', () => {
+describe('checkMessageValidity', () => {
     it(`should return true if message if well formated`, () => {
         expect(
-            isMessageValid({
+            checkMessageValidity({
                 user: 'user',
                 room: 'room',
                 message: 'msg',
@@ -53,7 +50,7 @@ describe('isMessageValid', () => {
         },
     ].forEach(({ message, title }) =>
         it(`should throw error if ${title}`, () =>
-            expect(() => isMessageValid(message)).toThrow())
+            expect(() => checkMessageValidity(message)).toThrow())
     )
 })
 describe('validateMessage', () => {

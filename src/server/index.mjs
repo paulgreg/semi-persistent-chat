@@ -1,32 +1,33 @@
-const path = require('path')
-const express = require('express')
-const app = express()
-const server = require('http').Server(app)
-const morgan = require('morgan')
-const socketio = require('socket.io')
-const fs = require('fs')
-const { validateMessage } = require('./validation')
-const {
+import path from 'path'
+import express from 'express'
+import http from 'http'
+import morgan from 'morgan'
+import { Server } from 'socket.io'
+import fs from 'fs'
+import {
     INITIAL_MSG,
     INCOMING_MSG,
     CHECK_MISSING_MSG,
     USER_ONLINE,
     USERS_ONLINE,
     PUSH_MSG,
-} = require('../services/messageTypes')
-const addSummaryEndPoint = require('./fetchSummary')
-const { isProd } = require('../configuration')
-const {
-    port,
-    cleanupTimeInHours,
-    saveState,
-    origin,
-} = require('../config.json')
+} from '../services/messageTypes.mjs'
+import addSummaryEndPoint from './fetchSummary.mjs'
+import { validateMessage } from './validation.mjs'
+import { isProd } from '../configuration.mjs'
+import config from '../config.mjs'
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-const io = socketio(server, {
+const DEV_URL = 'http://localhost:5173'
+
+const app = express()
+const server = http.Server(app)
+const io = new Server(server, {
     path: '/persistent-chat-ws',
     cors: {
-        origin: isProd() ? origin : 'http://localhost:3000',
+        origin: isProd() ? config.origin : DEV_URL,
         credentials: true,
     },
 })
@@ -140,13 +141,13 @@ app.use('/', express.static(path.join(__dirname, '../../build')))
 addSummaryEndPoint(app)
 
 function start() {
-    const p = process.env.PORT || port
+    const p = process.env.PORT || config.port
     server.listen(p)
     console.log(`Server listeming on port ${p}`)
     console.log(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
-if (saveState && fs.existsSync(SAVED_FILE)) {
+if (config.saveState && fs.existsSync(SAVED_FILE)) {
     console.log('save file exists')
     fs.readFile(SAVED_FILE, 'utf8', (err, data) => {
         console.log('read save file', data)
@@ -179,7 +180,7 @@ function cleanupOldMessages() {
     clearTimeout(cleanupMessagesTimeout)
     const now = Date.now()
     const beforeMessagesNb = persistentMessages.length
-    const cleanupTimestamp = cleanupTimeInHours * HOUR
+    const cleanupTimestamp = config.cleanupTimeInHours * HOUR
     persistentMessages = persistentMessages.filter(
         ({ timestamp }) => now - timestamp < cleanupTimestamp
     )
@@ -259,7 +260,7 @@ logOnlineUsers()
 const registerGracefullShutdownOn = (signal) => {
     process.on(signal, function () {
         console.log(`received ${signal}, saving and stopping gracefully`)
-        if (!saveState) return process.exit(0)
+        if (!config.saveState) return process.exit(0)
         fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
             if (err) {
                 console.log(err)

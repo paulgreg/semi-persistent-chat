@@ -1,14 +1,14 @@
-const axios = require('axios')
-const cheerio = require('cheerio')
-const { LRUCache } = require('lru-cache')
-const { isProd } = require('../configuration')
-const { urlCache = 100 } = require('../config.json')
-const { mayUrlHaveATitle } = require('../media')
+import axios from 'axios'
+import cheerio from 'cheerio'
+import { LRUCache } from 'lru-cache'
+import { isProd } from '../configuration.mjs'
+import config from '../config.mjs'
+import { mayUrlHaveATitle } from '../media.mjs'
 
 const MAX_TITLE_LENGTH = 1024
 
 const addSummaryEndPoint = (app) => {
-    const lruCacheConfig = { max: urlCache ?? 100 }
+    const lruCacheConfig = { max: config.urlCache ?? 100 }
     console.log('url cache configuration', lruCacheConfig)
     const cache = new LRUCache(lruCacheConfig)
 
@@ -98,4 +98,4 @@ const addSummaryEndPoint = (app) => {
     })
 }
 
-module.exports = addSummaryEndPoint
+export default addSummaryEndPoint
