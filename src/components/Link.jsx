@@ -37,5 +37,5 @@ export default function Link(url) {
         )
     }
 
-    return <AnchorTitleLink url={url} />
+    return <AnchorTitleLink url={url} key={url} />
 }

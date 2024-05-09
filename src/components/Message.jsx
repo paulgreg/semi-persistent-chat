@@ -26,7 +26,6 @@ export default function Message({
     message,
     timestamp,
     validated,
-    isSameUser,
     isUserOnline,
     setEditMessage,
 }) {
