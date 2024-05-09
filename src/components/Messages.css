@@ -55,6 +55,16 @@
     color: grey;
 }
 
+.MessagesTextEdit {
+    margin: auto 0.2em;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.MessagesTextEdit:hover,
+.MessagesTextEdit:active {
+    opacity: 1;
+}
+
 .UserStatus {
     margin: auto 0.1em auto 0.25em;
 }

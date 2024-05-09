@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import './Global.css'
 import './App.css'
 import WriteBox from './components/WriteBox'
 import Messages from './components/Messages'
 import Users from './components/Users'
-import { v1 as uuid } from 'uuid'
+import { v1 as uuidV1 } from 'uuid'
 import {
     sendMessage,
     onIncomingMessage,
@@ -34,6 +34,7 @@ function App() {
     const [room, setRoom] = useState('')
     const [count, setCount] = useState(0)
     const [messages, setMessages] = useState([])
+    const [editMessage, setEditMessage] = useState()
     const [users, setUsers] = useState([])
 
     const onLogin = (login, room) => {
@@ -50,7 +51,7 @@ function App() {
     useEffect(() => {
         onIncomingMessage((incomingMessage) => {
             if (!isDocumentVisible()) setCount(count + 1)
-            setMessages(mergeMessages(messages, incomingMessage))
+            setMessages(mergeMessages(messages, [incomingMessage]))
         })
     }, [messages, setMessages, count, setCount])
 
@@ -68,17 +69,18 @@ function App() {
         })
     }, [users, setUsers])
 
-    const onMessage = (text) => {
+    const onMessage = ({ uuid, text, timestamp = Date.now() }) => {
         const m = {
-            uuid: uuid(),
-            timestamp: Date.now(),
+            uuid: uuid ?? uuidV1(),
+            timestamp,
             user: login,
             message: text,
             validated: false,
             room,
         }
+        setEditMessage(undefined)
         sendMessage(m)
-        setMessages(mergeMessages(messages, m))
+        setMessages(mergeMessages(messages, [m]))
     }
 
     const ready = login && room
@@ -89,8 +91,18 @@ function App() {
             {ready && (
                 <>
                     {!connected && <Connecting />}
-                    <Messages login={login} users={users} messages={messages} />
-                    <WriteBox login={login} onMessage={onMessage} />
+                    <Messages
+                        login={login}
+                        users={users}
+                        messages={messages}
+                        setEditMessage={setEditMessage}
+                    />
+                    <WriteBox
+                        login={login}
+                        onMessage={onMessage}
+                        editMessage={editMessage}
+                        setEditMessage={setEditMessage}
+                    />
                     <Favicon url={logo192} alertCount={count} />
                     <Users login={login} users={users} room={room} />
                 </>
