@@ -8,21 +8,21 @@
     },
     "type": "module",
     "dependencies": {
-        "@emoji-mart/data": "^1.1.2",
+        "@emoji-mart/data": "^1.2.1",
         "@emoji-mart/react": "^1.1.1",
-        "axios": "^1.6.5",
-        "cheerio": "^1.0.0-rc.10",
-        "emoji-mart": "^5.5.2",
-        "express": "^4.18.2",
-        "lru-cache": "^10.1.0",
+        "axios": "^1.6.8",
+        "cheerio": "^1.0.0-rc.12",
+        "emoji-mart": "^5.6.0",
+        "express": "^4.19.2",
+        "lru-cache": "^10.2.2",
         "morgan": "^1.10.0",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "react-favicon": "^2.0.3",
         "react-linkify": "^1.0.0-alpha",
-        "smile2emoji": "^3.9.0",
-        "socket.io": "^4.7.4",
-        "socket.io-client": "^4.7.4",
+        "smile2emoji": "^3.11.0",
+        "socket.io": "^4.7.5",
+        "socket.io-client": "^4.7.5",
         "uuid": "^9.0.1"
     },
     "scripts": {
@@ -43,12 +43,12 @@
     ],
     "devDependencies": {
         "@vitejs/plugin-react": "^4.2.1",
-        "nodemon": "^3.0.3",
+        "nodemon": "^3.1.0",
         "pre-commit": "^1.2.2",
-        "prettier": "^3.2.4",
-        "vite": "^5.0.12",
-        "vite-bundle-visualizer": "^1.0.0",
-        "vite-plugin-pwa": "^0.17.4",
-        "vitest": "^1.2.1"
+        "prettier": "^3.2.5",
+        "vite": "^5.2.11",
+        "vite-bundle-visualizer": "^1.1.0",
+        "vite-plugin-pwa": "^0.20.0",
+        "vitest": "^1.6.0"
     }
 }
