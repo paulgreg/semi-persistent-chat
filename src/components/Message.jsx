@@ -46,8 +46,6 @@ export default function Message({
 
     const messageWithEjomi = checkText(message)
 
-    const statusClassName = validated ? 'MessagesCheck' : 'MessagesPending'
-    const statusSign = validated ? '✔' : '~'
     const sameUser = user === login
     const userStatus = isUserOnline(user) ? 'online' : 'offline'
     const d = new Date(timestamp)
@@ -55,9 +53,9 @@ export default function Message({
     const onEditClick = useCallback(
         (e) => {
             e.stopPropagation()
-            setEditMessage({ uuid, message })
+            setEditMessage({ uuid, message, emojis })
         },
-        [setEditMessage, uuid, message]
+        [setEditMessage, uuid, message, emojis]
     )
 
     return (
@@ -89,23 +87,17 @@ export default function Message({
                     {hightlightSameUser({ login, message: messageWithEjomi })}
                 </Linkify>
             </span>
-            <span
-                className={`MessagesStatus ${statusClassName}`}
-                title={validated ? 'sent' : 'pending'}
-            >
-                {statusSign}
-            </span>
-            {sameUser && (
-                <span className="MessagesTextEdit" onClick={onEditClick}>
-                    ✏️
-                </span>
-            )}
             <MessageEmojis
                 uuid={uuid}
                 login={login}
                 emojis={emojis}
                 onEmojis={onEmojis}
             />
+            {sameUser && (
+                <span className="MessagesTextEdit" onClick={onEditClick}>
+                    ✏️
+                </span>
+            )}
             <span className="MessagesUuid">{uuid}</span>
         </div>
     )

@@ -1,13 +1,10 @@
 .MessageEmojisRow {
-    position: absolute;
-    left: 0.6em;
+    display: inline-block;
+    margin-left: 0.4em;
 }
 
 .MessageEmojis {
-    position: relative;
     display: flex;
-    top: -2px;
-    font-size: 14px;
     border: 1px solid grey;
     border-radius: 12px;
 }
@@ -26,7 +23,7 @@
 }
 
 .MessageEmojiAdd {
-    padding: 2px;
+    padding: 2px 4px;
     opacity: 0.5;
     background: white;
     border-radius: 50%;
@@ -48,5 +45,7 @@
 
 .MessageEmojiPicker {
     position: absolute;
+    z-index: 1;
     bottom: 24px;
+    right: 0;
 }

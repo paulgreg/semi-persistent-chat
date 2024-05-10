@@ -20,6 +20,7 @@ export default function WriteBox({
     const [cursorPosition, setCursorPosition] = useState(0)
     const [launch] = useTimeout()
 
+    console.log(editMessage)
     useEffect(() => {
         if (editMessage) {
             setMessage(editMessage.message)
@@ -53,6 +54,7 @@ export default function WriteBox({
                     uuid: editMessage?.uuid,
                     timestamp: editMessage?.timestamp,
                     text: trimmedMessage,
+                    emojis: editMessage?.emojis,
                 })
                 setMessage('')
                 setWarning('')
