@@ -3,6 +3,7 @@ import Link from './Link'
 import Linkify from 'react-linkify'
 import { isDataUrlImg } from '../media'
 import { checkText } from 'smile2emoji'
+import MessageEmojis from './MessageEmojis'
 
 const dateOptions = {
     month: 'numeric',
@@ -10,6 +11,10 @@ const dateOptions = {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
+}
+const timeOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
 }
 
 export const hightlightSameUser = ({ login, message }) =>
@@ -26,8 +31,10 @@ export default function Message({
     message,
     timestamp,
     validated,
+    emojis,
     isUserOnline,
     setEditMessage,
+    onEmojis,
 }) {
     if (isDataUrlImg(message))
         return (
@@ -43,6 +50,7 @@ export default function Message({
     const statusSign = validated ? '✔' : '~'
     const sameUser = user === login
     const userStatus = isUserOnline(user) ? 'online' : 'offline'
+    const d = new Date(timestamp)
 
     const onEditClick = useCallback(
         (e) => {
@@ -54,11 +62,11 @@ export default function Message({
 
     return (
         <div key={uuid} className="MessagesRow">
-            <span className="MessagesTime">
-                {new Date(timestamp).toLocaleString(
-                    navigator.language,
-                    dateOptions
-                )}
+            <span
+                className="MessagesTime"
+                title={d.toLocaleString(navigator.language, dateOptions)}
+            >
+                {d.toLocaleString(navigator.language, timeOptions)}
             </span>
             <span
                 className={`MessagesUser ${sameUser ? 'MessageSameUser' : ''}`}
@@ -92,6 +100,12 @@ export default function Message({
                     ✏️
                 </span>
             )}
+            <MessageEmojis
+                uuid={uuid}
+                login={login}
+                emojis={emojis}
+                onEmojis={onEmojis}
+            />
             <span className="MessagesUuid">{uuid}</span>
         </div>
     )

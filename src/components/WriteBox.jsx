@@ -21,7 +21,10 @@ export default function WriteBox({
     const [launch] = useTimeout()
 
     useEffect(() => {
-        if (editMessage) setMessage(editMessage.message)
+        if (editMessage) {
+            setMessage(editMessage.message)
+            inputRef.current.focus()
+        }
     }, [editMessage])
 
     function onChange(e) {

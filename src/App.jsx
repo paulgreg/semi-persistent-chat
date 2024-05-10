@@ -77,10 +77,20 @@ function App() {
             message: text,
             validated: false,
             room,
+            emojis: [],
         }
         setEditMessage(undefined)
         sendMessage(m)
         setMessages(mergeMessages(messages, [m]))
+    }
+
+    const onEmojis = ({ uuid, emojis }) => {
+        const newMessage = messages.find((m) => m.uuid === uuid)
+        newMessage.emojis = emojis
+        setMessages((messages) =>
+            messages.map((m) => (m.uuid === uuid ? newMessage : m))
+        )
+        sendMessage(newMessage)
     }
 
     const ready = login && room
@@ -96,6 +106,7 @@ function App() {
                         users={users}
                         messages={messages}
                         setEditMessage={setEditMessage}
+                        onEmojis={onEmojis}
                     />
                     <WriteBox
                         login={login}

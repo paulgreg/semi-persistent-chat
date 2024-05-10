@@ -1,0 +1,52 @@
+.MessageEmojisRow {
+    position: absolute;
+    left: 0.6em;
+}
+
+.MessageEmojis {
+    position: relative;
+    display: flex;
+    top: -2px;
+    font-size: 14px;
+    border: 1px solid grey;
+    border-radius: 12px;
+}
+
+.MessageEmojisHidden {
+    visibility: hidden;
+}
+.MessagesRow:hover .MessageEmojisHidden,
+.MessagesRow:active .MessageEmojisHidden {
+    visibility: initial;
+}
+
+.MessageEmoji {
+    padding: 2px;
+    cursor: default;
+}
+
+.MessageEmojiAdd {
+    padding: 2px;
+    opacity: 0.5;
+    background: white;
+    border-radius: 50%;
+}
+
+.MessageEmoji + .MessageEmojiAdd {
+    margin-left: 4px;
+}
+
+.MessageEmojiAdd:hover,
+.MessageEmojiAdd:active {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.MessageEmojiSameUser {
+    cursor: pointer;
+}
+
+.MessageEmojiPicker {
+    position: absolute;
+    bottom: 24px;
+}

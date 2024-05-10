@@ -1,54 +1,99 @@
 import { validateMessage, checkMessageValidity } from './validation'
 
 describe('checkMessageValidity', () => {
-    it(`should return true if message if well formated`, () => {
-        expect(
-            checkMessageValidity({
+    const CORRECT_MESSAGES = [
+        {
+            title: 'should return true if simple message if well formated',
+            message: {
                 user: 'user',
                 room: 'room',
                 message: 'msg',
-            })
-        ).toBe(true)
-    })
-    ;[
+            },
+        },
         {
-            message: undefined,
+            title: `should return true if message with empty emojis if well formated`,
+            message: {
+                user: 'user',
+                room: 'room',
+                message: 'msg',
+                emojis: [],
+            },
+        },
+        {
+            title: `should return true if message with emojis if well formated`,
+            message: {
+                user: 'user',
+                room: 'room',
+                message: 'msg',
+                emojis: [
+                    { user: 'a', emoji: '👍' },
+                    { user: 'b', emoji: '👍' },
+                ],
+            },
+        },
+    ]
+
+    CORRECT_MESSAGES.forEach(({ title, message }) =>
+        it(title, () => expect(checkMessageValidity(message)).toBe(true))
+    )
+    const BAD_MESSAGES = [
+        {
             title: 'message undefined',
+            message: undefined,
         },
         {
-            message: {},
             title: 'message empty',
+            message: {},
         },
         {
-            message: {
-                room: 'room',
-                message: 'msg',
-            },
             title: 'message has no user',
+            message: {
+                room: 'room',
+                message: 'msg',
+            },
         },
         {
+            title: 'message has no room',
             message: {
                 user: 'user',
                 message: 'msg',
             },
-            title: 'message has no room',
         },
         {
+            title: 'message has no message',
             message: {
                 user: 'user',
                 room: 'room',
             },
-            title: 'message has no message',
         },
         {
+            title: 'message has empty user',
             message: {
                 user: ' ',
                 room: 'room',
                 message: 'msg',
             },
-            title: 'message has empty user',
         },
-    ].forEach(({ message, title }) =>
+        {
+            title: 'message has emojis object',
+            message: {
+                user: 'user',
+                room: 'room',
+                message: 'msg',
+                emojis: {},
+            },
+        },
+        {
+            title: 'message has emojis object',
+            message: {
+                user: 'user',
+                room: 'room',
+                message: 'msg',
+                emojis: [{ user: 'a' }],
+            },
+        },
+    ]
+    BAD_MESSAGES.forEach(({ message, title }) =>
         it(`should throw error if ${title}`, () =>
             expect(() => checkMessageValidity(message)).toThrow())
     )

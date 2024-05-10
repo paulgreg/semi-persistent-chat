@@ -16,6 +16,7 @@ export default function mergeMessages(messages = [], newMessages = []) {
         return {
             ...m,
             message: editedMessage?.message ?? m.message,
+            emojis: editedMessage?.emojis ?? m.emojis,
             validated: editedMessage?.validated ?? m.validated,
         }
     })

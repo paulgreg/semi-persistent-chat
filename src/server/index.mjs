@@ -61,21 +61,23 @@ io.on('connection', function (socket) {
         try {
             const validatedMessage = validateMessage(incomingMessage)
             const { room } = validatedMessage
-            const isEdition = persistentMessages.find(
-                ({ uuid }) => uuid === incomingMessage.uuid
+            const isEdition = Boolean(
+                persistentMessages.find(
+                    ({ uuid }) => uuid === incomingMessage.uuid
+                )
             )
             if (!isEdition) {
                 persistentMessages.push(validatedMessage)
             } else {
-                persistentMessages = persistentMessages.map((m) => {
-                    if (m.uuid === incomingMessage.uuid) {
-                        return {
-                            ...m,
-                            message: incomingMessage.message,
-                        }
-                    }
-                    return m
-                })
+                persistentMessages = persistentMessages.map((m) =>
+                    m.uuid === incomingMessage.uuid
+                        ? {
+                              ...m,
+                              message: incomingMessage.message,
+                              emojis: incomingMessage.emojis,
+                          }
+                        : m
+                )
             }
             socket.to(room).emit(PUSH_MSG, validatedMessage)
             socket.emit(PUSH_MSG, validatedMessage)
