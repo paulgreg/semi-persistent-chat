@@ -14,6 +14,10 @@ export function EmojiPicker({ onSelectEmoji }) {
         [setOpen, onSelectEmoji]
     )
 
+    const onClickOutside = useCallback(() => {
+        setOpen(false)
+    }, [])
+
     const onClick = useCallback(() => {
         if (open) onSelectEmoji()
         setOpen(!open)
@@ -33,6 +37,7 @@ export function EmojiPicker({ onSelectEmoji }) {
                 <Picker
                     data={data}
                     onEmojiSelect={onSelect}
+                    onClickOutside={open ? onClickOutside : undefined}
                     set="native"
                     theme="dark"
                 />

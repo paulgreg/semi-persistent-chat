@@ -11,6 +11,10 @@ const MessageEmojis = ({ uuid, login, emojis = [], onEmojis }) => {
         setOpen(true)
     }, [])
 
+    const onClickOutside = useCallback(() => {
+        setOpen(false)
+    }, [])
+
     const onSelect = useCallback(
         (emoji) => {
             onEmojis({
@@ -60,6 +64,7 @@ const MessageEmojis = ({ uuid, login, emojis = [], onEmojis }) => {
                     <Picker
                         data={data}
                         onEmojiSelect={onSelect}
+                        onClickOutside={onClickOutside}
                         set="native"
                         theme="dark"
                     />
