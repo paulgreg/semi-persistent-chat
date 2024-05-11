@@ -38,9 +38,7 @@ const MessageEmojis = ({ uuid, login, emojis = [], onEmojis }) => {
 
     return (
         <div className="MessageEmojisRow">
-            <span
-                className={`MessageEmojis ${emojis.length === 0 ? 'MessageEmojisHidden' : ''}`}
-            >
+            <span className="MessageEmojis">
                 {emojis.map((emoji, idx) => (
                     <span
                         className={`MessageEmoji ${login === emoji.user ? 'MessageEmojiSameUser' : ''} `}

@@ -48,13 +48,19 @@
     display: inline-block;
 }
 
+.MessagesText {
+    line-height: 24px;
+}
+
 .MessagesTextEdit {
     display: none;
-    font-size: 13px;
+    font-size: 14px;
     margin-left: 0.4em;
-    padding: 2px;
+    padding: 3px;
     cursor: pointer;
     opacity: 0.5;
+    background: white;
+    border-radius: 50%;
 }
 .MessagesTextEdit:hover,
 .MessagesTextEdit:active {

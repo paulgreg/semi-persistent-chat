@@ -9,24 +9,23 @@
     border-radius: 12px;
 }
 
-.MessageEmojisHidden {
-    visibility: hidden;
-}
-.MessagesRow:hover .MessageEmojisHidden,
-.MessagesRow:active .MessageEmojisHidden {
-    visibility: initial;
-}
-
 .MessageEmoji {
     padding: 2px;
     cursor: default;
 }
 
 .MessageEmojiAdd {
-    padding: 2px 4px;
+    display: none;
+    font-size: 14px;
+    padding: 2px;
     opacity: 0.5;
     background: white;
     border-radius: 50%;
+}
+
+.MessagesRow:hover .MessageEmojiAdd,
+.MessagesRow:active .MessageEmojiAdd {
+    display: block;
 }
 
 .MessageEmoji + .MessageEmojiAdd {
