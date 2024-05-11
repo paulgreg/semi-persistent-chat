@@ -14,7 +14,6 @@
 .MessagesRow {
     margin: 0.2em auto;
     width: 100%;
-    min-height: 25px;
 }
 
 .MessagesTime {
