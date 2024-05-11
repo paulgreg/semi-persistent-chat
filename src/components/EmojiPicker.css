@@ -7,6 +7,12 @@
     width: 32px;
 }
 
+@media (pointer: coarse) {
+    .emojiButton {
+        display: none;
+    }
+}
+
 .emojiPicker {
     position: absolute;
     bottom: 70px;
