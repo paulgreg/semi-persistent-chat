@@ -35,10 +35,6 @@
     }
 }
 
-.MessagesUuid {
-    display: none;
-}
-
 .MessagesTextPending {
     color: grey;
 }

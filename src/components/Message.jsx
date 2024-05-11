@@ -111,7 +111,6 @@ export default function Message({
                     🗑️
                 </span>
             )}
-            <span className="MessagesUuid">{uuid}</span>
         </div>
     )
 }
