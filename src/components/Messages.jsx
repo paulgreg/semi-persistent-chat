@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Message from './Message'
 import './Messages.css'
 
@@ -13,12 +13,14 @@ export default function Messages({
     onEmojis,
 }) {
     const messagesRef = useRef()
+    const [count, setCount] = useState(messages?.length)
 
     const isUserOnline = isUserOnlineFromUsers(users)
 
     useEffect(() => {
-        if (messagesRef.current) {
+        if (messagesRef.current && messages?.length > count) {
             messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+            setCount(messages.length)
         }
     }, [messagesRef, messages])
 
