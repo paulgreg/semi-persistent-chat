@@ -14,6 +14,7 @@
 .MessagesRow {
     margin: 0.2em auto;
     width: 100%;
+    min-height: 25px;
 }
 
 .MessagesTime {
@@ -43,16 +44,11 @@
     color: grey;
 }
 
-.MessagesRow:hover .MessagesTextEdit,
-.MessagesRow:active .MessagesTextEdit {
-    display: inline-block;
-}
-
 .MessagesText {
     line-height: 24px;
 }
 
-.MessagesTextEdit {
+.MessagesTextAction {
     display: none;
     font-size: 14px;
     margin-left: 0.4em;
@@ -62,9 +58,15 @@
     background: white;
     border-radius: 50%;
 }
-.MessagesTextEdit:hover,
-.MessagesTextEdit:active {
+
+.MessagesTextAction:hover,
+.MessagesTextAction:active {
     opacity: 1;
+}
+
+.MessagesRow:hover .MessagesTextAction,
+.MessagesRow:active .MessagesTextAction {
+    display: inline-block;
 }
 
 .UserStatus {

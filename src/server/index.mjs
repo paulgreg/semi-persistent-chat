@@ -6,11 +6,13 @@ import { Server } from 'socket.io'
 import fs from 'fs'
 import {
     INITIAL_MSG,
-    INCOMING_MSG,
-    CHECK_MISSING_MSG,
+    INCOMING,
+    CHECK_MISSING,
     USER_ONLINE,
     USERS_ONLINE,
     PUSH_MSG,
+    DELETE,
+    DELETE_MSG,
 } from '../services/messageTypes.mjs'
 import addSummaryEndPoint from './fetchSummary.mjs'
 import { validateMessage } from './validation.mjs'
@@ -56,8 +58,8 @@ const getUsernames = (filterRoom) =>
 
 const findUserFromSocket = (socket) => users.find(({ s }) => s === socket)
 
-io.on('connection', function (socket) {
-    socket.on(INCOMING_MSG, function (incomingMessage) {
+io.on('connection', (socket) => {
+    socket.on(INCOMING, (incomingMessage) => {
         try {
             const validatedMessage = validateMessage(incomingMessage)
             const { room } = validatedMessage
@@ -85,8 +87,26 @@ io.on('connection', function (socket) {
             console.error('error on incoming message', e)
         }
     })
+    socket.on(DELETE, (uuid) => {
+        try {
+            if (uuid) {
+                const message =
+                    persistentMessages.find((m) => m.uuid === uuid) ?? {}
+                const { room } = message
+                if (room) {
+                    persistentMessages = persistentMessages.filter(
+                        (m) => m.uuid !== uuid
+                    )
+                    socket.to(room).emit(DELETE_MSG, uuid)
+                    socket.emit(DELETE_MSG, uuid)
+                }
+            }
+        } catch (e) {
+            console.error('error on delete message', e)
+        }
+    })
 
-    socket.on(CHECK_MISSING_MSG, function (uuids) {
+    socket.on(CHECK_MISSING, (uuids) => {
         const clientUuids = uuids || []
         const user = findUserFromSocket(socket)
         if (!user) return
@@ -103,7 +123,7 @@ io.on('connection', function (socket) {
         }
     })
 
-    socket.on(USER_ONLINE, function (userInfo) {
+    socket.on(USER_ONLINE, (userInfo) => {
         const { username: incomingUsername, room: incomingRoom } = userInfo
         socket.join(incomingRoom)
         socket.emit(INITIAL_MSG, getMessagesForRoom(incomingRoom))
@@ -134,7 +154,7 @@ io.on('connection', function (socket) {
         }
     })
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect', () => {
         const beforeUsersNb = users.length
         const user = findUserFromSocket(socket)
         if (user) {
@@ -157,7 +177,7 @@ app.use('/', express.static(path.join(__dirname, '../../build')))
 
 addSummaryEndPoint(app)
 
-function start() {
+const start = () => {
     const p = process.env.PORT || config.port
     server.listen(p)
     console.log(`Server listeming on port ${p}`)
@@ -193,7 +213,7 @@ if (config.saveState && fs.existsSync(SAVED_FILE)) {
 
 let cleanupMessagesTimeout
 
-function cleanupOldMessages() {
+const cleanupOldMessages = () => {
     clearTimeout(cleanupMessagesTimeout)
     const now = Date.now()
     const beforeMessagesNb = persistentMessages.length
@@ -224,7 +244,7 @@ const getUsersByRoom = (u) =>
 
 let cleanupUsersTimeout
 
-function cleanupOldUsers() {
+const cleanupOldUsers = () => {
     const now = Date.now()
     const isAlive = (timestamp) => now - timestamp < USER_TIMEOUT
 
@@ -275,7 +295,7 @@ const logOnlineUsers = () => {
 logOnlineUsers()
 
 const registerGracefullShutdownOn = (signal) => {
-    process.on(signal, function () {
+    process.on(signal, () => {
         console.log(`received ${signal}, saving and stopping gracefully`)
         if (!config.saveState) return process.exit(0)
         fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {

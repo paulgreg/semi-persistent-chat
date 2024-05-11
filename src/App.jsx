@@ -15,6 +15,8 @@ import {
     connect,
     onConnect,
     onDisconnect,
+    sendDelete,
+    onDeleteMessage,
 } from './services/communication'
 import mergeMessages from './services/mergeMessages'
 import useEffectOnVisibilityChange, {
@@ -52,6 +54,9 @@ function App() {
         onIncomingMessage((incomingMessage) => {
             if (!isDocumentVisible()) setCount(count + 1)
             setMessages(mergeMessages(messages, [incomingMessage]))
+        })
+        onDeleteMessage((uuid) => {
+            setMessages(messages.filter((m) => m.uuid !== uuid))
         })
     }, [messages, setMessages, count, setCount])
 
@@ -93,6 +98,10 @@ function App() {
         sendMessage(newMessage)
     }
 
+    const onDelete = ({ uuid }) => {
+        sendDelete(uuid)
+    }
+
     const ready = login && room
 
     return (
@@ -107,6 +116,7 @@ function App() {
                         messages={messages}
                         setEditMessage={setEditMessage}
                         onEmojis={onEmojis}
+                        onDelete={onDelete}
                     />
                     <WriteBox
                         login={login}

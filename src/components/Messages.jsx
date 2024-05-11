@@ -11,6 +11,7 @@ export default function Messages({
     users,
     setEditMessage,
     onEmojis,
+    onDelete,
 }) {
     const messagesRef = useRef()
     const [count, setCount] = useState(messages?.length)
@@ -51,6 +52,7 @@ export default function Messages({
                                     isUserOnline={isUserOnline}
                                     setEditMessage={setEditMessage}
                                     onEmojis={onEmojis}
+                                    onDelete={onDelete}
                                 />
                             )
                         }

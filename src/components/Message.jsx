@@ -35,6 +35,7 @@ export default function Message({
     isUserOnline,
     setEditMessage,
     onEmojis,
+    onDelete,
 }) {
     if (isDataUrlImg(message))
         return (
@@ -56,6 +57,13 @@ export default function Message({
             setEditMessage({ uuid, message, emojis })
         },
         [setEditMessage, uuid, message, emojis]
+    )
+    const onDeleteClick = useCallback(
+        (e) => {
+            e.stopPropagation()
+            if (confirm('Delete ?')) onDelete({ uuid })
+        },
+        [uuid]
     )
 
     return (
@@ -94,8 +102,13 @@ export default function Message({
                 onEmojis={onEmojis}
             />
             {sameUser && (
-                <span className="MessagesTextEdit" onClick={onEditClick}>
+                <span className="MessagesTextAction" onClick={onEditClick}>
                     ✏️
+                </span>
+            )}
+            {sameUser && (
+                <span className="MessagesTextAction" onClick={onDeleteClick}>
+                    🗑️
                 </span>
             )}
             <span className="MessagesUuid">{uuid}</span>

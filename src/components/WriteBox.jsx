@@ -20,7 +20,6 @@ export default function WriteBox({
     const [cursorPosition, setCursorPosition] = useState(0)
     const [launch] = useTimeout()
 
-    console.log(editMessage)
     useEffect(() => {
         if (editMessage) {
             setMessage(editMessage.message)
