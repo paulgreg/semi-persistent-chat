@@ -4,9 +4,15 @@
 }
 
 .MessageEmojis {
-    display: flex;
+    display: none;
     border: 1px solid grey;
     border-radius: 12px;
+}
+
+.MessagesRow:hover .MessageEmojis,
+.MessagesRow:active .MessageEmojis,
+.MessageEmojis:has(.MessageEmoji) {
+    display: flex;
 }
 
 .MessageEmoji {
@@ -16,8 +22,6 @@
 
 .MessageEmojiAdd {
     display: none;
-    font-size: 14px;
-    padding: 2px;
     opacity: 0.5;
     background: white;
     border-radius: 50%;
