@@ -22,11 +22,11 @@ import mergeMessages from './services/mergeMessages'
 import useEffectOnVisibilityChange, {
     isDocumentVisible,
 } from './services/useEffectOnVisibilityChange'
-import Favicon from 'react-favicon'
 import logo192 from './logo192.png'
 import { arrayEquals } from './array'
 import Home from './components/Home'
 import Connecting from './components/Connecting'
+import Favicon from './components/Favicon'
 
 window.onpopstate = () => window.location.reload()
 
