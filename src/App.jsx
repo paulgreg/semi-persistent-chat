@@ -46,19 +46,19 @@ function App() {
         onDisconnect(() => setConnected(false))
         connect(login, room)
         getInitialMessages().then((initialMessages) => {
-            setMessages(mergeMessages(messages, initialMessages))
+            setMessages(initialMessages)
         })
     }
 
     useEffect(() => {
         onIncomingMessage((incomingMessage) => {
-            if (!isDocumentVisible()) setCount(count + 1)
+            if (!isDocumentVisible()) setCount((count) => count + 1)
             setMessages(mergeMessages(messages, [incomingMessage]))
         })
         onDeleteMessage((uuid) => {
             setMessages(messages.filter((m) => m.uuid !== uuid))
         })
-    }, [messages, setMessages, count, setCount])
+    }, [messages, setMessages, setCount])
 
     useEffectOnVisibilityChange(checkMissingMessages, messages)
     useEffectOnVisibilityChange(() => setCount(0), setCount)
