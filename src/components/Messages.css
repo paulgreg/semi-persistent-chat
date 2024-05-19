@@ -45,7 +45,7 @@
 
 .MessagesTextAction {
     display: none;
-    font-size: 14px;
+    font-size: 1em;
     margin-left: 0.4em;
     padding: 2px;
     cursor: pointer;
