@@ -119,7 +119,7 @@ io.on('connection', (socket) => {
                 new Date(),
                 `Sending ${missingMessageForUser.length} missed messages to a client`
             )
-            socket.emit(PUSH_MSG, missingMessageForUser)
+            missingMessageForUser.forEach((m) => socket.emit(PUSH_MSG, m))
         }
     })
 
