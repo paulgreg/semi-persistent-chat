@@ -74,15 +74,15 @@ function App() {
         })
     }, [users, setUsers])
 
-    const onMessage = ({ uuid, text, timestamp = Date.now(), emojis = [] }) => {
+    const onMessage = ({ uuid, text, timestamp, emojis }) => {
         const m = {
             uuid: uuid ?? uuidV1(),
-            timestamp,
+            timestamp: timestamp ?? Date.now(),
             user: login,
             message: text,
             validated: false,
             room,
-            emojis,
+            emojis: emojis ?? [],
         }
         setEditMessage(undefined)
         sendMessage(m)

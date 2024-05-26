@@ -38,24 +38,22 @@ export default function Messages({
                             message,
                             validated,
                             emojis,
-                        }) => {
-                            return (
-                                <Message
-                                    key={uuid}
-                                    login={login}
-                                    uuid={uuid}
-                                    message={message}
-                                    timestamp={timestamp}
-                                    user={user}
-                                    validated={validated}
-                                    emojis={emojis}
-                                    isUserOnline={isUserOnline}
-                                    setEditMessage={setEditMessage}
-                                    onEmojis={onEmojis}
-                                    onDelete={onDelete}
-                                />
-                            )
-                        }
+                        }) => (
+                            <Message
+                                key={uuid}
+                                login={login}
+                                uuid={uuid}
+                                message={message}
+                                timestamp={timestamp}
+                                user={user}
+                                validated={validated}
+                                emojis={emojis}
+                                isUserOnline={isUserOnline}
+                                setEditMessage={setEditMessage}
+                                onEmojis={onEmojis}
+                                onDelete={onDelete}
+                            />
+                        )
                     )}
             </div>
         )
