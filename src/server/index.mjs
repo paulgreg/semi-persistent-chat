@@ -19,6 +19,11 @@ import { validateMessage } from './validation.mjs'
 import { isProd } from '../configuration.mjs'
 import config from '../config.mjs'
 import { fileURLToPath } from 'url'
+import { arrayEquals } from '../array.mjs'
+import debug from 'debug'
+
+const d = debug('chat')
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -60,6 +65,7 @@ const findUserFromSocket = (socket) => users.find(({ s }) => s === socket)
 
 io.on('connection', (socket) => {
     socket.on(INCOMING, (incomingMessage) => {
+        if (d.enabled) d('incoming message', incomingMessage)
         try {
             const validatedMessage = validateMessage(incomingMessage)
             const { room } = validatedMessage
@@ -69,8 +75,10 @@ io.on('connection', (socket) => {
                 )
             )
             if (!isEdition) {
+                if (d.enabled) d('new message')
                 persistentMessages.push(validatedMessage)
             } else {
+                if (d.enabled) d('edit message')
                 persistentMessages = persistentMessages.map((m) =>
                     m.uuid === incomingMessage.uuid
                         ? {
@@ -88,6 +96,7 @@ io.on('connection', (socket) => {
         }
     })
     socket.on(DELETE, (uuid) => {
+        if (d.enabled) d('delete message', uuid)
         try {
             if (uuid) {
                 const message =
@@ -106,24 +115,30 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on(CHECK_MISSING, (uuids) => {
-        const clientUuids = uuids || []
+    socket.on(CHECK_MISSING, (userUuids) => {
+        if (d.enabled) d('check missing message', userUuids)
         const user = findUserFromSocket(socket)
         if (!user) return
-        const missingMessageForUser = persistentMessages.filter(
-            ({ uuid, room }) =>
-                room === user.room && !clientUuids.includes(uuid)
+        const roomMessages = persistentMessages.filter(
+            ({ room }) => room === user.room
         )
-        if (missingMessageForUser.length) {
-            console.log(
+        const missedMessages = roomMessages.filter((message) => {
+            const userUuid = userUuids[message.uuid]
+            if (!userUuid) return true
+            return !arrayEquals(userUuid, message.emojis)
+        })
+
+        if (missedMessages.length) {
+            console.info(
                 new Date(),
-                `Sending ${missingMessageForUser.length} missed messages to a client`
+                `Sending ${missedMessages.length} missed messages to a client`
             )
-            missingMessageForUser.forEach((m) => socket.emit(PUSH_MSG, m))
+            roomMessages.forEach((m) => socket.emit(PUSH_MSG, m))
         }
     })
 
     socket.on(USER_ONLINE, (userInfo) => {
+        if (d.enabled) d('user online', userInfo)
         const { username: incomingUsername, room: incomingRoom } = userInfo
         socket.join(incomingRoom)
         socket.emit(INITIAL_MSG, getMessagesForRoom(incomingRoom))
@@ -155,6 +170,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
+        if (d.enabled) d('disconnect')
         const beforeUsersNb = users.length
         const user = findUserFromSocket(socket)
         if (user) {
@@ -180,14 +196,14 @@ addSummaryEndPoint(app)
 const start = () => {
     const p = process.env.PORT || config.port
     server.listen(p)
-    console.log(`Server listeming on port ${p}`)
-    console.log(`NODE_ENV=${process.env.NODE_ENV}`)
+    console.info(`Server listeming on port ${p}`)
+    console.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
 if (config.saveState && fs.existsSync(SAVED_FILE)) {
-    console.log('save file exists')
+    console.info('save file exists')
     fs.readFile(SAVED_FILE, 'utf8', (err, data) => {
-        console.log('read save file', data)
+        console.info('read save file', data)
         if (err) console.error('Failed to load file:', err)
         let savedMsgs
         try {
@@ -196,12 +212,12 @@ if (config.saveState && fs.existsSync(SAVED_FILE)) {
             console.error('failed to load messages:', e)
         }
         if (savedMsgs) {
-            console.log(
+            console.info(
                 `Loading ${savedMsgs.length} messages from ${SAVED_FILE}`
             )
             persistentMessages = persistentMessages.concat(savedMsgs)
         }
-        console.log('deleting save file')
+        console.info('deleting save file')
         fs.unlink(SAVED_FILE, (err) => {
             if (err) console.error('Failed to delete save file:', err)
         })
@@ -223,12 +239,15 @@ const cleanupOldMessages = () => {
     )
     const afterMessagesNb = persistentMessages.length
     if (beforeMessagesNb !== afterMessagesNb) {
-        console.log(
+        console.info(
             new Date(),
             `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
         )
     } else {
-        console.log(new Date(), `${afterMessagesNb} message(s) still in memory`)
+        console.info(
+            new Date(),
+            `${afterMessagesNb} message(s) still in memory`
+        )
     }
     cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
 }
@@ -253,24 +272,24 @@ const cleanupOldUsers = () => {
     const timedOutUsers = users.filter(({ username, room, timestamp, s }) => {
         const timedOut = !isAlive(timestamp)
         if (timedOut) {
-            console.log(`User "${username}" in room "${room}" has timedout`)
+            console.warn(`User "${username}" in room "${room}" has timedout`)
             if (s && s.close) s.close()
         }
         return timedOut
     })
     if (timedOutUsers.length)
-        console.log('timedOutUsers nb', timedOutUsers.length)
+        console.info('timedOutUsers nb', timedOutUsers.length)
 
     const roomsWhereUsersHaveTimedOut = Object.keys(
         getUsersByRoom(timedOutUsers)
     )
     if (roomsWhereUsersHaveTimedOut.length)
-        console.log('roomsWherUserHaveTimedOut', roomsWhereUsersHaveTimedOut)
+        console.info('roomsWherUserHaveTimedOut', roomsWhereUsersHaveTimedOut)
 
     if (roomsWhereUsersHaveTimedOut.length > 0) {
         users.forEach(({ username, room, s }) => {
             if (roomsWhereUsersHaveTimedOut.includes(room)) {
-                console.log(
+                console.info(
                     `sending to "${username}" list of user in room "${room}"`
                 )
                 s.emit(USERS_ONLINE, getUsernames(room))
@@ -289,21 +308,21 @@ let logOnlineUsersTimeout
 const logOnlineUsers = () => {
     clearTimeout(logOnlineUsersTimeout)
     if (users.length > 0)
-        console.log(new Date(), 'current users : ', getUsersByRoom(users))
+        console.info(new Date(), 'current users : ', getUsersByRoom(users))
     setTimeout(logOnlineUsers, HOUR)
 }
 logOnlineUsers()
 
 const registerGracefullShutdownOn = (signal) => {
     process.on(signal, () => {
-        console.log(`received ${signal}, saving and stopping gracefully`)
+        console.info(`received ${signal}, saving and stopping gracefully`)
         if (!config.saveState) return process.exit(0)
         fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
             if (err) {
-                console.log(err)
+                console.error(err)
                 process.exit(err)
             }
-            console.log(
+            console.info(
                 `${persistentMessages.length} messages saved in ${SAVED_FILE}`
             )
             process.exit(0)

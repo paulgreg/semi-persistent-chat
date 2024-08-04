@@ -71,11 +71,13 @@ export function getInitialMessages() {
 }
 
 export function checkMissingMessages(messages) {
-    if (socket)
-        socket.emit(
-            CHECK_MISSING,
-            messages.map(({ uuid }) => uuid)
-        )
+    if (socket) {
+        const receivedMsgs = messages.reduce((acc, message) => {
+            acc[message.uuid] = message.emojis ?? []
+            return acc
+        }, {})
+        socket.emit(CHECK_MISSING, receivedMsgs)
+    }
 }
 
 let notifyTimeout
