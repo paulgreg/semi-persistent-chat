@@ -27,6 +27,7 @@ import { arrayEquals } from './array'
 import Home from './components/Home'
 import Connecting from './components/Connecting'
 import Favicon from './components/Favicon'
+import useEffectOnNetworkOnline from './services/useEffectOnNetworkOnline'
 
 window.onpopstate = () => window.location.reload()
 
@@ -60,6 +61,7 @@ function App() {
         })
     }, [messages, setMessages, setCount])
 
+    useEffectOnNetworkOnline(checkMissingMessages, messages)
     useEffectOnVisibilityChange(checkMissingMessages, messages)
     useEffectOnVisibilityChange(() => setCount(0), setCount)
     useEffectOnVisibilityChange(
