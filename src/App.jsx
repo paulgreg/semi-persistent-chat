@@ -28,6 +28,9 @@ import Home from './components/Home'
 import Connecting from './components/Connecting'
 import Favicon from './components/Favicon'
 import useEffectOnNetworkOnline from './services/useEffectOnNetworkOnline'
+import debug from 'debug'
+
+const d = debug('App')
 
 window.onpopstate = () => window.location.reload()
 
@@ -53,13 +56,14 @@ function App() {
 
     useEffect(() => {
         onIncomingMessage((incomingMessage) => {
+            if (d.enabled) d('onIncomingMessage', incomingMessage)
             if (!isDocumentVisible()) setCount((count) => count + 1)
-            setMessages(mergeMessages(messages, [incomingMessage]))
+            setMessages((msgs) => mergeMessages(msgs, [incomingMessage]))
         })
         onDeleteMessage((uuid) => {
-            setMessages(messages.filter((m) => m.uuid !== uuid))
+            setMessages((msgs) => msgs.filter((m) => m.uuid !== uuid))
         })
-    }, [messages, setMessages, setCount])
+    }, [setMessages, setCount])
 
     useEffectOnNetworkOnline(checkMissingMessages, messages)
     useEffectOnVisibilityChange(checkMissingMessages, messages)
@@ -88,14 +92,14 @@ function App() {
         }
         setEditMessage(undefined)
         sendMessage(m)
-        setMessages(mergeMessages(messages, [m]))
+        setMessages((msgs) => mergeMessages(msgs, [m]))
     }
 
     const onEmojis = ({ uuid, emojis }) => {
         const newMessage = messages.find((m) => m.uuid === uuid)
         newMessage.emojis = emojis
-        setMessages((messages) =>
-            messages.map((m) => (m.uuid === uuid ? newMessage : m))
+        setMessages((msgs) =>
+            msgs.map((m) => (m.uuid === uuid ? newMessage : m))
         )
         sendMessage(newMessage)
     }

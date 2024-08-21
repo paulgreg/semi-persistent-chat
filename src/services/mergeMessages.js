@@ -1,4 +1,8 @@
+import debug from 'debug'
+const d = debug('merge')
+
 export default function mergeMessages(messages = [], newMessages = []) {
+    if (d.enabled) 'mergeMessages', messages, newMessages
     const messagesUuid = messages.map(({ uuid }) => uuid)
     const newMessagesWithoutUuid = newMessages.filter(
         ({ uuid }) => !messagesUuid.includes(uuid)
@@ -20,6 +24,7 @@ export default function mergeMessages(messages = [], newMessages = []) {
             validated: editedMessage?.validated ?? m.validated,
         }
     })
+    if (d.enabled) d('- merged', merged)
 
     const validatedIds = merged
         .filter(({ validated }) => validated)
@@ -27,5 +32,6 @@ export default function mergeMessages(messages = [], newMessages = []) {
     const withoutUnvalidatedMessages = merged.filter(
         ({ uuid, validated }) => validated || !validatedIds.includes(uuid)
     )
+    if (d.enabled) d('- withoutUnvalidatedMessages', withoutUnvalidatedMessages)
     return withoutUnvalidatedMessages
 }

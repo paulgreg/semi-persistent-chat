@@ -11,6 +11,9 @@ import {
 } from './messageTypes.mjs'
 import { isProd } from '../configuration.mjs'
 import config from '../config.mjs'
+import debug from 'debug'
+
+const d = debug('communication')
 
 let socket
 
@@ -29,7 +32,6 @@ export function connect(login, room) {
     socket.on('disconnect', onDisconnectCb)
     socket.on(PUSH_MSG, (incomingMessage) => onMessageCb?.(incomingMessage))
     socket.on(DELETE_MSG, (uuid) => onDeleteCb?.(uuid))
-
     socket.on(USERS_ONLINE, (users) => onUsersOnlineCb?.(users))
 }
 
@@ -66,6 +68,7 @@ export function getInitialMessages() {
     return new Promise((resolve) => {
         socket.on(INITIAL_MSG, function (initialMessages) {
             resolve(initialMessages)
+            if (d.enabled) d('getInitialMessages', initialMessages)
         })
     })
 }
@@ -76,6 +79,7 @@ export function checkMissingMessages(messages) {
             acc[message.uuid] = message.emojis ?? []
             return acc
         }, {})
+        if (d.enabled) d('CHECK_MISSING', receivedMsgs)
         socket.emit(CHECK_MISSING, receivedMsgs)
     }
 }
