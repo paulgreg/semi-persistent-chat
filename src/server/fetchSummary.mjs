@@ -1,5 +1,5 @@
 import axios from 'axios'
-import cheerio from 'cheerio'
+import * as cheerio from 'cheerio'
 import { LRUCache } from 'lru-cache'
 import { isProd } from '../configuration.mjs'
 import config from '../config.mjs'
