@@ -4,8 +4,21 @@ import { LRUCache } from 'lru-cache'
 import { isProd } from '../configuration.mjs'
 import config from '../config.mjs'
 import { mayUrlHaveATitle } from '../media.mjs'
+import jschardet from 'jschardet'
+import charset from 'charset'
+import iconv from 'iconv-lite'
 
 const MAX_TITLE_LENGTH = 1024
+
+axios.interceptors.response.use((response) => {
+    const chardetResult = jschardet.detect(response.data)
+    const encoding =
+        chardetResult?.encoding || charset(response.headers, response.data)
+
+    response.data = iconv.decode(response.data, encoding)
+
+    return response
+})
 
 const addSummaryEndPoint = (app) => {
     const lruCacheConfig = { max: config.urlCache ?? 100 }
