@@ -1,10 +1,10 @@
 const CONFIG = {
-    "port": 6060,
-    "cleanupTimeInHours": 2,
-    "maxMsgSize": 65535,
-    "saveState": false,
-    "urlCache": 100,
-    "origin": "https://example.com/"
+    port: 6060,
+    cleanupTimeInHours: 2,
+    maxMsgSize: 65535,
+    urlCache: 100,
+    saveState: false,
+    origin: 'https://semi-persistent-chat.fly.dev/',
 }
 
 export default CONFIG
