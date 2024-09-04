@@ -189,7 +189,7 @@ io.on('connection', (socket) => {
 })
 
 app.use(morgan('combined'))
-app.use('/', express.static(path.join(__dirname, '../../build')))
+app.use('/', express.static(path.join(__dirname, '../../dist')))
 
 addSummaryEndPoint(app)
 
