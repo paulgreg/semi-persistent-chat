@@ -32,7 +32,7 @@ export default function Home({ onLogin }) {
             localStorage.setItem('login', login)
             localStorage.setItem('room', room)
             window.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
-            onLogin && onLogin(login, room)
+            onLogin?.(login, room)
         },
         [onLogin]
     )
