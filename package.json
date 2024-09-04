@@ -34,7 +34,7 @@
         "dev:client": "vite",
         "dev:server": "DEBUG=chat nodemon src/server/index.mjs",
         "browserlist": "./node_modules/.bin/browserslist --update-db",
-        "config": "if [ ! -f ./src/config.mjs]; then cp ./src/config.mjs.dist ./src/config.mjs; fi;",
+        "config": "if [ ! -f ./src/config.mjs ]; then cp ./src/config.mjs.dist ./src/config.mjs; fi;",
         "build": "npm run config && vite build",
         "test": "vitest --run",
         "tdd": "vitest",
