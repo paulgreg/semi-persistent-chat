@@ -70,7 +70,8 @@ export default function Home({ onLogin }) {
             </p>
             <p>
                 Messages will be deleted on server after{' '}
-                {config.cleanupTimeInHours} hours.
+                {config.cleanupTimeInHours} hours
+                {config?.sleep ? ', maybe sooner if app is set to sleep' : ''}.
             </p>
             <p>
                 Do not use that service for confidential discussions.{' '}

@@ -1,6 +1,7 @@
 const CONFIG = {
     port: 6060,
-    cleanupTimeInHours: 24,
+    cleanupTimeInHours: 6,
+    sleep: true,
     maxMsgSize: 65535,
     urlCache: 100,
     saveState: false,
