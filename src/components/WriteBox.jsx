@@ -87,7 +87,7 @@ export default function WriteBox({
                         )
                         return
                     }
-                    onMessage(dataUrl)
+                    onMessage({ text: dataUrl })
                 }
                 reader.readAsDataURL(item.getAsFile())
             }
