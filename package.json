@@ -49,7 +49,7 @@
         "nodemon": "^3.1.4",
         "pre-commit": "^1.2.2",
         "prettier": "^3.3.3",
-        "vite": "^5.4.5",
+        "vite": "^5.4.6",
         "vite-bundle-visualizer": "^1.2.1",
         "vite-plugin-pwa": "^0.20.5",
         "vitest": "^2.1.0"
