@@ -11,9 +11,10 @@
         "@emoji-mart/data": "^1.2.1",
         "@emoji-mart/react": "^1.1.1",
         "axios": "^1.7.9",
+        "caniuse-lite": "^1.0.30001695",
         "charset": "^1.0.1",
         "cheerio": "^1.0.0",
-        "debug": "^4.3.7",
+        "debug": "^4.4.0",
         "emoji-mart": "^5.6.0",
         "express": "^4.21.2",
         "iconv-lite": "^0.6.3",
@@ -23,10 +24,10 @@
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-linkify": "^1.0.0-alpha",
-        "smile2emoji": "^3.15.1",
+        "smile2emoji": "^3.17.0",
         "socket.io": "^4.8.1",
         "socket.io-client": "^4.8.1",
-        "uuid": "^11.0.3"
+        "uuid": "^11.0.5"
     },
     "scripts": {
         "analyze": "./node_modules/.bin/vite-bundle-visualizer",
@@ -46,12 +47,12 @@
     ],
     "devDependencies": {
         "@vitejs/plugin-react": "^4.3.4",
-        "nodemon": "^3.1.7",
-        "pre-commit": "^1.0.10",
+        "nodemon": "^3.1.9",
+        "pre-commit": "^1.2.2",
         "prettier": "^3.4.2",
-        "vite": "^6.0.3",
+        "vite": "^6.0.11",
         "vite-bundle-visualizer": "^1.2.1",
         "vite-plugin-pwa": "^0.21.1",
-        "vitest": "^2.1.8"
+        "vitest": "^3.0.3"
     }
 }
