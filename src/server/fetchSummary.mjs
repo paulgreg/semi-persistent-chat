@@ -10,13 +10,19 @@ import iconv from 'iconv-lite'
 
 const MAX_TITLE_LENGTH = 1024
 
-axios.interceptors.response.use((response) => {
-    const chardetResult = jschardet.detect(response.data)
-    const encoding =
-        chardetResult?.encoding || charset(response.headers, response.data)
-
-    response.data = iconv.decode(response.data, encoding)
-
+axios.interceptors.response.use((response = {}) => {
+    const { status, headers, data } = response
+    if (status < 200 || status >= 300) {
+        throw new Error('bad status')
+    }
+    if (!headers['content-type'].includes('text/html')) {
+        throw new Error('not an HTML page')
+    }
+    if (data) {
+        const chardetResult = jschardet.detect(data)
+        const encoding = chardetResult?.encoding || charset(headers, data)
+        response.data = iconv.decode(data, encoding)
+    }
     return response
 })
 
@@ -60,9 +66,16 @@ const addSummaryEndPoint = (app) => {
                 return title
             })
             .catch((e = {}) => {
-                const { response = {} } = e
+                const { response = {}, message } = e
                 const { status } = response
-                console.log('fetchSummary error', status, 'fetching', url)
+                console.log(
+                    'fetchSummary error',
+                    message,
+                    '- status:',
+                    status,
+                    'fetching',
+                    url
+                )
                 return undefined
             })
     }
