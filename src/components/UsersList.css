@@ -1,0 +1,86 @@
+.UsersCount {
+    position: fixed;
+    top: 0.8em;
+    transition: top 1s;
+    right: 1em;
+    cursor: pointer;
+    display: flex;
+    font-size: 1.2em;
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    border: 1px solid white;
+    fill: white;
+    background: black;
+    padding: 0.6em;
+}
+
+.UsersCountText {
+    margin: auto;
+    text-align: center;
+    color: white;
+}
+
+.UsersCountIcon {
+    margin-left: 0.25em;
+}
+
+.UsersCountVisible {
+    top: 16%;
+}
+
+.UsersList {
+    position: fixed;
+    top: -20%;
+    transition: top 1s;
+    left: 0;
+    right: 0;
+    height: 20%;
+    border-bottom: 1px solid white;
+    background-color: #282c34;
+    color: white;
+}
+
+.UsersListContent {
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.UsersUl {
+    list-style-type: square;
+    margin: 0.5em auto;
+}
+
+.UsersVisible {
+    top: 0;
+}
+
+.hightlight {
+    color: cyan;
+}
+
+.UsersListTitle {
+    font-size: 1em;
+    margin: 0.6em;
+}
+
+@media (prefers-color-scheme: light) {
+    .UsersCount {
+        background-color: #e7f2f4;
+        border-color: darkblue;
+    }
+
+    .UsersCountText {
+        color: darkblue;
+    }
+
+    .UsersList {
+        border-bottom: 1px solid black;
+        background-color: #e7f2f4;
+        color: black;
+    }
+
+    .UsersYourself {
+        color: blue;
+    }
+}

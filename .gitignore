@@ -18,5 +18,5 @@
 
 npm-debug.log*
 
-src/config.mjs
+src/settings.json
 tmp-data/semi-persistent-chat-dump.json

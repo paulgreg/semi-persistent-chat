@@ -5,29 +5,29 @@ describe('checkMessageValidity', () => {
         {
             title: 'should return true if simple message if well formated',
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
             },
         },
         {
             title: `should return true if message with empty emojis if well formated`,
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
                 emojis: [],
             },
         },
         {
             title: `should return true if message with emojis if well formated`,
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
                 emojis: [
-                    { user: 'a', emoji: '👍' },
-                    { user: 'b', emoji: '👍' },
+                    { username: 'a', emoji: '👍' },
+                    { username: 'b', emoji: '👍' },
                 ],
             },
         },
@@ -49,46 +49,46 @@ describe('checkMessageValidity', () => {
             title: 'message has no user',
             message: {
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
             },
         },
         {
             title: 'message has no room',
             message: {
-                user: 'user',
-                message: 'msg',
+                username: 'username',
+                text: 'msg',
             },
         },
         {
             title: 'message has no message',
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
             },
         },
         {
-            title: 'message has empty user',
+            title: 'message has empty username',
             message: {
-                user: ' ',
+                username: ' ',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
             },
         },
         {
             title: 'message has emojis object',
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
                 emojis: {},
             },
         },
         {
             title: 'message has emojis object',
             message: {
-                user: 'user',
+                username: 'username',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
                 emojis: [{ user: 'a' }],
             },
         },
@@ -101,50 +101,54 @@ describe('checkMessageValidity', () => {
 describe('validateMessage', () => {
     it('validate correct message', () => {
         const m = validateMessage({
-            uuid: 1,
-            user: 'a',
-            message: 'b',
+            msgId: 1,
+            username: 'b',
+            text: 'c',
             room: 'room',
         })
         expect(m).toMatchObject({
-            uuid: '1',
-            user: 'a',
-            message: 'b',
+            msgId: '1',
+            username: 'b',
+            text: 'c',
             room: 'room',
             validated: true,
         })
         expect(m).toHaveProperty('timestamp')
     })
 
-    it('should add uuid if missing', () => {
+    it('should add msgId if missing', () => {
         expect(
-            validateMessage({ user: 'user', room: 'room', message: 'msg' })
-        ).toHaveProperty('uuid')
+            validateMessage({
+                username: 'username',
+                room: 'room',
+                text: 'msg',
+            })
+        ).toHaveProperty('msgId')
     })
 
     it('should trim user, room and message', () => {
         expect(
             validateMessage({
-                user: '  user  ',
+                username: '  username  ',
                 room: '  room  ',
-                message: '  msg  ',
+                text: '  msg  ',
             })
         ).toMatchObject({
-            user: 'user',
+            username: 'username',
             room: 'room',
-            message: 'msg',
+            text: 'msg',
         })
     })
 
-    it('should trucate user ', () => {
+    it('should truncate username', () => {
         expect(
             validateMessage({
-                user: '1234567890-1234567890',
+                username: '1234567890-1234567890',
                 room: 'room',
-                message: 'msg',
+                text: 'msg',
             })
         ).toMatchObject({
-            user: '1234567890',
+            username: '1234567890',
         })
     })
 

@@ -1,0 +1,9 @@
+{
+    "port": 6060,
+    "cleanupTimeInHours": 6,
+    "maxMsgSize": 65535,
+    "sleep": true,
+    "urlCache": 100,
+    "saveState": false,
+    "origin": "https://semi-persistent-chat.fly.dev/"
+}
