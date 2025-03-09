@@ -1,7 +1,7 @@
 {
     "name": "semi-persistent-chat",
     "version": "0.1.0",
-    "main": "src/server/index.mjs",
+    "main": "src/server/index.ts",
     "license": "MIT",
     "engines": {
         "node": ">=22.0.0"
@@ -9,7 +9,7 @@
     "type": "module",
     "scripts": {
         "analyze": "./node_modules/.bin/vite-bundle-visualizer",
-        "start": "NODE_ENV=production node src/server/index.mjs",
+        "start": "NODE_ENV=production tsx src/server/index.ts",
         "dev:client": "vite",
         "dev:server": "DEBUG=chat tsx --watch src/server/index.ts",
         "browserlist": "./node_modules/.bin/browserslist --update-db",
@@ -46,6 +46,7 @@
         "smile2emoji": "^3.17.1",
         "socket.io": "^4.8.1",
         "socket.io-client": "^4.8.1",
+        "tsx": "^4.19.3",
         "uuid": "^11.1.0"
     },
     "devDependencies": {
@@ -69,7 +70,6 @@
         "nodemon": "^3.1.9",
         "pre-commit": "^1.2.2",
         "prettier": "^3.5.3",
-        "tsx": "^4.19.3",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.26.0",
         "vite": "^6.2.1",
