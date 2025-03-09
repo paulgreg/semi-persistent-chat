@@ -4,12 +4,12 @@ import { UsersType } from '../types/ChatTypes'
 import './UsersList.css'
 
 type UsersListType = {
-    login: string
+    userId: string
     users: UsersType
     room: string
 }
 
-const UsersList: React.FC<UsersListType> = ({ users, login, room }) => {
+const UsersList: React.FC<UsersListType> = ({ userId, users, room }) => {
     const [visible, setVisible] = useState(false)
 
     const onClick = useCallback(() => setVisible(!visible), [visible])
@@ -20,17 +20,20 @@ const UsersList: React.FC<UsersListType> = ({ users, login, room }) => {
                 <div className="UsersListContent">
                     <p className="UsersListTitle">Connected users :</p>
                     <ul className="UsersUl">
-                        {users.map(({ username }) => (
-                            <li key={username}>
-                                {username === login ? (
+                        {users.map((m) => (
+                            <li key={m.userId}>
+                                {m.userId === userId ? (
                                     <>
-                                        <span className="higlight">
-                                            {username}
+                                        <span
+                                            className="higlight"
+                                            title={m.userId}
+                                        >
+                                            {m.username}
                                         </span>
                                         <Logout room={room} />
                                     </>
                                 ) : (
-                                    <span>{username}</span>
+                                    <span title={m.userId}>{m.username}</span>
                                 )}
                             </li>
                         ))}

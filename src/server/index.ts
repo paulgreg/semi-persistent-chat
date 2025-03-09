@@ -72,7 +72,7 @@ const getMessagesForRoom = (filterRoom: string) =>
 const getUsernames = (filterRoom: string): UsersType =>
     users
         .filter(({ room }) => (filterRoom ? room === filterRoom : true))
-        .map(({ username }) => ({ username }))
+        .map(({ userId, username }) => ({ userId, username }))
 
 const findUserFromSocket = (socket: Socket) =>
     users.find(({ s }) => s === socket)
@@ -80,7 +80,11 @@ const findUserFromSocket = (socket: Socket) =>
 io.on('connection', (socket) => {
     socket.on(USER_ONLINE, (userInfo: EventUserOnlineType) => {
         if (d.enabled) d('user online', userInfo)
-        const { username: incomingUsername, room: incomingRoom } = userInfo
+        const {
+            userId: incomingUserId,
+            username: incomingUsername,
+            room: incomingRoom,
+        } = userInfo
 
         socket.join(incomingRoom)
         const payload: EventInitialMessagesType = {
@@ -89,11 +93,12 @@ io.on('connection', (socket) => {
         socket.emit(INITIAL_MSG, payload)
 
         const idx = users.findIndex(
-            ({ username, room }) =>
-                username === incomingUsername && room === incomingRoom
+            ({ userId, room }) =>
+                userId === incomingUserId && room === incomingRoom
         )
 
         const userEntry = {
+            userId: incomingUserId,
             username: incomingUsername,
             room: incomingRoom,
             timestamp: Date.now(),
@@ -305,6 +310,7 @@ let cleanupUsersTimeout: NodeJS.Timeout
 
 const cleanupOldUsers = () => {
     const now = Date.now()
+
     const isAlive = (timestamp: number) => now - timestamp < USER_TIMEOUT
 
     clearTimeout(cleanupUsersTimeout)

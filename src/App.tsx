@@ -32,18 +32,21 @@ import {
     UsersType,
 } from './types/ChatTypes'
 import { onEmojisType } from './components/MessageEmojis'
+import { getUserId } from './services/utils'
 import logo192 from './logo192.png'
 import './Global.css'
 import './App.css'
 
 const d = debug('App')
 
-export type onLoginType = (login: string, room: string) => void
+export type onLoginType = (userId: string, login: string, room: string) => void
 export type setEditMessageType = (m: FullMessageType | undefined) => void
 export type onDeleteType = (msgId: string) => void
 export type onMessageCbType = (m: PartialMessageType) => void
 
 window.onpopstate = () => window.location.reload()
+
+const userId = getUserId()
 
 const App = () => {
     const [connected, setConnected] = useState(false)
@@ -56,12 +59,12 @@ const App = () => {
     >()
     const [users, setUsers] = useState<UsersType>([])
 
-    const onLogin: onLoginType = (login, room) => {
+    const onLogin: onLoginType = (userId, login, room) => {
         setLogin(login)
         setRoom(room)
         onConnect(() => setConnected(true))
         onDisconnect(() => setConnected(false))
-        connect(login, room)
+        connect({ userId, username: login, room })
         getInitialMessages().then((initialMessages) => {
             setMessages(initialMessages)
         })
@@ -81,10 +84,11 @@ const App = () => {
     useEffectOnNetworkOnline(checkMissingMessages, messages)
     useEffectOnVisibilityChange(checkMissingMessages, messages)
     useEffectOnVisibilityChange(() => setCount(0), setCount)
-    useEffectOnVisibilityChange(
-        () => login && room && notifyUserOnline(login, room),
-        [login, room]
-    )
+    useEffectOnVisibilityChange(() => {
+        if (userId && login && room) {
+            notifyUserOnline({ userId, username: login, room })
+        }
+    }, [userId, login, room])
 
     useEffect(() => {
         onUsersOnline((newUsers) => {
@@ -126,7 +130,7 @@ const App = () => {
 
     return (
         <div className="App">
-            {!ready && <Home onLogin={onLogin} />}
+            {!ready && <Home userId={userId} onLogin={onLogin} />}
             {ready && (
                 <>
                     {!connected && <Connecting />}
@@ -147,7 +151,7 @@ const App = () => {
                         editMessage={editMessage}
                         setEditMessage={setEditMessage}
                     />
-                    <UsersList login={login} users={users} room={room} />
+                    <UsersList userId={userId} users={users} room={room} />
                 </>
             )}
         </div>

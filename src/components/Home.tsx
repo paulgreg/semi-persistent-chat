@@ -23,27 +23,32 @@ const isValidated = (login: string, room: string) =>
     login && room && login.length > 2 && room.length > 2
 
 type HomeType = {
+    userId: string
     onLogin: onLoginType
 }
 
-const Home: React.FC<HomeType> = ({ onLogin }) => {
+const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
     const roomFromLocation = getRoomFromLocation(window.location)
     const [room, setRoom] = useState(
-        roomFromLocation ?? localStorage.room ?? generateRandomRoom()
+        roomFromLocation ??
+            localStorage.getItem('spChatRoom') ??
+            generateRandomRoom()
     )
-    const [login, setLogin] = useState(localStorage.login || '')
+    const [login, setLogin] = useState(
+        localStorage.getItem('spChatLogin') ?? ''
+    )
 
     const doLogin: onLoginType = useCallback(
-        (login, room) => {
+        (userId, login, room) => {
             saveLoginInfo(login, room)
-            onLogin?.(login, room)
+            onLogin?.(userId, login, room)
         },
         [onLogin]
     )
 
     useEffect(() => {
         if (roomFromLocation && isValidated(login, room)) {
-            doLogin(login, room)
+            doLogin(userId, login, room)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []) // should only been done once
@@ -57,7 +62,7 @@ const Home: React.FC<HomeType> = ({ onLogin }) => {
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (isValidated(login, room)) doLogin(login, room)
+        if (isValidated(login, room)) doLogin(userId, login, room)
     }
 
     return (

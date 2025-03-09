@@ -1,6 +1,7 @@
 import type { Socket } from 'socket.io'
 
 export type UserType = {
+    userId: string
     username: string
 }
 export type UsersType = Array<UserType>
@@ -31,6 +32,7 @@ export type FullMessageType = {
 }
 
 export type EventUserOnlineType = {
+    userId: string
     username: string
     room: string
 }
@@ -60,6 +62,7 @@ export type EventPushType = {
 }
 
 export type ServerUserType = {
+    userId: string
     username: string
     room: string
     timestamp: number

@@ -49,9 +49,9 @@ let onIncomingMessageCb: onIncomingMessageCbType,
 const portPart = `:${isProd() ? window.location.port : settings.port}`
 const baseUrl = `${window.location.hostname}${portPart}`
 
-export const connect = (login: string, room: string) => {
+export const connect = ({ userId, username, room }: EventUserOnlineType) => {
     socket = io(baseUrl, { path: '/persistent-chat-ws' })
-    notifyUserOnline(login, room)
+    notifyUserOnline({ userId, username, room })
     socket.on('connect', onConnectCb)
     socket.on('disconnect', onDisconnectCb)
     socket.on(PUSH_MSG, (payload: EventPushType) =>
@@ -129,12 +129,19 @@ export const checkMissingMessages = (messages: Array<FullMessageType>) => {
 
 let notifyTimeout: NodeJS.Timeout
 
-export const notifyUserOnline = (username: string, room: string) => {
+export const notifyUserOnline = ({
+    userId,
+    username,
+    room,
+}: EventUserOnlineType) => {
     if (!socket || !username || !room) return
     clearTimeout(notifyTimeout)
-    const payload: EventUserOnlineType = { username, room }
+    const payload: EventUserOnlineType = { userId, username, room }
     socket.emit(USER_ONLINE, payload)
-    notifyTimeout = setTimeout(() => notifyUserOnline(username, room), MINUTE)
+    notifyTimeout = setTimeout(
+        () => notifyUserOnline({ userId, username, room }),
+        MINUTE
+    )
 }
 
 export const disconnect = () => {
