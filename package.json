@@ -4,7 +4,7 @@
     "main": "src/server/index.mjs",
     "license": "MIT",
     "engines": {
-        "node": ">=16.0.0"
+        "node": ">=22.0.0"
     },
     "type": "module",
     "scripts": {
