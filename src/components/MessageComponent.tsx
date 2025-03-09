@@ -24,6 +24,7 @@ type MessageComponentType = {
     login: string
     message: FullMessageType
     isUserOnline: (username: string) => boolean
+    editMsgId?: string
     setEditMessage: setEditMessageType
     onEmojis: onEmojisType
     onDelete: onDeleteType
@@ -33,6 +34,7 @@ const MessageComponent: React.FC<MessageComponentType> = ({
     login,
     message,
     isUserOnline,
+    editMsgId,
     setEditMessage,
     onEmojis,
     onDelete,
@@ -64,12 +66,13 @@ const MessageComponent: React.FC<MessageComponentType> = ({
 
     const textWithEjomi = checkText(text)
 
+    const d = new Date(timestamp)
     const sameUser = login === username
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
-    const d = new Date(timestamp ?? 0)
+    const editionClass = msgId === editMsgId ? 'MessageEdition' : ''
 
     return (
-        <div key={msgId} className="MessagesRow">
+        <div key={msgId} className={`MessagesRow ${editionClass}`}>
             <span
                 className="MessagesTime"
                 title={d.toLocaleDateString(navigator.language, dateOptions)}

@@ -135,6 +135,7 @@ const App = () => {
                         login={login}
                         users={users}
                         messages={messages}
+                        editMsgId={editMessage?.msgId}
                         setEditMessage={setEditMessage}
                         onEmojis={onEmojis}
                         onDelete={onDelete}

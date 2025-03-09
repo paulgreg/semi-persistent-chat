@@ -13,6 +13,7 @@ type MessagesListType = {
     login: string
     messages: Array<FullMessageType>
     users: UsersType
+    editMsgId?: string
     setEditMessage: setEditMessageType
     onEmojis: onEmojisType
     onDelete: onDeleteType
@@ -22,6 +23,7 @@ const MessagesList: React.FC<MessagesListType> = ({
     login,
     messages,
     users,
+    editMsgId,
     setEditMessage,
     onEmojis,
     onDelete,
@@ -49,6 +51,7 @@ const MessagesList: React.FC<MessagesListType> = ({
                     login={login}
                     message={message}
                     isUserOnline={isUserOnline}
+                    editMsgId={editMsgId}
                     setEditMessage={setEditMessage}
                     onEmojis={onEmojis}
                     onDelete={onDelete}

@@ -35,7 +35,8 @@
     }
 }
 
-.MessagesTextPending {
+.MessagesTextPending,
+.MessageEdition {
     color: grey;
 }
 
