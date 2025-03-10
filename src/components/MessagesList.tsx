@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import MessageComponent from './MessageComponent'
+import SingleMessage from './SingleMessage'
 import { FullMessageType, UsersType } from '../types/ChatTypes'
 import { onEmojisType } from './MessageEmojis'
 import { onDeleteType, setEditMessageType } from '../App'
@@ -46,7 +46,7 @@ const MessagesList: React.FC<MessagesListType> = ({
     return (
         <div className="Messages" ref={messagesRef}>
             {messages.toSorted(sortMessages).map((message) => (
-                <MessageComponent
+                <SingleMessage
                     key={message.msgId}
                     login={login}
                     message={message}

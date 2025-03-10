@@ -6,7 +6,6 @@ import { checkText } from 'smile2emoji'
 import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, setEditMessageType } from '../App'
-import HightlightSameUser from './HighligtSameUser'
 
 const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
@@ -30,7 +29,20 @@ type MessageComponentType = {
     onDelete: onDeleteType
 }
 
-const MessageComponent: React.FC<MessageComponentType> = ({
+export const hightlightSameUser = ({
+    login,
+    text,
+}: {
+    login: string
+    text: string
+}) =>
+    new RegExp(`\\b(${login})\\b`, 'gi').test(text) ? (
+        <span className="MessageSameUser">{text}</span>
+    ) : (
+        text
+    )
+
+const SingleMessage: React.FC<MessageComponentType> = ({
     login,
     message,
     isUserOnline,
@@ -64,8 +76,6 @@ const MessageComponent: React.FC<MessageComponentType> = ({
             </details>
         )
 
-    const textWithEjomi = checkText(text)
-
     const d = new Date(timestamp)
     const sameUser = login === username
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
@@ -97,7 +107,7 @@ const MessageComponent: React.FC<MessageComponentType> = ({
                 className={`MessagesText ${validated ? '' : 'MessagesTextPending'}`}
             >
                 <Linkify componentDecorator={Link}>
-                    <HightlightSameUser login={login} text={textWithEjomi} />
+                    {hightlightSameUser({ login, text: checkText(text) })}
                 </Linkify>
             </span>
             <MessageEmojis
@@ -120,4 +130,4 @@ const MessageComponent: React.FC<MessageComponentType> = ({
     )
 }
 
-export default MessageComponent
+export default SingleMessage
