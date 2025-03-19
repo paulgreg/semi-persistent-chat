@@ -1,7 +1,7 @@
 {
     "name": "semi-persistent-chat",
     "version": "0.1.0",
-    "main": "src/server/index.ts",
+    "main": "dist/server/index.js",
     "license": "MIT",
     "engines": {
         "node": ">=22.0.0"
@@ -9,12 +9,14 @@
     "type": "module",
     "scripts": {
         "analyze": "./node_modules/.bin/vite-bundle-visualizer",
-        "start": "NODE_ENV=production tsx src/server/index.ts",
         "dev:client": "vite",
         "dev:server": "DEBUG=chat tsx --watch src/server/index.ts",
         "browserlist": "./node_modules/.bin/browserslist --update-db",
         "config": "if [ ! -f ./src/settings.json ]; then cp ./src/settings.json.dist ./src/settings.json; fi;",
-        "build": "npm run config && vite build",
+        "build": "npm run config && npm run build:server && npm run build:client",
+        "build:server": "NODE_ENV=production vite build --outDir dist/server --ssr ./src/server/index.ts",
+        "build:client": "NODE_ENV=production vite build --outDir dist/client",
+        "start": "node dist/server/index.js",
         "test": "vitest --run",
         "tdd": "vitest",
         "lint": "eslint src",
