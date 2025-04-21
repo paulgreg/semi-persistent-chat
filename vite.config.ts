@@ -1,5 +1,4 @@
 import { defineConfig } from 'vitest/config'
-import { VitePWA } from 'vite-plugin-pwa'
 import eslint from 'vite-plugin-eslint'
 import react from '@vitejs/plugin-react'
 
@@ -9,9 +8,6 @@ export default defineConfig({
     plugins: [
         eslint(),
         react(),
-        VitePWA({
-            injectRegister: 'auto',
-        }),
     ],
     test: {
         globals: true,
