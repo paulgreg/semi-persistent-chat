@@ -77,6 +77,16 @@ const getUsernames = (filterRoom: string): UsersType =>
 const findUserFromSocket = (socket: Socket) =>
     users.find(({ s }) => s === socket)
 
+io.use((socket, next) => {
+    const token = socket.handshake.auth.token
+    if (token === settings.secret) {
+        next()
+    } else {
+        console.error('client uses bad auth')
+        socket.disconnect()
+    }
+})
+
 io.on('connection', (socket) => {
     socket.on(USER_ONLINE, (userInfo: EventUserOnlineType) => {
         if (d.enabled) d('user online', userInfo)

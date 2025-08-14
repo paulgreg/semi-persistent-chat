@@ -50,7 +50,13 @@ const portPart = `:${isProd() ? window.location.port : settings.port}`
 const baseUrl = `${window.location.hostname}${portPart}`
 
 export const connect = ({ userId, username, room }: EventUserOnlineType) => {
-    socket = io(baseUrl, { path: '/persistent-chat-ws' })
+    socket = io(baseUrl, {
+        path: '/persistent-chat-ws',
+        auth: (cb) =>
+            cb({
+                token: settings.secret,
+            }),
+    })
     notifyUserOnline({ userId, username, room })
     socket.on('connect', onConnectCb)
     socket.on('disconnect', onDisconnectCb)

@@ -28,6 +28,7 @@ Chat Screen :
 ## Configuration
 
 Launch `npm run config` to create `src/config.mjs` (from `src/config.mjs.dist`) and update it according your needs.
+You should at least change "secret" (used for websocket authentification) and "origin" (your domain).
 
 
 ## To dev
