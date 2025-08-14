@@ -82,7 +82,7 @@ io.use((socket, next) => {
     if (token === settings.secret) {
         next()
     } else {
-        console.error('client uses bad auth')
+        console.error('socket.io: client uses bad auth')
         socket.disconnect()
     }
 })

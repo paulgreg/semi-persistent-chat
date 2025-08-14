@@ -1,5 +1,5 @@
 import { v1 } from 'uuid'
-import config from '../settings.json'
+import settings from '../settings.json'
 import { FullMessageType, PartialMessageType } from '../types/ChatTypes'
 
 export const checkMessageValidity = (m: PartialMessageType) => {
@@ -33,7 +33,7 @@ export const validateMessage = (m: PartialMessageType): FullMessageType => {
         msgId: msgId ? String(msgId) : v1(),
         username: formatString(username),
         room: formatString(room),
-        text: formatString(text, config.maxMsgSize ?? 2048),
+        text: formatString(text, settings.maxMsgSize ?? 2048),
         timestamp: Date.now(),
         validated: true,
         emojis: emojis.map(({ username, emoji }) => ({

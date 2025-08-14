@@ -16,7 +16,7 @@ const AnchorTitleLink: React.FC<AnchorTitleLinkType> = ({ url }) => {
     const fetchTitle = async (url: string) => {
         try {
             const response = await fetch(
-                `${baseUrl}/api/fetchSummary?url=${url}`
+                `${baseUrl}/api/fetchSummary?auth=${settings.secret}&url=${url}`
             )
             if (response.status === 200) {
                 const json = await response.json()

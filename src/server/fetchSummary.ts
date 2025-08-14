@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import * as cheerio from 'cheerio'
 import { LRUCache } from 'lru-cache'
 import { isProd } from '../configuration.js'
-import config from '../settings.json'
+import settings from '../settings.json'
 import { mayUrlHaveATitle } from '../media.js'
 import jschardet from 'jschardet'
 import charset from 'charset'
@@ -33,7 +33,7 @@ axios.interceptors.response.use((response: AxiosResponse) => {
 })
 
 const addSummaryEndPoint = (app: Express) => {
-    const lruCacheConfig = { max: config.urlCache ?? 100 }
+    const lruCacheConfig = { max: settings.urlCache ?? 100 }
     console.log('url cache configuration', lruCacheConfig)
     const cache = new LRUCache(lruCacheConfig)
 
@@ -86,6 +86,13 @@ const addSummaryEndPoint = (app: Express) => {
 
     app.get('/api/fetchSummary', (req, res) => {
         let error = false
+
+        if (req.query.auth !== settings.secret) {
+            error = true
+            console.error('summary api: client uses bad auth')
+            res.status(401).end('401 Unauthorized')
+        }
+
         const url = req.query.url
         if (!isString(url)) {
             error = true
