@@ -28,13 +28,13 @@ const formatString = (s: string, limit = 10) =>
 
 export const validateMessage = (m: PartialMessageType): FullMessageType => {
     checkMessageValidity(m)
-    const { msgId, username, text, room, emojis = [] } = m
+    const { msgId, timestamp, username, text, room, emojis = [] } = m
     return {
         msgId: msgId ? String(msgId) : v1(),
         username: formatString(username),
         room: formatString(room),
         text: formatString(text, settings.maxMsgSize ?? 2048),
-        timestamp: Date.now(),
+        timestamp: timestamp ?? Date.now(),
         validated: true,
         emojis: emojis.map(({ username, emoji }) => ({
             username: formatString(username),

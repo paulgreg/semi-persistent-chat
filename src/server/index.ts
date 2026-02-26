@@ -4,7 +4,6 @@ import http from 'http'
 import morgan from 'morgan'
 import { Server } from 'socket.io'
 import type { Socket } from 'socket.io'
-import fs from 'fs'
 import {
     INITIAL_MSG,
     INCOMING,
@@ -23,9 +22,17 @@ import { fileURLToPath } from 'url'
 import { arrayEquals } from '../array'
 import debug from 'debug'
 import {
+    addMessage,
+    closeMessageStore,
+    deleteMessage,
+    getMessagesForRoom,
+    initMessageStore,
+    purgeOldMessages,
+    updateMessage,
+} from './messageStore'
+import {
     ServerUserType,
     EventUserOnlineType,
-    FullMessageType,
     EventIncomingMessageType,
     EventDeleteType,
     EventCheckMissingType,
@@ -52,22 +59,13 @@ const io = new Server(server, {
     },
 })
 
-const SAVED_FILE = path.join(
-    __dirname,
-    '../../tmp-data/semi-persistent-chat-dump.json'
-)
-
 const SECOND = 1000
 const MINUTE = 60 * SECOND
 const HOUR = 60 * MINUTE
 
 const USER_TIMEOUT = 2 * MINUTE
 
-let persistentMessages: Array<FullMessageType> = []
 let users: Array<ServerUserType> = []
-
-const getMessagesForRoom = (filterRoom: string) =>
-    persistentMessages.filter(({ room }) => room === filterRoom)
 
 const getUsernames = (filterRoom: string): UsersType =>
     users
@@ -88,7 +86,7 @@ io.use((socket, next) => {
 })
 
 io.on('connection', (socket) => {
-    socket.on(USER_ONLINE, (userInfo: EventUserOnlineType) => {
+    socket.on(USER_ONLINE, async (userInfo: EventUserOnlineType) => {
         if (d.enabled) d('user online', userInfo)
         const {
             userId: incomingUserId,
@@ -97,8 +95,9 @@ io.on('connection', (socket) => {
         } = userInfo
 
         socket.join(incomingRoom)
+        const initialMessages = await getMessagesForRoom(incomingRoom)
         const payload: EventInitialMessagesType = {
-            initialMessages: getMessagesForRoom(incomingRoom),
+            initialMessages,
         }
         socket.emit(INITIAL_MSG, payload)
 
@@ -136,29 +135,17 @@ io.on('connection', (socket) => {
 
     socket.on(
         INCOMING,
-        ({ message: incomingMessage }: EventIncomingMessageType) => {
+        async ({ message: incomingMessage }: EventIncomingMessageType) => {
             if (d.enabled) d('incoming message', incomingMessage)
             try {
                 const validatedMessage = validateMessage(incomingMessage)
-                const isEdition = Boolean(
-                    persistentMessages.find(
-                        ({ msgId }) => msgId === incomingMessage.msgId
-                    )
-                )
-                if (!isEdition) {
-                    if (d.enabled) d('new message')
-                    persistentMessages.push(validatedMessage)
-                } else {
+                const isEdition = Boolean(incomingMessage.msgId)
+                if (isEdition) {
                     if (d.enabled) d('edit message')
-                    persistentMessages = persistentMessages.map((m) =>
-                        m.msgId === validatedMessage.msgId
-                            ? {
-                                  ...m,
-                                  text: validatedMessage.text,
-                                  emojis: validatedMessage.emojis,
-                              }
-                            : m
-                    )
+                    await updateMessage(validatedMessage)
+                } else {
+                    if (d.enabled) d('new message')
+                    await addMessage(validatedMessage)
                 }
                 const { room } = validatedMessage
                 const payload: EventPushType = { message: validatedMessage }
@@ -169,19 +156,13 @@ io.on('connection', (socket) => {
             }
         }
     )
-    socket.on(DELETE, ({ msgId }: EventDeleteType) => {
+    socket.on(DELETE, async ({ msgId }: EventDeleteType) => {
         if (d.enabled) d('delete message', msgId)
         try {
             if (msgId) {
-                const message = persistentMessages.find(
-                    (m) => m.msgId === msgId
-                )
-
+                const message = await deleteMessage(msgId)
                 const { room } = message ?? {}
                 if (room) {
-                    persistentMessages = persistentMessages.filter(
-                        (m) => m.msgId !== msgId
-                    )
                     const payload: EventDeleteType = { msgId }
                     socket.to(room).emit(DELETE_MSG, payload)
                     socket.emit(DELETE_MSG, payload)
@@ -192,13 +173,11 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on(CHECK_MISSING, ({ msgIds }: EventCheckMissingType) => {
+    socket.on(CHECK_MISSING, async ({ msgIds }: EventCheckMissingType) => {
         if (d.enabled) d('check missing message', msgIds)
         const user = findUserFromSocket(socket)
         if (!user) return
-        const roomMessages = persistentMessages.filter(
-            ({ room }) => room === user.room
-        )
+        const roomMessages = await getMessagesForRoom(user.room)
         const missedMessages = roomMessages.filter((message) => {
             const userUuid = msgIds[message.msgId]
             if (!userUuid) return true
@@ -244,62 +223,24 @@ app.use('/', express.static(path.join(__dirname, '../../dist')))
 
 addSummaryEndPoint(app)
 
-const start = () => {
+const start = async () => {
+    await initMessageStore()
     const p = process.env.PORT ?? settings.port
     server.listen(p)
     console.info(`Server listeming on port ${p}`)
     console.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
-if (settings.saveState && fs.existsSync(SAVED_FILE)) {
-    console.info('save file exists')
-    fs.readFile(SAVED_FILE, 'utf8', (err, data) => {
-        console.info('read save file', data)
-        if (err) console.error('Failed to load file:', err)
-        let savedMsgs
-        try {
-            savedMsgs = data && JSON.parse(data)
-        } catch (e) {
-            console.error('failed to load messages:', e)
-        }
-        if (savedMsgs) {
-            console.info(
-                `Loading ${savedMsgs.length} messages from ${SAVED_FILE}`
-            )
-            persistentMessages = persistentMessages.concat(savedMsgs)
-        }
-        console.info('deleting save file')
-        fs.unlink(SAVED_FILE, (err) => {
-            if (err) console.error('Failed to delete save file:', err)
-        })
-        start()
-    })
-} else {
-    start()
-}
+start().catch((err) => {
+    console.error('failed to start server', err)
+    process.exit(1)
+})
 
 let cleanupMessagesTimeout: NodeJS.Timeout
 
-const cleanupOldMessages = () => {
+const cleanupOldMessages = async () => {
     clearTimeout(cleanupMessagesTimeout)
-    const now = Date.now()
-    const beforeMessagesNb = persistentMessages.length
-    const cleanupTimestamp = settings.cleanupTimeInHours * HOUR
-    persistentMessages = persistentMessages.filter(
-        ({ timestamp }) => now - timestamp < cleanupTimestamp
-    )
-    const afterMessagesNb = persistentMessages.length
-    if (beforeMessagesNb !== afterMessagesNb) {
-        console.info(
-            new Date(),
-            `Purged ${beforeMessagesNb} message(s) (after ${cleanupTimestamp} ms). ${afterMessagesNb} message(s) still in memory`
-        )
-    } else {
-        console.info(
-            new Date(),
-            `${afterMessagesNb} message(s) still in memory`
-        )
-    }
+    await purgeOldMessages()
     cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
 }
 
@@ -376,18 +317,14 @@ const registerGracefullShutdownOn = (
     signal: 'SIGINT' | 'SIGHUP' | 'SIGTERM'
 ) => {
     process.on(signal, () => {
-        console.info(`received ${signal}, saving and stopping gracefully`)
-        if (!settings.saveState) return process.exit(0)
-        fs.writeFile(SAVED_FILE, JSON.stringify(persistentMessages), (err) => {
-            if (err) {
+        console.info(`received ${signal}, stopping gracefully`)
+        Promise.resolve()
+            .then(async () => closeMessageStore())
+            .then(() => process.exit(0))
+            .catch((err) => {
                 console.error(err)
                 process.exit(1)
-            }
-            console.info(
-                `${persistentMessages.length} messages saved in ${SAVED_FILE}`
-            )
-            process.exit(0)
-        })
+            })
     })
 }
 registerGracefullShutdownOn('SIGINT')

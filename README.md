@@ -31,6 +31,14 @@ Launch `npm run config` to create `src/config.mjs` (from `src/config.mjs.dist`) 
 You should at least change "secret" (used for websocket authentification) and "origin" (your domain).
 
 
+## Redis
+
+  docker-compose up -d
+
+### To inspect redis
+
+  docker-compose exec redis redis-cli
+
 ## To dev
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

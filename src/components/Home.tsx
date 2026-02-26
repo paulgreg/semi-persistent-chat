@@ -81,8 +81,7 @@ const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
             </p>
             <p>
                 Messages will be deleted on server after{' '}
-                {settings.cleanupTimeInHours} hours
-                {settings.sleep ? ', maybe sooner if app is set to sleep' : ''}.
+                {settings.cleanupTimeInHours} hours.
             </p>
             <p>
                 Do not use that service for confidential discussions.{' '}
