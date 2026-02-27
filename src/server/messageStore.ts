@@ -41,7 +41,12 @@ const parseMessage = (raw: string): FullMessageType | undefined => {
 const getCutoffTimestamp = () => Date.now() - cleanupWindowMs
 
 const zAdd = async (key: string, score: number, value: string) => {
-    await client.sendCommand(['ZADD', key, String(score), value])
+    try {
+        await client.sendCommand(['ZADD', key, String(score), value])
+    } catch (err) {
+        console.error('Failed to add to sorted set:', err)
+        throw err
+    }
 }
 
 const zRangeByScore = async (
@@ -49,50 +54,75 @@ const zRangeByScore = async (
     min: number,
     max: number
 ): Promise<Array<string>> => {
-    const reply = await client.sendCommand([
-        'ZRANGEBYSCORE',
-        key,
-        String(min),
-        String(max),
-    ])
-    return Array.isArray(reply) ? (reply as Array<string>) : []
+    try {
+        const reply = await client.sendCommand([
+            'ZRANGEBYSCORE',
+            key,
+            String(min),
+            String(max),
+        ])
+        return Array.isArray(reply) ? (reply as Array<string>) : []
+    } catch (err) {
+        console.error('Failed to range by score:', err)
+        return []
+    }
 }
 
 const zRemRangeByScore = async (key: string, min: string, max: number) => {
-    await client.sendCommand(['ZREMRANGEBYSCORE', key, min, String(max)])
+    try {
+        await client.sendCommand(['ZREMRANGEBYSCORE', key, min, String(max)])
+    } catch (err) {
+        console.error('Failed to remove range by score:', err)
+        throw err
+    }
 }
 
 const zRem = async (key: string, member: string) => {
-    await client.sendCommand(['ZREM', key, member])
+    try {
+        await client.sendCommand(['ZREM', key, member])
+    } catch (err) {
+        console.error('Failed to remove from sorted set:', err)
+        throw err
+    }
 }
 
 const expireKey = async (key: string, seconds: number) => {
-    await client.sendCommand(['EXPIRE', key, String(seconds)])
+    try {
+        await client.sendCommand(['EXPIRE', key, String(seconds)])
+    } catch (err) {
+        console.error('Failed to set key expiration:', err)
+        throw err
+    }
 }
 
 const scanKeys = async (pattern: string): Promise<Array<string>> => {
-    let cursor = '0'
-    const keys: Array<string> = []
-    do {
-        const reply = await client.sendCommand([
-            'SCAN',
-            cursor,
-            'MATCH',
-            pattern,
-            'COUNT',
-            '100',
-        ])
-        if (Array.isArray(reply) && reply.length === 2) {
-            cursor = String(reply[0])
-            const batch = Array.isArray(reply[1])
-                ? (reply[1] as Array<string>)
-                : []
-            keys.push(...batch)
-        } else {
-            break
-        }
-    } while (cursor !== '0')
-    return keys
+    try {
+        let cursor = '0'
+        const keys: Array<string> = []
+        do {
+            const reply = await client.sendCommand([
+                'SCAN',
+                cursor,
+                'MATCH',
+                pattern,
+                'COUNT',
+                '100',
+            ])
+            if (Array.isArray(reply) && reply.length === 2) {
+                cursor = String(reply[0])
+                const batch = Array.isArray(reply[1])
+                    ? (reply[1] as Array<string>)
+                    : []
+                keys.push(...batch)
+            } else {
+                break
+            }
+        } while (cursor !== '0')
+        return keys
+    } catch (err) {
+        console.error('Failed to scan keys:', err)
+        return []
+    }
 }
 
 export const initMessageStore = async () => {
