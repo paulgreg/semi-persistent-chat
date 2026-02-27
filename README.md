@@ -13,45 +13,67 @@ Chat Screen :
 
 ![Screenshot of a chat](./semi-persistent-chat.png 'Chat')
 
-
 ## Features
 
- - multi-room chat
- - show media preview (image, video, audio)
- - display web page title
- - works on mobile
- - edit or delete sent messages
- - comment with emojis 
- - messages are saved in `tmp-data/semi-persistent-chat-dump.json` when server is halted and restored on next startup (to keep messages duging system update)
-
+- multi-room chat
+- show media preview (image, video, audio)
+- display web page title
+- works on mobile
+- edit or delete sent messages
+- comment with emojis
+- **client-side message expiration**: messages are automatically strikethrough when they reach their expiration time
 
 ## Configuration
 
-Launch `npm run config` to create `src/config.mjs` (from `src/config.mjs.dist`) and update it according your needs.
+Launch `npm run config` to create `src/settings.json` (from `src/settings.json.dist`) and update it according your needs.
 You should at least change "secret" (used for websocket authentification) and "origin" (your domain).
 
+**Message Expiration Settings:**
+
+- `messageRetentionHours`: Number of hours before messages expire (default: 1)
+- This setting controls both server-side message cleanup and client-side strikethrough behavior
 
 ## Redis
 
-  docker-compose up -d
+The application uses Redis for message storage with automatic expiration. Messages are stored in sorted sets with timestamps as scores, allowing efficient range queries and automatic cleanup.
 
-### To inspect redis
+**Key features of Redis usage:**
 
-  docker-compose exec redis redis-cli
+- Messages are stored with TTL (Time-To-Live) based on `messageRetentionHours` setting
+- Hourly cleanup job removes expired messages automatically
+- Efficient sorted set operations for message retrieval and expiration
+
+### Setup
+
+docker-compose up -d
+
+### Inspection
+
+docker-compose exec redis redis-cli
+
+### Configuration
+
+Redis settings can be configured in `src/settings.json`:
+
+- `redisHost`: Redis server host (default: "127.0.0.1")
+- `redisPort`: Redis server port (default: 6379)
+- `redisPassword`: Optional Redis password
+
+Environment variables can override these settings:
+
+- `REDIS_HOST`
+- `REDIS_PORT`
+- `REDIS_PASSWORD`
 
 ## To dev
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 run `npm run dev:client` to launch client code (with watch) and `npm run dev:server` to launch server code
 
 Webapp is served on port 3000 by devtools while node is launched on port 6060 (explaining while websocket and api calls are made on that port on non production env).
 
-
 ## To deploy on production using only node
 
 Run `npm run build` to generate static files into `build` directory, then run `npm run start` which will serve static files.
-
 
 ## To deploy on production using nginx to serve static file (recommanded)
 
