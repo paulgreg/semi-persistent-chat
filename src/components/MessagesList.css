@@ -44,6 +44,12 @@
     line-height: 1.6em;
 }
 
+.MessagesTextExpired {
+    text-decoration: line-through;
+    opacity: 0.7;
+    color: #888;
+}
+
 .MessagesTextAction {
     display: none;
     font-size: 1em;

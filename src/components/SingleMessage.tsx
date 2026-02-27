@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback } from 'react'
+import { MouseEvent, useCallback, useState, useEffect } from 'react'
 import Link from './Link'
 import Linkify from 'react-linkify'
 import { isDataUrlImg } from '../media'
@@ -6,6 +6,7 @@ import { checkText } from 'smile2emoji'
 import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, setEditMessageType } from '../App'
+import settings from '../settings.json'
 
 const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
@@ -52,6 +53,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     onDelete,
 }) => {
     const { msgId, text, emojis, username, timestamp, validated } = message
+    const [isExpired, setIsExpired] = useState(false)
 
     const onEditClick = useCallback(
         (e: MouseEvent<HTMLSpanElement>) => {
@@ -67,6 +69,25 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         },
         [onDelete, msgId]
     )
+
+    const checkExpiration = useCallback(() => {
+        const expirationTime =
+            timestamp + settings.cleanupTimeInHours * 60 * 60 * 1000
+        const isMessageExpired = Date.now() > expirationTime
+
+        if (isMessageExpired && !isExpired) {
+            setIsExpired(true)
+            return
+        }
+
+        if (!isMessageExpired && !isExpired) {
+            setTimeout(checkExpiration, 600000)
+        }
+    }, [timestamp, isExpired])
+
+    useEffect(() => {
+        checkExpiration()
+    }, [checkExpiration])
 
     if (isDataUrlImg(text))
         return (
@@ -104,7 +125,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 :
             </span>
             <span
-                className={`MessagesText ${validated ? '' : 'MessagesTextPending'}`}
+                className={`MessagesText ${validated ? '' : 'MessagesTextPending'} ${isExpired ? 'MessagesTextExpired' : ''}`}
             >
                 <Linkify componentDecorator={Link}>
                     {hightlightSameUser({ login, text: checkText(text) })}
