@@ -29,6 +29,29 @@ const roomTtlSeconds = Math.max(60, Math.floor(cleanupWindowMs / 1000))
 
 const roomKey = (room: string) => `spc:room:${room}:messages`
 
+// Hourly cleanup for all rooms
+const setupHourlyCleanup = async () => {
+    const purgeAllOldMessages = async () => {
+        try {
+            const roomKeys = await scanKeys('spc:room:*:messages')
+            const cutoff = getCutoffTimestamp()
+
+            for (const key of roomKeys) {
+                await zRemRangeByScore(key, '-inf', cutoff)
+                if (d.enabled) {
+                    d(`hourly purge: removed old messages from ${key}`)
+                }
+            }
+        } catch (err) {
+            console.error('Hourly cleanup failed:', err)
+        }
+    }
+
+    // Run immediately and then every hour
+    await purgeAllOldMessages()
+    setInterval(purgeAllOldMessages, 60 * 60 * 1000)
+}
+
 const parseMessage = (raw: string): FullMessageType | undefined => {
     try {
         return JSON.parse(raw) as FullMessageType
@@ -129,6 +152,9 @@ export const initMessageStore = async () => {
     if (!client.isOpen) {
         await client.connect()
     }
+
+    // Start hourly cleanup
+    await setupHourlyCleanup()
 }
 
 export const getMessagesForRoom = async (
@@ -138,7 +164,7 @@ export const getMessagesForRoom = async (
     const now = Date.now()
     const cutoff = getCutoffTimestamp()
     const members = await zRangeByScore(roomKey(room), cutoff, now)
-    await purgeOldMessagesForRoom(room)
+
     return members
         .map(parseMessage)
         .filter((m): m is FullMessageType => Boolean(m))
@@ -183,21 +209,11 @@ const findMemberByMsgIdAcrossRooms = async (
     return undefined
 }
 
-const purgeOldMessagesForRoom = async (room: string) => {
-    const cutoff = getCutoffTimestamp()
-    const key = roomKey(room)
-    await zRemRangeByScore(key, '-inf', cutoff)
-    if (d.enabled) {
-        d(`purged old messages from ${key}`)
-    }
-}
-
 export const addMessage = async (message: FullMessageType) => {
     const key = roomKey(message.room)
     const payload = JSON.stringify(message)
     await zAdd(key, message.timestamp, payload)
     await expireKey(key, roomTtlSeconds)
-    await purgeOldMessagesForRoom(message.room)
 }
 
 export const updateMessage = async (message: FullMessageType) => {
@@ -209,7 +225,6 @@ export const updateMessage = async (message: FullMessageType) => {
     const payload = JSON.stringify(message)
     await zAdd(key, message.timestamp, payload)
     await expireKey(key, roomTtlSeconds)
-    await purgeOldMessagesForRoom(message.room)
 }
 
 export const deleteMessage = async (
