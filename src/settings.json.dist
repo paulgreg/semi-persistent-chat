@@ -1,6 +1,6 @@
 {
     "port": 6060,
-    "cleanupTimeInHours": 6,
+    "messageRetentionHours": 6,
     "maxMsgSize": 500000,
     "urlCache": 100,
     "redisHost": "127.0.0.1",

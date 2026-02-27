@@ -37,7 +37,7 @@ export const hightlightSameUser = ({
     login: string
     text: string
 }) =>
-    new RegExp(`\\b(${login})\\b`, 'gi').test(text) ? (
+    new RegExp(String.raw`\b(${login})\b`, 'gi').test(text) ? (
         <span className="MessageSameUser">{text}</span>
     ) : (
         text
@@ -72,7 +72,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
 
     const checkExpiration = useCallback(() => {
         const expirationTime =
-            timestamp + settings.cleanupTimeInHours * 60 * 60 * 1000
+            timestamp + settings.messageRetentionHours * 60 * 60 * 1000
         const isMessageExpired = Date.now() > expirationTime
 
         if (isMessageExpired && !isExpired) {

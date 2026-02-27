@@ -23,7 +23,7 @@ client.on('error', (err) => {
 const SECOND = 1000
 const HOUR = 60 * 60 * SECOND
 
-const cleanupWindowMs = (settings.cleanupTimeInHours ?? 6) * HOUR
+const cleanupWindowMs = (settings.messageRetentionHours ?? 6) * HOUR
 
 const roomTtlSeconds = Math.max(60, Math.floor(cleanupWindowMs / 1000))
 
