@@ -191,14 +191,6 @@ export const deleteMessage = async (
     return found.message
 }
 
-export const purgeOldMessages = async () => {
-    const cutoff = getCutoffTimestamp()
-    const keys = await scanKeys('spc:room:*:messages')
-    for (const key of keys) {
-        await zRemRangeByScore(key, '-inf', cutoff)
-    }
-}
-
 export const closeMessageStore = async () => {
     if (client.isOpen) {
         await client.quit()

@@ -3,7 +3,6 @@
     "cleanupTimeInHours": 6,
     "maxMsgSize": 500000,
     "urlCache": 100,
-    "saveState": false,
     "redisHost": "127.0.0.1",
     "redisPort": 6379,
     "secret": "random-string",

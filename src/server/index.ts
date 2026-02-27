@@ -1,6 +1,6 @@
-import path from 'path'
+import path from 'node:path'
 import express from 'express'
-import http from 'http'
+import http from 'node:http'
 import morgan from 'morgan'
 import { Server } from 'socket.io'
 import type { Socket } from 'socket.io'
@@ -27,7 +27,6 @@ import {
     deleteMessage,
     getMessagesForRoom,
     initMessageStore,
-    purgeOldMessages,
     updateMessage,
 } from './messageStore'
 import {
@@ -235,16 +234,6 @@ start().catch((err) => {
     console.error('failed to start server', err)
     process.exit(1)
 })
-
-let cleanupMessagesTimeout: NodeJS.Timeout
-
-const cleanupOldMessages = async () => {
-    clearTimeout(cleanupMessagesTimeout)
-    await purgeOldMessages()
-    cleanupMessagesTimeout = setTimeout(cleanupOldMessages, HOUR)
-}
-
-cleanupOldMessages()
 
 const getUsersByRoom = (u: Array<ServerUserType>) =>
     u.reduce((acc: Record<string, Array<string>>, current) => {
