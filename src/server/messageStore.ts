@@ -136,7 +136,7 @@ export const getMessagesForRoom = async (
 ): Promise<Array<FullMessageType>> => {
     if (!room) return []
     const now = Date.now()
-    const cutoff = now - cleanupWindowMs
+    const cutoff = getCutoffTimestamp()
     const members = await zRangeByScore(roomKey(room), cutoff, now)
     await purgeOldMessagesForRoom(room)
     return members
@@ -150,7 +150,7 @@ const findMemberByMsgId = async (
 ): Promise<{ member: string; message: FullMessageType } | undefined> => {
     if (!room || !msgId) return undefined
     const now = Date.now()
-    const cutoff = now - cleanupWindowMs
+    const cutoff = getCutoffTimestamp()
     const members = await zRangeByScore(roomKey(room), cutoff, now)
     for (const member of members) {
         const message = parseMessage(member)
@@ -168,7 +168,7 @@ const findMemberByMsgIdAcrossRooms = async (
 > => {
     if (!msgId) return undefined
     const now = Date.now()
-    const cutoff = now - cleanupWindowMs
+    const cutoff = getCutoffTimestamp()
 
     const keys = await scanKeys('spc:room:*:messages')
     for (const key of keys) {
