@@ -108,6 +108,7 @@ export const getMessagesForRoom = async (
     const now = Date.now()
     const cutoff = now - cleanupWindowMs
     const members = await zRangeByScore(roomKey(room), cutoff, now)
+    await purgeOldMessagesForRoom(room)
     return members
         .map(parseMessage)
         .filter((m): m is FullMessageType => Boolean(m))
