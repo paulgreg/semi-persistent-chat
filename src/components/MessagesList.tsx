@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import SingleMessage from './SingleMessage'
 import { FullMessageType, UsersType } from '../types/ChatTypes'
 import { onEmojisType } from './MessageEmojis'
-import { onDeleteType, setEditMessageType } from '../App'
+import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import { sortMessages } from '../services/utils'
 import './MessagesList.css'
 
@@ -17,6 +17,7 @@ type MessagesListType = {
     setEditMessage: setEditMessageType
     onEmojis: onEmojisType
     onDelete: onDeleteType
+    onReply: onReplyType
 }
 
 const MessagesList: React.FC<MessagesListType> = ({
@@ -27,6 +28,7 @@ const MessagesList: React.FC<MessagesListType> = ({
     setEditMessage,
     onEmojis,
     onDelete,
+    onReply,
 }) => {
     const messagesRef = useRef<HTMLDivElement>(null)
     const [count, setCount] = useState(messages?.length)
@@ -43,20 +45,63 @@ const MessagesList: React.FC<MessagesListType> = ({
         }
     }, [messagesRef, messages, count])
 
+    const topLevelMessages = messages
+        .filter((message) => !message.replyToId)
+        .toSorted(sortMessages)
+
+    const repliesByParent = messages.reduce(
+        (acc: Record<string, Array<FullMessageType>>, message) => {
+            if (message.replyToId) {
+                if (!acc[message.replyToId]) acc[message.replyToId] = []
+                acc[message.replyToId].push(message)
+            }
+            return acc
+        },
+        {}
+    )
+
+    Object.values(repliesByParent).forEach((replies) =>
+        replies.sort(sortMessages)
+    )
+
     return (
         <div className="Messages" ref={messagesRef}>
-            {messages.toSorted(sortMessages).map((message) => (
-                <SingleMessage
-                    key={message.msgId}
-                    login={login}
-                    message={message}
-                    isUserOnline={isUserOnline}
-                    editMsgId={editMsgId}
-                    setEditMessage={setEditMessage}
-                    onEmojis={onEmojis}
-                    onDelete={onDelete}
-                />
-            ))}
+            {topLevelMessages.map((message) => {
+                const replies = repliesByParent[message.msgId] ?? []
+                return (
+                    <div key={message.msgId} className="MessageGroup">
+                        <SingleMessage
+                            login={login}
+                            message={message}
+                            isUserOnline={isUserOnline}
+                            editMsgId={editMsgId}
+                            setEditMessage={setEditMessage}
+                            onEmojis={onEmojis}
+                            onDelete={onDelete}
+                            onReply={onReply}
+                            replyCount={replies.length}
+                        />
+                        {replies.length > 0 && (
+                            <div className="MessageReplies">
+                                {replies.map((reply) => (
+                                    <SingleMessage
+                                        key={reply.msgId}
+                                        login={login}
+                                        message={reply}
+                                        isUserOnline={isUserOnline}
+                                        editMsgId={editMsgId}
+                                        setEditMessage={setEditMessage}
+                                        onEmojis={onEmojis}
+                                        onDelete={onDelete}
+                                        onReply={onReply}
+                                        isReply
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )
+            })}
         </div>
     )
 }

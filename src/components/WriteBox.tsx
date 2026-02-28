@@ -26,6 +26,9 @@ type WriteBoxType = {
     onMessage: onMessageCbType
     editMessage: FullMessageType | undefined
     setEditMessage: setEditMessageType
+    replyingTo?: string | null
+    replyPreview?: string
+    onCancelReply?: () => void
 }
 
 const WriteBox: React.FC<WriteBoxType> = ({
@@ -34,6 +37,9 @@ const WriteBox: React.FC<WriteBoxType> = ({
     onMessage,
     editMessage,
     setEditMessage,
+    replyingTo,
+    replyPreview,
+    onCancelReply,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [message, setMessage] = useState('')
@@ -47,6 +53,10 @@ const WriteBox: React.FC<WriteBoxType> = ({
             inputRef.current?.focus()
         }
     }, [editMessage])
+
+    useEffect(() => {
+        if (replyingTo) inputRef.current?.focus()
+    }, [replyingTo])
 
     const onChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -73,12 +83,13 @@ const WriteBox: React.FC<WriteBoxType> = ({
                 setWarning('')
                 setCursorPosition(0)
                 setEditMessage(undefined)
+                onCancelReply?.()
             } else if (e.key === 'Enter') {
                 if (editMessage && msgLength === 0) {
                     setEditMessage(undefined)
                 } else if (msgLength > 0 && msgLength < settings.maxMsgSize) {
                     onMessage({
-                        ...(editMessage ?? {}),
+                        ...editMessage,
                         room,
                         username: login,
                         text: trimmedMessage,
@@ -97,6 +108,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
             onMessage,
             room,
             login,
+            onCancelReply,
         ]
     )
 
@@ -161,6 +173,15 @@ const WriteBox: React.FC<WriteBoxType> = ({
     return (
         login && (
             <>
+                {replyingTo && (
+                    <div className="WriteBoxReplyIndicator">
+                        <span>
+                            💬 Replying to message
+                            {replyPreview ? ` "${replyPreview}"` : ''}
+                        </span>
+                        <button onClick={onCancelReply}>×</button>
+                    </div>
+                )}
                 <div className="WriteBox">
                     <label className="WriteBoxLabel" htmlFor="msg">
                         {login}&nbsp;:

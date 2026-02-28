@@ -16,6 +16,26 @@
     width: 100%;
 }
 
+.MessageGroup {
+    width: 100%;
+}
+
+.MessageReplies {
+    margin-left: 20px;
+    padding-left: 12px;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.MessageReply {
+    padding-left: 6px;
+}
+
+.MessageReplyCount {
+    margin-left: 8px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
 .MessagesTime {
     margin-right: 0.5em;
     font-size: small;
@@ -32,6 +52,10 @@
 @media (prefers-color-scheme: light) {
     .MessageSameUser {
         color: blue;
+    }
+
+    .MessageReplies {
+        border-left: 2px solid rgba(0, 0, 0, 0.15);
     }
 }
 
@@ -81,4 +105,11 @@
 
 .offline {
     color: rgb(196, 0, 0);
+}
+
+@media (max-width: 768px) {
+    .MessageReplies {
+        margin-left: 10px;
+        padding-left: 8px;
+    }
 }

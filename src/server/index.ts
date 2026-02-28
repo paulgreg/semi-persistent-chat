@@ -27,6 +27,7 @@ import {
     deleteMessage,
     getMessagesForRoom,
     initMessageStore,
+    resetMessageAndRepliesExpiration,
     updateMessage,
 } from './messageStore'
 import {
@@ -145,6 +146,14 @@ io.on('connection', (socket) => {
                 } else {
                     if (d.enabled) d('new message')
                     await addMessage(validatedMessage)
+
+                    // If this is a reply, reset expiration for original message and replies
+                    if (validatedMessage.replyToId) {
+                        await resetMessageAndRepliesExpiration(
+                            validatedMessage.replyToId,
+                            validatedMessage.room
+                        )
+                    }
                 }
                 const { room } = validatedMessage
                 const payload: EventPushType = { message: validatedMessage }

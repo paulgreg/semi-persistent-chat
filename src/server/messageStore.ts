@@ -210,21 +210,21 @@ const findMemberByMsgIdAcrossRooms = async (
 }
 
 export const addMessage = async (message: FullMessageType) => {
-    const key = roomKey(message.room)
+    const roomKeyName = roomKey(message.room)
     const payload = JSON.stringify(message)
-    await zAdd(key, message.timestamp, payload)
-    await expireKey(key, roomTtlSeconds)
+    await zAdd(roomKeyName, message.timestamp, payload)
+    await expireKey(roomKeyName, roomTtlSeconds)
 }
 
 export const updateMessage = async (message: FullMessageType) => {
-    const key = roomKey(message.room)
+    const roomKeyName = roomKey(message.room)
     const existing = await findMemberByMsgId(message.room, message.msgId)
     if (existing) {
-        await zRem(key, existing.member)
+        await zRem(roomKeyName, existing.member)
     }
     const payload = JSON.stringify(message)
-    await zAdd(key, message.timestamp, payload)
-    await expireKey(key, roomTtlSeconds)
+    await zAdd(roomKeyName, message.timestamp, payload)
+    await expireKey(roomKeyName, roomTtlSeconds)
 }
 
 export const deleteMessage = async (
@@ -235,6 +235,52 @@ export const deleteMessage = async (
     if (!found) return undefined
     await zRem(found.key, found.member)
     return found.message
+}
+
+export const getRepliesForMessage = async (
+    msgId: string,
+    room: string
+): Promise<Array<FullMessageType>> => {
+    if (!msgId || !room) return []
+    const now = Date.now()
+    const cutoff = getCutoffTimestamp()
+    const members = await zRangeByScore(roomKey(room), cutoff, now)
+
+    return members
+        .map(parseMessage)
+        .filter((m): m is FullMessageType => Boolean(m))
+        .filter((message) => message.replyToId === msgId)
+}
+
+export const resetMessageAndRepliesExpiration = async (
+    msgId: string,
+    room: string
+): Promise<void> => {
+    if (!msgId || !room) return
+
+    const now = Date.now()
+    const cutoff = getCutoffTimestamp()
+    const members = await zRangeByScore(roomKey(room), cutoff, now)
+    const messages = members
+        .map(parseMessage)
+        .filter((m): m is FullMessageType => Boolean(m))
+
+    // Find original message and all its replies
+    const original = messages.find((m) => m.msgId === msgId)
+    const replies = messages.filter((m) => m.replyToId === msgId)
+
+    // Reset expiration by updating timestamps to now
+    const newTimestamp = Date.now()
+
+    if (original) {
+        const updatedOriginal = { ...original, timestamp: newTimestamp }
+        await updateMessage(updatedOriginal)
+    }
+
+    for (const reply of replies) {
+        const updatedReply = { ...reply, timestamp: newTimestamp }
+        await updateMessage(updatedReply)
+    }
 }
 
 export const closeMessageStore = async () => {

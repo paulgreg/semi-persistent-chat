@@ -14,3 +14,35 @@
     flex: 2;
     flex-grow: 1;
 }
+
+@media (prefers-color-scheme: light) {
+    .WriteBoxReplyIndicator {
+        background-color: #eef6f8;
+        color: black;
+    }
+
+    .WriteBoxReplyIndicator button {
+        color: black;
+    }
+}
+
+.WriteBoxReplyIndicator {
+    background-color: #333;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    color: white;
+}
+
+.WriteBoxReplyIndicator button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 4px;
+}

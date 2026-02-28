@@ -19,6 +19,7 @@ export type PartialMessageType = {
     emojis?: Array<EmojiUserType>
     timestamp?: number
     validated?: boolean
+    replyToId?: string
 }
 
 export type FullMessageType = {
@@ -29,6 +30,7 @@ export type FullMessageType = {
     room: string
     timestamp: number
     validated: boolean
+    replyToId?: string
 }
 
 export type EventUserOnlineType = {

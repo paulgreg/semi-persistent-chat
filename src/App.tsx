@@ -33,6 +33,7 @@ import {
 } from './types/ChatTypes'
 import { onEmojisType } from './components/MessageEmojis'
 import { getUserId } from './services/utils'
+import { isDataUrlImg } from './media'
 import logo192 from './logo192.png'
 import './Global.css'
 import './App.css'
@@ -43,6 +44,7 @@ export type onLoginType = (userId: string, login: string, room: string) => void
 export type setEditMessageType = (m: FullMessageType | undefined) => void
 export type onDeleteType = (msgId: string) => void
 export type onMessageCbType = (m: PartialMessageType) => void
+export type onReplyType = (msgId: string) => void
 
 window.onpopstate = () => window.location.reload()
 
@@ -58,6 +60,19 @@ const App = () => {
         FullMessageType | undefined
     >()
     const [users, setUsers] = useState<UsersType>([])
+    const [replyingTo, setReplyingTo] = useState<string | null>(null)
+
+    const getReplyPreview = (msgId: string | null) => {
+        if (!msgId) return undefined
+        const original = messages.find((m) => m.msgId === msgId)
+        if (!original) return undefined
+        if (isDataUrlImg(original.text)) return 'Image'
+        const text = original.text.replace(/\s+/g, ' ').trim()
+        if (!text) return undefined
+        return text.length > 50 ? `${text.slice(0, 50)}...` : text
+    }
+
+    const replyPreview = getReplyPreview(replyingTo)
 
     const onLogin: onLoginType = (userId, login, room) => {
         setLogin(login)
@@ -105,10 +120,16 @@ const App = () => {
             text,
             validated: false,
             emojis: emojis ?? [],
+            replyToId: replyingTo || undefined,
         }
         setEditMessage(undefined)
         sendMessage(m)
         setMessages((msgs) => mergeMessages(msgs, [m]))
+
+        // Reset reply state after sending
+        if (replyingTo) {
+            setReplyingTo(null)
+        }
     }
 
     const onEmojis: onEmojisType = ({ msgId, emojis }) => {
@@ -124,6 +145,14 @@ const App = () => {
 
     const onDelete = (msgId: string) => {
         sendDelete(msgId)
+    }
+
+    const onReply = (msgId: string) => {
+        setReplyingTo(msgId)
+    }
+
+    const onCancelReply = () => {
+        setReplyingTo(null)
     }
 
     const ready = login && room
@@ -143,6 +172,7 @@ const App = () => {
                         setEditMessage={setEditMessage}
                         onEmojis={onEmojis}
                         onDelete={onDelete}
+                        onReply={onReply}
                     />
                     <WriteBox
                         login={login}
@@ -150,6 +180,9 @@ const App = () => {
                         onMessage={onMessage}
                         editMessage={editMessage}
                         setEditMessage={setEditMessage}
+                        replyingTo={replyingTo}
+                        replyPreview={replyPreview}
+                        onCancelReply={onCancelReply}
                     />
                     <UsersList userId={userId} users={users} room={room} />
                 </>

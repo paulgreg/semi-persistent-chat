@@ -5,7 +5,7 @@ import { isDataUrlImg } from '../media'
 import { checkText } from 'smile2emoji'
 import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
-import { onDeleteType, setEditMessageType } from '../App'
+import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import settings from '../settings.json'
 
 const dateOptions: Intl.DateTimeFormatOptions = {
@@ -28,6 +28,9 @@ type MessageComponentType = {
     setEditMessage: setEditMessageType
     onEmojis: onEmojisType
     onDelete: onDeleteType
+    onReply: onReplyType
+    isReply?: boolean
+    replyCount?: number
 }
 
 export const hightlightSameUser = ({
@@ -51,6 +54,9 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     setEditMessage,
     onEmojis,
     onDelete,
+    onReply,
+    isReply = false,
+    replyCount = 0,
 }) => {
     const { msgId, text, emojis, username, timestamp, validated } = message
     const [isExpired, setIsExpired] = useState(false)
@@ -102,8 +108,13 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
     const editionClass = msgId === editMsgId ? 'MessageEdition' : ''
 
+    const canReply = !isReply
+
     return (
-        <div key={msgId} className={`MessagesRow ${editionClass}`}>
+        <div
+            key={msgId}
+            className={`MessagesRow ${editionClass} ${isReply ? 'MessageReply' : ''}`}
+        >
             <span
                 className="MessagesTime"
                 title={d.toLocaleDateString(navigator.language, dateOptions)}
@@ -123,6 +134,11 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     </span>
                 )}{' '}
                 :
+                {!isReply && replyCount > 0 && (
+                    <span className="MessageReplyCount" title="Replies">
+                        💬 {replyCount}
+                    </span>
+                )}
             </span>
             <span
                 className={`MessagesText ${validated ? '' : 'MessagesTextPending'} ${isExpired ? 'MessagesTextExpired' : ''}`}
@@ -145,6 +161,14 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             {sameUser && (
                 <span className="MessagesTextAction" onClick={onDeleteClick}>
                     🗑️
+                </span>
+            )}
+            {canReply && (
+                <span
+                    className="MessagesTextAction"
+                    onClick={() => onReply(message.msgId)}
+                >
+                    💬
                 </span>
             )}
         </div>
