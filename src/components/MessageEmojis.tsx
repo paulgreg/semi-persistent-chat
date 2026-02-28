@@ -25,7 +25,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
 }) => {
     const [open, setOpen] = useState(false)
 
-    const onAddClick = useCallback((e: MouseEvent<HTMLSpanElement>) => {
+    const onAddClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation()
         setOpen(true)
     }, [])
@@ -45,7 +45,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
         [emojis, login, msgId, onEmojis]
     )
     const onRemoveClick = useCallback(
-        (index: number) => (e: MouseEvent<HTMLSpanElement>) => {
+        (index: number) => (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             onEmojis({
                 msgId,
@@ -58,23 +58,36 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
     return (
         <div className="MessageEmojisRow">
             <span className="MessageEmojis">
-                {emojis.map((emoji, idx) => (
-                    <span
-                        className={`MessageEmoji ${login === emoji.username ? 'MessageEmojiSameUser' : ''} `}
-                        title={emoji.username}
-                        key={idx}
-                        onClick={
-                            login === emoji.username
-                                ? onRemoveClick(idx)
-                                : undefined
-                        }
-                    >
-                        {emoji.emoji}
-                    </span>
-                ))}
-                <span className="MessageEmojiAdd" onClick={onAddClick}>
+                {emojis.map((emoji, idx) =>
+                    login === emoji.username ? (
+                        <button
+                            className="MessageEmoji MessageEmojiButton MessageEmojiSameUser"
+                            title={emoji.username}
+                            type="button"
+                            aria-label={`Remove ${emoji.emoji} reaction`}
+                            key={idx}
+                            onClick={onRemoveClick(idx)}
+                        >
+                            {emoji.emoji}
+                        </button>
+                    ) : (
+                        <span
+                            className="MessageEmoji"
+                            title={emoji.username}
+                            key={idx}
+                        >
+                            {emoji.emoji}
+                        </span>
+                    )
+                )}
+                <button
+                    className="MessageEmojiAdd"
+                    type="button"
+                    aria-label="Add reaction"
+                    onClick={onAddClick}
+                >
                     ➕
-                </span>
+                </button>
             </span>
             {open && (
                 <div className="MessageEmojiPicker">

@@ -62,14 +62,14 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const [isExpired, setIsExpired] = useState(false)
 
     const onEditClick = useCallback(
-        (e: MouseEvent<HTMLSpanElement>) => {
+        (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             setEditMessage(message)
         },
         [setEditMessage, message]
     )
     const onDeleteClick = useCallback(
-        (e: MouseEvent<HTMLSpanElement>) => {
+        (e: MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation()
             if (msgId && confirm('Delete ?')) onDelete(msgId)
         },
@@ -153,23 +153,35 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 emojis={emojis}
                 onEmojis={onEmojis}
             />
-            {sameUser && (
-                <span className="MessagesTextAction" onClick={onEditClick}>
-                    ✏️
-                </span>
-            )}
-            {sameUser && (
-                <span className="MessagesTextAction" onClick={onDeleteClick}>
-                    🗑️
-                </span>
-            )}
             {canReply && (
-                <span
+                <button
                     className="MessagesTextAction"
+                    type="button"
+                    aria-label="Reply"
                     onClick={() => onReply(message.msgId)}
                 >
                     💬
-                </span>
+                </button>
+            )}
+            {sameUser && (
+                <button
+                    className="MessagesTextAction"
+                    type="button"
+                    aria-label="Edit message"
+                    onClick={onEditClick}
+                >
+                    ✏️
+                </button>
+            )}
+            {sameUser && (
+                <button
+                    className="MessagesTextAction"
+                    type="button"
+                    aria-label="Delete message"
+                    onClick={onDeleteClick}
+                >
+                    🗑️
+                </button>
             )}
         </div>
     )

@@ -76,18 +76,27 @@
 
 .MessagesTextAction {
     display: none;
+    font: inherit;
     font-size: 1em;
     margin-left: 0.4em;
-    padding: 2px;
+    padding: 3px;
     cursor: pointer;
     opacity: 0.5;
     background: white;
     border-radius: 50%;
+    border: none;
+    color: inherit;
+    line-height: 1;
 }
 
 .MessagesTextAction:hover,
 .MessagesTextAction:active {
     opacity: 1;
+}
+
+.MessagesTextAction:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
 
 .MessagesRow:hover .MessagesTextAction,

@@ -2,6 +2,10 @@
     padding: 0 0.5em;
     color: lightgrey;
     cursor: pointer;
+    background: none;
+    border: none;
+    font: inherit;
+    line-height: inherit;
 }
 
 .LogoutText {

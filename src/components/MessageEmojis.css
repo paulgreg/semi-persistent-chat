@@ -18,8 +18,17 @@
 }
 
 .MessageEmoji {
-    padding: 0 2px;
+    padding: 3px;
     cursor: default;
+}
+
+.MessageEmojiButton {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    padding: 3px;
 }
 
 .MessageEmojiAdd {
@@ -27,6 +36,11 @@
     opacity: 0.5;
     background: white;
     border-radius: 50%;
+    border: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    padding: 3px;
 }
 
 .MessagesRow:hover .MessageEmojiAdd,

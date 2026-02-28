@@ -12,9 +12,9 @@ const Logout: React.FC<LogoutType> = ({ room }) => {
     }, [room])
 
     return (
-        <span className="Logout" onClick={onClick}>
+        <button className="Logout" type="button" onClick={onClick}>
             (<span className="LogoutText">logout</span>)
-        </span>
+        </button>
     )
 }
 
