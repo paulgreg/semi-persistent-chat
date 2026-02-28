@@ -20,6 +20,7 @@ Chat Screen :
 - display web page title
 - works on mobile
 - edit or delete sent messages
+- can reply to messages (1 reply level)
 - comment with emojis
 - **client-side message expiration**: messages are automatically strikethrough when they reach their expiration time
 
@@ -45,11 +46,11 @@ The application uses Redis for message storage with automatic expiration. Messag
 
 ### Setup
 
-docker-compose up -d
+    docker-compose up -d
 
 ### Inspection
 
-docker-compose exec redis redis-cli
+    docker-compose exec redis redis-cli
 
 ### Configuration
 
