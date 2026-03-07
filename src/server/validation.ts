@@ -1,6 +1,6 @@
 import { v1 } from 'uuid'
 import { FullMessageType, PartialMessageType } from '../types/ChatTypes'
-import { clientConfig } from '../services/clientConfig'
+import { MAX_MSG_SIZE } from './env'
 
 export const checkMessageValidity = (m: PartialMessageType) => {
     if (!m) throw new Error('no message')
@@ -33,7 +33,7 @@ export const validateMessage = (m: PartialMessageType): FullMessageType => {
         msgId: msgId ? String(msgId) : v1(),
         username: formatString(username),
         room: formatString(room),
-        text: formatString(text, clientConfig.maxMsgSize),
+        text: formatString(text, MAX_MSG_SIZE),
         timestamp: timestamp ?? Date.now(),
         validated: true,
         emojis: emojis.map(({ username, emoji }) => ({
@@ -43,5 +43,3 @@ export const validateMessage = (m: PartialMessageType): FullMessageType => {
         replyToId: replyToId ? String(replyToId) : undefined,
     }
 }
-
-export const isString = (value: unknown) => typeof value === 'string'

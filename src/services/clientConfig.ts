@@ -3,5 +3,4 @@ export const clientConfig = {
     messageRetentionHours: globalThis.messageRetentionHours,
     maxMsgSize: globalThis.maxMsgSize,
     secret: globalThis.secret,
-    baseUrl: globalThis.isProd ? '.' : `http://localhost:${globalThis.port}`,
 }

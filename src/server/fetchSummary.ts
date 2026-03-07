@@ -7,8 +7,8 @@ import charset from 'charset'
 import iconv from 'iconv-lite'
 import type { IncomingHttpHeaders } from 'http'
 import type { Express } from 'express'
-import { isString } from './validation.js'
 import { IS_PROD, SECRET, URL_CACHE } from './env.js'
+import { isString } from '../components/strings.js'
 
 const MAX_TITLE_LENGTH = 1024
 

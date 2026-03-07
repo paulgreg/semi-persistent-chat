@@ -7,12 +7,12 @@ const mergeMessages = (
     newMessages: Array<FullMessageType> = []
 ): Array<FullMessageType> => {
     if (d.enabled) d('mergeMessages', messages, newMessages)
-    const messagesmsgId = messages.map(({ msgId }) => msgId)
+    const messagesMsgId = new Set(messages.map(({ msgId }) => msgId))
     const newMessagesWithoutmsgId = newMessages.filter(
-        ({ msgId }) => !messagesmsgId.includes(msgId)
+        ({ msgId }) => !messagesMsgId.has(msgId)
     )
     const newMessagesWithmsgId = newMessages.filter(({ msgId }) =>
-        messagesmsgId.includes(msgId)
+        messagesMsgId.has(msgId)
     )
 
     const newMessagesConcateneted = messages.concat(newMessagesWithoutmsgId)
@@ -30,12 +30,12 @@ const mergeMessages = (
     })
     if (d.enabled) d('- merged', merged)
 
-    const validatedIds = merged
-        .filter(({ validated }) => validated)
-        .map(({ msgId }) => msgId)
+    const validatedIds = new Set(
+        merged.filter(({ validated }) => validated).map(({ msgId }) => msgId)
+    )
 
     const withoutUnvalidatedMessages = merged.filter(
-        ({ msgId, validated }) => validated || !validatedIds.includes(msgId)
+        ({ msgId, validated }) => validated || !validatedIds.has(msgId)
     )
     if (d.enabled) d('- withoutUnvalidatedMessages', withoutUnvalidatedMessages)
 
