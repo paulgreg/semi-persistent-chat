@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useState, useEffect } from 'react'
+import { MouseEvent, useCallback, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import Linkify from 'react-linkify'
 import { isDataUrlImg } from '../media'
@@ -7,6 +7,9 @@ import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import { clientConfig } from '../services/clientConfig'
+import { useEffectOnceOnVisible } from '../services/useEffectOnVisibilityChange'
+
+const HIGHLIGHT_DELAY = 1_000
 
 const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
@@ -60,6 +63,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
 }) => {
     const { msgId, text, emojis, username, timestamp, validated } = message
     const [isExpired, setIsExpired] = useState(false)
+    const elRef = useRef<HTMLDivElement>(null)
 
     const onEditClick = useCallback(
         (e: MouseEvent<HTMLButtonElement>) => {
@@ -75,6 +79,30 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         },
         [onDelete, msgId]
     )
+
+    useEffectOnceOnVisible(() => {
+        const removeHighlightClass = (e: IntersectionObserverEntry) => () =>
+            e.target.classList.remove('MessagesRowHighlight')
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(removeHighlightClass(entry), HIGHLIGHT_DELAY)
+                        observer.unobserve(entry.target) // stop watching once seen
+                    }
+                })
+            },
+            {
+                threshold: 1,
+            }
+        )
+        const el = elRef.current
+        if (el) {
+            observer.observe(el)
+            return () => observer.unobserve(el)
+        }
+    }, [elRef])
 
     const checkExpiration = useCallback(() => {
         const expirationTime =
@@ -113,7 +141,8 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     return (
         <div
             key={msgId}
-            className={`MessagesRow ${editionClass} ${isReply ? 'MessageReply' : ''}`}
+            ref={elRef}
+            className={`MessagesRow ${editionClass} ${isReply ? 'MessageReply' : ''} MessagesRowHighlight`}
         >
             <span
                 className="MessagesTime"

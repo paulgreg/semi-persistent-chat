@@ -4,6 +4,7 @@
     flex-grow: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 0 0.2em;
 }
 
 /* https://stackoverflow.com/questions/36130760/use-justify-content-flex-end-and-to-have-vertical-scrollbar */
@@ -14,6 +15,19 @@
 .MessagesRow {
     margin: 0.2em auto;
     width: 100%;
+    background-color: transparent;
+    transition: background-color 1s ease-out;
+}
+
+.MessagesRowHighlight {
+    border-radius: 4px;
+    background-color: #d3dcfa;
+}
+
+@media (prefers-color-scheme: dark) {
+    .MessagesRowHighlight {
+        background-color: #3c3b52;
+    }
 }
 
 .MessageGroup {

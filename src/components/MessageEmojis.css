@@ -18,8 +18,8 @@
 }
 
 .MessageEmoji {
+    cursor: not-allowed;
     padding: 3px;
-    cursor: default;
 }
 
 .MessageEmojiButton {

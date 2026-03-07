@@ -1,10 +1,12 @@
 .emojiButton {
+    cursor: pointer;
     z-index: 0;
     background: transparent;
     border: 1px solid darkgoldenrod;
     border-radius: 16px;
     height: 32px;
     width: 32px;
+    margin: 0 0.4em 0 0;
 }
 
 @media (pointer: coarse) {

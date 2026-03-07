@@ -17,7 +17,8 @@ import {
     onDeleteMessage,
 } from './services/communication'
 import mergeMessages from './services/mergeMessages'
-import useEffectOnVisibilityChange, {
+import {
+    useEffectOnVisible,
     isDocumentVisible,
 } from './services/useEffectOnVisibilityChange'
 import { arrayEquals } from './array'
@@ -67,7 +68,7 @@ const App = () => {
         const original = messages.find((m) => m.msgId === msgId)
         if (!original) return undefined
         if (isDataUrlImg(original.text)) return 'Image'
-        const text = original.text.replace(/\s+/g, ' ').trim()
+        const text = original.text.replaceAll(/\s+/g, ' ').trim()
         if (!text) return undefined
         return text.length > 50 ? `${text.slice(0, 50)}...` : text
     }
@@ -97,9 +98,9 @@ const App = () => {
     }, [setMessages, setCount])
 
     useEffectOnNetworkOnline(checkMissingMessages, messages)
-    useEffectOnVisibilityChange(checkMissingMessages, messages)
-    useEffectOnVisibilityChange(() => setCount(0), setCount)
-    useEffectOnVisibilityChange(() => {
+    useEffectOnVisible(checkMissingMessages, messages)
+    useEffectOnVisible(() => setCount(0), setCount)
+    useEffectOnVisible(() => {
         if (userId && login && room) {
             notifyUserOnline({ userId, username: login, room })
         }
