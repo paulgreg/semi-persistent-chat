@@ -22,7 +22,7 @@ Chat Screen :
 - edit or delete sent messages
 - can reply to messages (1 reply level)
 - comment with emojis
-- **client-side message expiration**: messages are automatically strikethrough when they reach their expiration time
+- messages are strikethrough when they reach their expiration time
 
 ## Configuration
 
@@ -33,8 +33,8 @@ Other settings are :
 - `REDIS_HOST`
 - `REDIS_PORT`
 - `MSG_RETENTION_HOURS`: Number of hours before messages expires. This setting controls both server-side message cleanup and client-side strikethrough behavior
-- `MAX_MSG_SIZE`: max messsage size
-- `URL_CACHE` : max number of summary urls in cache
+- `MAX_MSG_SIZE`: max messsage size in bytes
+- `URL_CACHE` : max number of urls titles in cache
 
 ## Redis
 
@@ -42,7 +42,7 @@ The application uses Redis for message storage with automatic expiration. Messag
 
 **Key features of Redis usage:**
 
-- Messages are stored with TTL (Time-To-Live) based on `messageRetentionHours` setting
+- Messages are stored with TTL (Time-To-Live) based on `MSG_RETENTION_HOURS` setting
 - Hourly cleanup job removes expired messages automatically
 - Efficient sorted set operations for message retrieval and expiration
 
@@ -58,7 +58,7 @@ The application uses Redis for message storage with automatic expiration. Messag
 ## To dev
 
 run `npm run dev:client` and `npm run dev:server`. Go to http://localhost:6060 (or what you set in PORT)
-Server will inject env vars and inject vite middleware in dev.
+Server will inject env vars and vite middleware (for hot reload) in dev.
 
 ## To deploy on production using only node
 
