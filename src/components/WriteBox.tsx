@@ -14,11 +14,11 @@ import { insertAt } from './strings.ts'
 import { useTemporaryWarning } from './temporaryWarning'
 import useTimeout from './useTimeout'
 import Warning from './Warning.tsx'
-import settings from '../settings.json'
 import { FullMessageType } from '../types/ChatTypes'
 import { isString } from '../server/validation'
 import { onMessageCbType, setEditMessageType } from '../App.tsx'
 import './WriteBox.css'
+import { clientConfig } from '../services/clientConfig.ts'
 
 type WriteBoxType = {
     login: string
@@ -62,7 +62,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
         (e: ChangeEvent<HTMLInputElement>) => {
             const msg = e.target.value
             const warningMsg =
-                msg.length >= settings.maxMsgSize
+                msg.length >= clientConfig.maxMsgSize
                     ? 'Characters limit reached'
                     : ''
             setWarning(warningMsg)
@@ -87,7 +87,10 @@ const WriteBox: React.FC<WriteBoxType> = ({
             } else if (e.key === 'Enter') {
                 if (editMessage && msgLength === 0) {
                     setEditMessage(undefined)
-                } else if (msgLength > 0 && msgLength < settings.maxMsgSize) {
+                } else if (
+                    msgLength > 0 &&
+                    msgLength < clientConfig.maxMsgSize
+                ) {
                     onMessage({
                         ...editMessage,
                         room,
@@ -135,10 +138,11 @@ const WriteBox: React.FC<WriteBoxType> = ({
                             return
                         }
 
-                        if (dataUrl.length > settings.maxMsgSize) {
-                            const diff = dataUrl.length - settings.maxMsgSize
+                        if (dataUrl.length > clientConfig.maxMsgSize) {
+                            const diff =
+                                dataUrl.length - clientConfig.maxMsgSize
                             setTemporaryWarning(
-                                `Pasted image is too big : ${diff} bytes above limit (${settings.maxMsgSize})`
+                                `Pasted image is too big : ${diff} bytes above limit (${clientConfig.maxMsgSize})`
                             )
                             return
                         }
@@ -198,7 +202,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
                         onClick={onClick}
                         autoComplete="false"
                         minLength={1}
-                        maxLength={settings.maxMsgSize || 2048}
+                        maxLength={clientConfig.maxMsgSize}
                         autoFocus
                     ></input>
                     <EmojiPicker onSelectEmoji={onSelectEmoji} />

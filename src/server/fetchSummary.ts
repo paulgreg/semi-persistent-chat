@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import * as cheerio from 'cheerio'
 import { LRUCache } from 'lru-cache'
-import { isProd } from '../configuration.js'
-import settings from '../settings.json'
 import { mayUrlHaveATitle } from '../media.js'
 import jschardet from 'jschardet'
 import charset from 'charset'
@@ -10,6 +8,7 @@ import iconv from 'iconv-lite'
 import type { IncomingHttpHeaders } from 'http'
 import type { Express } from 'express'
 import { isString } from './validation.js'
+import { IS_PROD, SECRET, URL_CACHE } from './env.js'
 
 const MAX_TITLE_LENGTH = 1024
 
@@ -33,7 +32,7 @@ axios.interceptors.response.use((response: AxiosResponse) => {
 })
 
 const addSummaryEndPoint = (app: Express) => {
-    const lruCacheConfig = { max: settings.urlCache ?? 100 }
+    const lruCacheConfig = { max: URL_CACHE }
     console.log('url cache configuration', lruCacheConfig)
     const cache = new LRUCache(lruCacheConfig)
 
@@ -87,7 +86,7 @@ const addSummaryEndPoint = (app: Express) => {
     app.get('/api/fetchSummary', (req, res) => {
         let error = false
 
-        if (req.query.auth !== settings.secret) {
+        if (req.query.auth !== SECRET) {
             error = true
             console.error('summary api: client uses bad auth')
             res.status(401).end('401 Unauthorized')
@@ -107,7 +106,7 @@ const addSummaryEndPoint = (app: Express) => {
         }
 
         if (!error) {
-            if (isProd()) {
+            if (IS_PROD) {
                 const origin = req.header('origin')
                 if (origin) {
                     // an origin means a request from another web site, so rejecting it

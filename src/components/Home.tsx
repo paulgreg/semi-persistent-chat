@@ -2,9 +2,9 @@ import { useState, useCallback, useEffect, FormEvent } from 'react'
 import Login from './Login'
 import Room from './Room'
 import { onLoginType } from '../App'
-import settings from '../settings.json'
-import './Home.css'
 import { saveLoginInfo } from '../services/utils'
+import { clientConfig } from '../services/clientConfig'
+import './Home.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substring(2, 6)
 
@@ -13,11 +13,11 @@ const getRoomFromLocation = (location: Location) => {
     const roomParam = params.find((p) => p.startsWith('room='))
     if (roomParam) {
         const p = roomParam.split('=')
-        return p && p.length === 2 ? p[1] : undefined
+        return p?.length === 2 ? p[1] : undefined
     }
 }
 
-const clean = (s = '') => s.replace(/ /g, '-')
+const clean = (s = '') => s.replaceAll(' ', '-')
 
 const isValidated = (login: string, room: string) =>
     login && room && login.length > 2 && room.length > 2
@@ -81,7 +81,7 @@ const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
             </p>
             <p>
                 Messages will be deleted on server after{' '}
-                {settings.messageRetentionHours} hours.
+                {clientConfig.messageRetentionHours} hours.
             </p>
             <p>
                 Do not use that service for confidential discussions.{' '}

@@ -26,13 +26,15 @@ Chat Screen :
 
 ## Configuration
 
-Launch `npm run config` to create `src/settings.json` (from `src/settings.json.dist`) and update it according your needs.
-You should at least change "secret" (used for websocket authentification) and "origin" (your domain).
+Copy `.env.dist` and update it according your needs.
+You should at least change `REDIS_PASSWORD` and `SECRET` (used for websocket authentification) and `ORIGIN` (your domain).
 
-**Message Expiration Settings:**
-
-- `messageRetentionHours`: Number of hours before messages expire (default: 1)
-- This setting controls both server-side message cleanup and client-side strikethrough behavior
+Other settings are : 
+- `REDIS_HOST`
+- `REDIS_PORT`
+- `MSG_RETENTION_HOURS`: Number of hours before messages expires. This setting controls both server-side message cleanup and client-side strikethrough behavior
+- `MAX_MSG_SIZE`: max messsage size
+- `URL_CACHE` : max number of summary urls in cache
 
 ## Redis
 
@@ -44,59 +46,36 @@ The application uses Redis for message storage with automatic expiration. Messag
 - Hourly cleanup job removes expired messages automatically
 - Efficient sorted set operations for message retrieval and expiration
 
-### Setup
+### Start redis
 
     docker-compose up -d
 
-### Inspection
+### Redis inspection
 
     docker-compose exec redis redis-cli
-
-### Configuration
-
-Redis settings can be configured in `src/settings.json`:
-
-- `redisHost`: Redis server host (default: "127.0.0.1")
-- `redisPort`: Redis server port (default: 6379)
-- `redisPassword`: Optional Redis password
-
-Environment variables can override these settings:
-
-- `REDIS_HOST`
-- `REDIS_PORT`
-- `REDIS_PASSWORD`
+    auth "redis-password"
 
 ## To dev
 
-run `npm run dev:client` to launch client code (with watch) and `npm run dev:server` to launch server code
-
-Webapp is served on port 3000 by devtools while node is launched on port 6060 (explaining while websocket and api calls are made on that port on non production env).
+run `npm run dev:client` and `npm run dev:server`. Go to http://localhost:6060 (or what you set in PORT)
+Server will inject env vars and inject vite middleware in dev.
 
 ## To deploy on production using only node
 
 Run `npm run build` to generate static files into `build` directory, then run `npm run start` which will serve static files.
 
-## To deploy on production using nginx to serve static file (recommanded)
-
-Run `./build.sh` to generate static files into `build` directory (change `PUBLIC_URL` in that file if needed).
-
-Serve static files via a web server like nginx.
-I’m using a symbolic link from `/var/www/semi-persistent-chat` to the `build` directory.
-
-Launch src/server file (I suggest you to use pm2 to launch server via `./pm2.sh`).
-
-Finally, adapt nginx to let pass web socket and `/api` to node :
+## nginx configuration
 
 ```
+location /persistent-chat/ {
+        proxy_pass http://127.0.0.1:6060/api/;
+        proxy_http_version 1.1;
+}
 location /persistent-chat-ws/ {
         proxy_pass http://127.0.0.1:6060;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "Upgrade";
-}
-location /persistent-chat/api/ {
-        proxy_pass http://127.0.0.1:6060/api/;
-        proxy_http_version 1.1;
 }
 ```
 

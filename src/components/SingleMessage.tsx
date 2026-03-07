@@ -6,7 +6,7 @@ import { checkText } from 'smile2emoji'
 import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, onReplyType, setEditMessageType } from '../App'
-import settings from '../settings.json'
+import { clientConfig } from '../services/clientConfig'
 
 const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
@@ -78,7 +78,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
 
     const checkExpiration = useCallback(() => {
         const expirationTime =
-            timestamp + settings.messageRetentionHours * 60 * 60 * 1000
+            timestamp + clientConfig.messageRetentionHours * 60 * 60 * 1000
         const isMessageExpired = Date.now() > expirationTime
 
         if (isMessageExpired && !isExpired) {

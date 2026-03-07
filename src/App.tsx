@@ -34,7 +34,7 @@ import {
 import { onEmojisType } from './components/MessageEmojis'
 import { getUserId } from './services/utils'
 import { isDataUrlImg } from './media'
-import logo192 from './logo192.png'
+import logo192 from './assets/logo192.png'
 import './Global.css'
 import './App.css'
 
@@ -46,7 +46,7 @@ export type onDeleteType = (msgId: string) => void
 export type onMessageCbType = (m: PartialMessageType) => void
 export type onReplyType = (msgId: string) => void
 
-window.onpopstate = () => window.location.reload()
+globalThis.onpopstate = () => globalThis.location.reload()
 
 const userId = getUserId()
 
@@ -159,11 +159,11 @@ const App = () => {
 
     return (
         <div className="App">
+            <Favicon url={logo192} alertCount={count} />
             {!ready && <Home userId={userId} onLogin={onLogin} />}
             {ready && (
                 <>
                     {!connected && <Connecting />}
-                    <Favicon url={logo192} alertCount={count} />
                     <MessagesList
                         login={login}
                         users={users}

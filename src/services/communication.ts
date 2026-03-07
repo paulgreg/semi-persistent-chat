@@ -9,7 +9,6 @@ import {
     DELETE,
     DELETE_MSG,
 } from './messageTypes'
-import { isProd } from '../configuration'
 import debug from 'debug'
 import {
     EmojiUserType,
@@ -24,7 +23,7 @@ import {
     PartialMessageType,
     UsersType,
 } from '../types/ChatTypes'
-import settings from '../settings.json'
+import { clientConfig } from './clientConfig'
 
 const d = debug('communication')
 
@@ -46,15 +45,15 @@ let onIncomingMessageCb: onIncomingMessageCbType,
     onDisconnectCb: onDisconnectCbType,
     onDeleteCb: onDeleteCbType
 
-const portPart = `:${isProd() ? window.location.port : settings.port}`
-const baseUrl = `${window.location.hostname}${portPart}`
+const portPart = `:${isProd ? globalThis.location.port : clientConfig.port}`
+const baseUrl = `${globalThis.location.hostname}${portPart}`
 
 export const connect = ({ userId, username, room }: EventUserOnlineType) => {
     socket = io(baseUrl, {
         path: '/persistent-chat-ws',
         auth: (cb) =>
             cb({
-                token: settings.secret,
+                token: clientConfig.secret,
             }),
     })
     notifyUserOnline({ userId, username, room })

@@ -1,19 +1,20 @@
 import debug from 'debug'
 import { createClient } from 'redis'
-import settings from '../settings.json'
 import { FullMessageType } from '../types/ChatTypes'
+import {
+    MSG_RETENTION_HOURS,
+    REDIS_HOST,
+    REDIS_PASSOWRD,
+    REDIS_PORT,
+} from './env'
 
 const d = debug('chat:redis')
 
-const redisHost = process.env.REDIS_HOST ?? settings.redisHost ?? '127.0.0.1'
-const redisPort = Number(process.env.REDIS_PORT ?? settings.redisPort ?? 6379)
-const redisPassword = process.env.REDIS_PASSWORD ?? undefined
-
-const redisUrl = `redis://${redisHost}:${redisPort}`
+const redisUrl = `redis://${REDIS_HOST}:${REDIS_PORT}`
 
 const client = createClient({
     url: redisUrl,
-    password: redisPassword || undefined,
+    password: REDIS_PASSOWRD,
 })
 
 client.on('error', (err) => {
@@ -23,7 +24,7 @@ client.on('error', (err) => {
 const SECOND = 1000
 const HOUR = 60 * 60 * SECOND
 
-const cleanupWindowMs = (settings.messageRetentionHours ?? 6) * HOUR
+const cleanupWindowMs = MSG_RETENTION_HOURS * HOUR
 
 const roomTtlSeconds = Math.max(60, Math.floor(cleanupWindowMs / 1000))
 

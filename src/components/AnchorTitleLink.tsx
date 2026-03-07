@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import { isProd } from '../configuration'
 import { mayUrlHaveATitle } from '../media'
-import settings from '../settings.json'
+import { clientConfig } from '../services/clientConfig'
 import './AnchorTitleLink.css'
-
-const baseUrl = isProd() ? '.' : `http://localhost:${settings.port}`
 
 type AnchorTitleLinkType = {
     url: string
@@ -16,7 +13,7 @@ const AnchorTitleLink: React.FC<AnchorTitleLinkType> = ({ url }) => {
     const fetchTitle = async (url: string) => {
         try {
             const response = await fetch(
-                `${baseUrl}/api/fetchSummary?auth=${settings.secret}&url=${url}`
+                `${globalThis.baseUrl}/api/fetchSummary?auth=${clientConfig.secret}&url=${url}`
             )
             if (response.status === 200) {
                 const json = await response.json()

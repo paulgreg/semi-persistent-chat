@@ -16,9 +16,7 @@ import {
 } from '../services/messageTypes'
 import addSummaryEndPoint from './fetchSummary'
 import { validateMessage } from './validation'
-import { isProd } from '../configuration'
-import settings from '../settings.json'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import { arrayEquals } from '../array'
 import debug from 'debug'
 import {
@@ -41,6 +39,8 @@ import {
     UsersType,
     EventPushType,
 } from '../types/ChatTypes'
+import { IS_PROD, ORIGIN, PORT, SECRET } from './env'
+import { getIndexHtml } from './server.utils'
 
 const d = debug('chat')
 
@@ -54,7 +54,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
     path: '/persistent-chat-ws',
     cors: {
-        origin: isProd() ? settings.origin : DEV_URL,
+        origin: IS_PROD ? ORIGIN : DEV_URL,
         credentials: true,
     },
 })
@@ -77,7 +77,7 @@ const findUserFromSocket = (socket: Socket) =>
 
 io.use((socket, next) => {
     const token = socket.handshake.auth.token
-    if (token === settings.secret) {
+    if (token === SECRET) {
         next()
     } else {
         console.error('socket.io: client uses bad auth')
@@ -227,16 +227,39 @@ io.on('connection', (socket) => {
 })
 
 app.use(morgan('combined'))
-app.use('/', express.static(path.join(__dirname, '../../dist')))
+
+// Serve the transformed HTML with injected configuration
+// Use specific route instead of wildcard to avoid path-to-regexp issues
+app.get('/', async (_req, res, next) => {
+    try {
+        const html = await getIndexHtml(__dirname)
+        res.set('Content-Type', 'text/html')
+        res.send(html)
+    } catch (error) {
+        next(error)
+    }
+})
+
+const clientPath = path.join(
+    __dirname,
+    IS_PROD ? '../../dist/client' : '../../public'
+)
+app.use('/robots.txt', express.static(path.join(clientPath, 'robots.txt')))
+app.use('/assets', express.static(path.join(clientPath, 'assets')))
+
+if (!IS_PROD)
+    // hack for ReactFavicon in dev
+    app.use(
+        '/src/assets/logo192.png',
+        express.static(path.join(clientPath, 'assets/logo192.png'))
+    )
 
 addSummaryEndPoint(app)
 
 const start = async () => {
     await initMessageStore()
-    const p = process.env.PORT ?? settings.port
-    server.listen(p)
-    console.info(`Server listeming on port ${p}`)
-    console.info(`NODE_ENV=${process.env.NODE_ENV}`)
+    server.listen(PORT)
+    console.info(`Server listening on port ${PORT} / IS_PROD=${IS_PROD}`)
 }
 
 start().catch((err) => {
