@@ -63,6 +63,16 @@ const App = () => {
     const [users, setUsers] = useState<UsersType>([])
     const [replyingTo, setReplyingTo] = useState<string | null>(null)
 
+    // When editing a reply message, set the replyingTo state to preserve the reply relationship
+    useEffect(() => {
+        if (editMessage?.replyToId) {
+            setReplyingTo(editMessage.replyToId)
+        } else if (!editMessage) {
+            // Reset replyingTo when not editing anymore
+            setReplyingTo(null)
+        }
+    }, [editMessage])
+
     const getReplyPreview = (msgId: string | null) => {
         if (!msgId) return undefined
         const original = messages.find((m) => m.msgId === msgId)
@@ -118,6 +128,7 @@ const App = () => {
         timestamp,
         emojis,
         version,
+        replyToId,
     }) => {
         const m: FullMessageType = {
             msgId: msgId ?? uuidV1(),
@@ -127,8 +138,8 @@ const App = () => {
             text,
             validated: false,
             emojis: emojis ?? [],
-            replyToId: replyingTo || undefined,
-            version,
+            replyToId: replyToId || replyingTo || undefined,
+            version: version ?? 0,
         }
         setEditMessage(undefined)
         sendMessage(m)
