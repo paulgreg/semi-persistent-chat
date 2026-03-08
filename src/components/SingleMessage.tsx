@@ -128,14 +128,6 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         }
     }, [elRef])
 
-    if (isDataUrlImg(text))
-        return (
-            <details open>
-                <summary>Image</summary>
-                <img className="preview" src={text} alt="" />
-            </details>
-        )
-
     const d = new Date(timestamp)
     const sameUser = login === username
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
@@ -143,6 +135,59 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const classEdition = msgId === editMsgId ? 'MessageEdition' : ''
     const classReply = isReply ? 'MessageReply' : ''
     const classHighlight = isHighlight ? 'MessagesRowHighlight' : ''
+
+    if (isDataUrlImg(text))
+        return (
+            <div
+                key={msgId}
+                ref={elRef}
+                className={`MessagesRow ${classHighlight}`}
+            >
+                <span
+                    className="MessagesTime"
+                    title={d.toLocaleDateString(
+                        navigator.language,
+                        dateOptions
+                    )}
+                >
+                    {d.toLocaleTimeString(navigator.language, timeOptions)}
+                </span>
+                <span
+                    className={`MessagesUser ${sameUser ? 'MessageSameUser' : ''}`}
+                    title={`message version: ${version}`}
+                >
+                    {message.username}
+                    {!sameUser && (
+                        <span
+                            className={`UserStatus ${userStatus}`}
+                            title={userStatus}
+                        >
+                            •
+                        </span>
+                    )}
+                </span>
+                <details open>
+                    <summary>Image</summary>
+                    <img className="preview" src={text} alt="" />
+                    <MessageEmojis
+                        msgId={msgId}
+                        login={login}
+                        emojis={emojis}
+                        onEmojis={onEmojis}
+                    />
+                    {sameUser && (
+                        <button
+                            className="MessagesTextAction"
+                            type="button"
+                            aria-label="Delete message"
+                            onClick={onDeleteClick}
+                        >
+                            🗑️
+                        </button>
+                    )}
+                </details>
+            </div>
+        )
 
     return (
         <div
