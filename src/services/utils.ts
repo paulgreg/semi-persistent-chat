@@ -5,14 +5,14 @@ import { PartialMessageType } from '../types/ChatTypes'
 export const saveLoginInfo = (login: string, room: string) => {
     localStorage.setItem('spChatLogin', login)
     localStorage.setItem('spChatRoom', room)
-    window.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
+    globalThis.history.pushState({}, `Chat in "${room}"`, `?room=${room}`)
 }
 
 export const removeLoginInfoAndGoBackToHome = (room: string) => {
     localStorage.removeItem('spChatLogin')
-    window.history.pushState({}, 'Chat', `./?room=${room}`)
+    globalThis.history.pushState({}, 'Chat', `./?room=${room}`)
     disconnect()
-    window.location.reload()
+    globalThis.location.reload()
 }
 
 export const sortMessages = (

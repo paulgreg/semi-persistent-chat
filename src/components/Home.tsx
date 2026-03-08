@@ -28,7 +28,7 @@ type HomeType = {
 }
 
 const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
-    const roomFromLocation = getRoomFromLocation(window.location)
+    const roomFromLocation = getRoomFromLocation(globalThis.location)
     const [room, setRoom] = useState(
         roomFromLocation ??
             localStorage.getItem('spChatRoom') ??

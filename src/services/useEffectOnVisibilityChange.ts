@@ -3,26 +3,30 @@ import { useEffect } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useEffectOnVisible = (cb: (dep: any) => void, dep: any) => {
     useEffect(() => {
-        const callIfVisible = () => {
+        const handler = () => {
             if (isDocumentVisible()) cb(dep)
         }
 
-        document.addEventListener('visibilitychange', callIfVisible)
-        return () =>
-            document.removeEventListener('visibilitychange', callIfVisible)
+        document.addEventListener('visibilitychange', handler)
+        globalThis.addEventListener('focus', handler)
+
+        return () => {
+            document.removeEventListener('visibilitychange', handler)
+            globalThis.removeEventListener('focus', handler)
+        }
     }, [cb, dep])
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useEffectOnceOnVisible = (cb: () => void, dep: any) => {
     useEffect(() => {
-        if (document.visibilityState === 'visible' && document.hasFocus()) {
+        if (isDocumentVisible()) {
             cb()
             return
         }
 
         const handler = () => {
-            if (document.visibilityState === 'visible' && document.hasFocus()) {
+            if (isDocumentVisible()) {
                 cb()
                 cleanup()
             }
@@ -30,14 +34,15 @@ export const useEffectOnceOnVisible = (cb: () => void, dep: any) => {
 
         const cleanup = () => {
             document.removeEventListener('visibilitychange', handler)
-            window.removeEventListener('focus', handler)
+            globalThis.removeEventListener('focus', handler)
         }
 
         document.addEventListener('visibilitychange', handler)
-        window.addEventListener('focus', handler)
+        globalThis.addEventListener('focus', handler)
 
         return cleanup
     }, [cb, dep])
 }
 
-export const isDocumentVisible = () => document.visibilityState === 'visible'
+export const isDocumentVisible = () =>
+    document.visibilityState === 'visible' && document.hasFocus()
