@@ -61,8 +61,10 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     isReply = false,
     replyCount = 0,
 }) => {
-    const { msgId, text, emojis, username, timestamp, validated } = message
+    const { msgId, text, emojis, username, timestamp, validated, version } =
+        message
     const [isExpired, setIsExpired] = useState(false)
+    const [isHighlight, setIsHighlight] = useState(true)
     const elRef = useRef<HTMLDivElement>(null)
 
     const onEditClick = useCallback(
@@ -79,30 +81,6 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         },
         [onDelete, msgId]
     )
-
-    useEffectOnceOnVisible(() => {
-        const removeHighlightClass = (e: IntersectionObserverEntry) => () =>
-            e.target.classList.remove('MessagesRowHighlight')
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(removeHighlightClass(entry), HIGHLIGHT_DELAY)
-                        observer.unobserve(entry.target) // stop watching once seen
-                    }
-                })
-            },
-            {
-                threshold: 1,
-            }
-        )
-        const el = elRef.current
-        if (el) {
-            observer.observe(el)
-            return () => observer.unobserve(el)
-        }
-    }, [elRef])
 
     const checkExpiration = useCallback(() => {
         const expirationTime =
@@ -123,6 +101,33 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         checkExpiration()
     }, [checkExpiration])
 
+    useEffect(() => {
+        if (version > 1) setIsHighlight(true)
+    }, [version])
+
+    useEffectOnceOnVisible(() => {
+        const removeHighlightClass = () => setIsHighlight(false)
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(removeHighlightClass, HIGHLIGHT_DELAY)
+                        observer.unobserve(entry.target) // stop watching once seen
+                    }
+                })
+            },
+            {
+                threshold: 1,
+            }
+        )
+        const el = elRef.current
+        if (el) {
+            observer.observe(el)
+            return () => observer.unobserve(el)
+        }
+    }, [elRef])
+
     if (isDataUrlImg(text))
         return (
             <details open>
@@ -134,15 +139,16 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const d = new Date(timestamp)
     const sameUser = login === username
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
-    const editionClass = msgId === editMsgId ? 'MessageEdition' : ''
-
     const canReply = !isReply
+    const classEdition = msgId === editMsgId ? 'MessageEdition' : ''
+    const classReply = isReply ? 'MessageReply' : ''
+    const classHighlight = isHighlight ? 'MessagesRowHighlight' : ''
 
     return (
         <div
             key={msgId}
             ref={elRef}
-            className={`MessagesRow ${editionClass} ${isReply ? 'MessageReply' : ''} MessagesRowHighlight`}
+            className={`MessagesRow ${classEdition} ${classReply} ${classHighlight}`}
         >
             <span
                 className="MessagesTime"
@@ -152,6 +158,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             </span>
             <span
                 className={`MessagesUser ${sameUser ? 'MessageSameUser' : ''}`}
+                title={`message version: ${version}`}
             >
                 {message.username}
                 {!sameUser && (

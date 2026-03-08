@@ -20,6 +20,7 @@ export type PartialMessageType = {
     timestamp?: number
     validated?: boolean
     replyToId?: string
+    version?: number
 }
 
 export type FullMessageType = {
@@ -31,6 +32,7 @@ export type FullMessageType = {
     timestamp: number
     validated: boolean
     replyToId?: string
+    version: number
 }
 
 export type EventUserOnlineType = {

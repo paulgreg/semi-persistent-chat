@@ -112,7 +112,13 @@ const App = () => {
         })
     }, [users, setUsers, login, room])
 
-    const onMessage: onMessageCbType = ({ msgId, text, timestamp, emojis }) => {
+    const onMessage: onMessageCbType = ({
+        msgId,
+        text,
+        timestamp,
+        emojis,
+        version,
+    }) => {
         const m: FullMessageType = {
             msgId: msgId ?? uuidV1(),
             timestamp: timestamp ?? Date.now(),
@@ -122,6 +128,7 @@ const App = () => {
             validated: false,
             emojis: emojis ?? [],
             replyToId: replyingTo || undefined,
+            version,
         }
         setEditMessage(undefined)
         sendMessage(m)

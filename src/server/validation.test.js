@@ -112,6 +112,7 @@ describe('validateMessage', () => {
             text: 'c',
             room: 'room',
             validated: true,
+            version: 1,
         })
         expect(m).toHaveProperty('timestamp')
     })
@@ -124,6 +125,38 @@ describe('validateMessage', () => {
                 text: 'msg',
             })
         ).toHaveProperty('msgId')
+    })
+
+    it('should increment version', () => {
+        expect(
+            validateMessage({
+                username: 'username',
+                room: 'room',
+                text: 'msg',
+                version: 2,
+            })
+        ).toHaveProperty('version', 3)
+    })
+
+    it('should set version to 1 for new messages', () => {
+        expect(
+            validateMessage({
+                username: 'username',
+                room: 'room',
+                text: 'msg',
+            })
+        ).toHaveProperty('version', 1)
+    })
+
+    it('should increment version from 1 to 2 on first edit', () => {
+        expect(
+            validateMessage({
+                username: 'username',
+                room: 'room',
+                text: 'msg',
+                version: 1,
+            })
+        ).toHaveProperty('version', 2)
     })
 
     it('should trim user, room and message', () => {

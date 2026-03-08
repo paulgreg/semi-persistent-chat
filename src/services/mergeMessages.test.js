@@ -74,4 +74,70 @@ describe('mergeMessages', () => {
             )
         ).toEqual([{ msgId: 1, text: 'c', validated: true }])
     })
+
+    it('should update version when message is edited', () => {
+        expect(
+            mergeMessages(
+                [
+                    {
+                        msgId: '1',
+                        text: 'original',
+                        validated: false,
+                        version: 1,
+                    },
+                ],
+                [
+                    {
+                        msgId: '1',
+                        text: 'edited',
+                        validated: true,
+                        version: 2,
+                    },
+                ]
+            )
+        ).toEqual([
+            {
+                msgId: '1',
+                text: 'edited',
+                validated: true,
+                version: 2,
+            },
+        ])
+    })
+
+    it('should keep original version when message is not edited', () => {
+        expect(
+            mergeMessages(
+                [
+                    {
+                        msgId: '1',
+                        text: 'original',
+                        validated: true,
+                        version: 1,
+                    },
+                ],
+                [
+                    {
+                        msgId: '2',
+                        text: 'new',
+                        validated: true,
+                        version: 1,
+                    },
+                ]
+            )
+        ).toEqual([
+            {
+                msgId: '1',
+                text: 'original',
+                validated: true,
+                version: 1,
+            },
+            {
+                msgId: '2',
+                text: 'new',
+                validated: true,
+                version: 1,
+            },
+        ])
+    })
 })

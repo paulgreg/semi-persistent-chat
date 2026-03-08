@@ -28,7 +28,16 @@ const formatString = (s: string, limit = 10) =>
 
 export const validateMessage = (m: PartialMessageType): FullMessageType => {
     checkMessageValidity(m)
-    const { msgId, timestamp, username, text, room, emojis = [], replyToId } = m
+    const {
+        msgId,
+        timestamp,
+        username,
+        text,
+        room,
+        emojis = [],
+        replyToId,
+        version,
+    } = m
     return {
         msgId: msgId ? String(msgId) : v1(),
         username: formatString(username),
@@ -41,5 +50,6 @@ export const validateMessage = (m: PartialMessageType): FullMessageType => {
             emoji: formatString(emoji, 4),
         })),
         replyToId: replyToId ? String(replyToId) : undefined,
+        version: version ? version + 1 : 1,
     }
 }
