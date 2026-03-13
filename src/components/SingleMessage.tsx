@@ -7,7 +7,7 @@ import MessageEmojis, { onEmojisType } from './MessageEmojis'
 import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import { clientConfig } from '../services/clientConfig'
-import { useEffectOnceOnVisible } from '../services/useEffectOnVisibilityChange'
+import { useEffectOnceOnVisibleAndFocus } from '../services/useEffectOnVisibilityChange'
 
 const HIGHLIGHT_DELAY = 1_000
 
@@ -105,7 +105,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         if (version > 1) setIsHighlight(true)
     }, [version])
 
-    useEffectOnceOnVisible(() => {
+    useEffectOnceOnVisibleAndFocus(() => {
         const removeHighlightClass = () => setIsHighlight(false)
 
         const observer = new IntersectionObserver(

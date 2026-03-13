@@ -8,17 +8,15 @@ export const useEffectOnVisible = (cb: (dep: any) => void, dep: any) => {
         }
 
         document.addEventListener('visibilitychange', handler)
-        globalThis.addEventListener('focus', handler)
 
         return () => {
             document.removeEventListener('visibilitychange', handler)
-            globalThis.removeEventListener('focus', handler)
         }
     }, [cb, dep])
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useEffectOnceOnVisible = (cb: () => void, dep: any) => {
+export const useEffectOnceOnVisibleAndFocus = (cb: () => void, dep: any) => {
     useEffect(() => {
         if (isDocumentVisible()) {
             cb()
