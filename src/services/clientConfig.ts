@@ -3,4 +3,5 @@ export const clientConfig = {
     messageRetentionHours: globalThis.messageRetentionHours,
     maxMsgSize: globalThis.maxMsgSize,
     secret: globalThis.secret,
+    isProd: globalThis.isProd,
 }

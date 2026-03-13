@@ -45,7 +45,7 @@ let onIncomingMessageCb: onIncomingMessageCbType,
     onDisconnectCb: onDisconnectCbType,
     onDeleteCb: onDeleteCbType
 
-const portPart = `:${isProd ? globalThis.location.port : clientConfig.port}`
+const portPart = `:${clientConfig.isProd ? globalThis.location.port : clientConfig.port}`
 const baseUrl = `${globalThis.location.hostname}${portPart}`
 
 export const connect = ({ userId, username, room }: EventUserOnlineType) => {
