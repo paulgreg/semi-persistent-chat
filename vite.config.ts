@@ -7,7 +7,11 @@ export default defineConfig({
     base: './',
     plugins: [
         eslint(),
-        react(),
+        react({
+            babel: {
+                plugins: ['babel-plugin-react-compiler'],
+            },
+        }),
     ],
     test: {
         globals: true,
