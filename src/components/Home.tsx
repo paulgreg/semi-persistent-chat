@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, FormEvent } from 'react'
+import { useState, useCallback, useEffect, SubmitEventHandler } from 'react'
 import Login from './Login'
 import Room from './Room'
 import { onLoginType } from '../App'
@@ -60,7 +60,7 @@ const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
         setRoom(clean(r))
     }
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit: SubmitEventHandler = (e) => {
         e.preventDefault()
         if (isValidated(login, room)) doLogin(userId, login, room)
     }

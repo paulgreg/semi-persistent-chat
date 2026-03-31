@@ -7,7 +7,7 @@ import { sortMessages } from '../services/utils'
 import './MessagesList.css'
 
 const isUserOnlineFromUsers = (users: UsersType) => (username: string) =>
-    users.findIndex((user) => user.username === username) !== -1
+    users.some((user) => user.username === username)
 
 type MessagesListType = {
     login: string
@@ -61,7 +61,7 @@ const MessagesList: React.FC<MessagesListType> = ({
     )
 
     Object.values(repliesByParent).forEach((replies) =>
-        replies.sort(sortMessages)
+        replies.toSorted(sortMessages)
     )
 
     return (

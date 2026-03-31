@@ -40,7 +40,7 @@ const UsersList: React.FC<UsersListType> = ({ userId, users, room }) => {
                     </ul>
                 </div>
             </div>
-            <div
+            <button
                 className={`UsersCount ${visible && 'UsersCountVisible'}`}
                 title="Users"
                 onClick={onClick}
@@ -55,7 +55,7 @@ const UsersList: React.FC<UsersListType> = ({ userId, users, room }) => {
                         👪
                     </span>
                 </span>
-            </div>
+            </button>
         </>
     )
 }

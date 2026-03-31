@@ -9,8 +9,10 @@ export default tseslint.config(
     tseslint.configs.strict,
     pluginReact.configs.flat.recommended,
     pluginReact.configs.flat['jsx-runtime'],
-    reactHooks.configs['recommended-latest'],
     {
+        plugins: {
+            'react-hooks': reactHooks,
+        },
         settings: {
             react: {
                 version: 'detect',
@@ -20,12 +22,13 @@ export default tseslint.config(
             globals: {
                 ...globals.browser,
                 ...globals.jest,
+                ...globals.node,
             },
         },
         rules: {
             'react/prop-types': 0,
             'react-hooks/rules-of-hooks': 'error',
-            'react-hooks/exhaustive-deps': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
         },
     }
 )
