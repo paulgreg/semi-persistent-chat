@@ -224,6 +224,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             <span
                 className={`MessagesText ${validated ? '' : 'MessagesTextPending'} ${isExpired ? 'MessagesTextExpired' : ''}`}
             >
+                {/* Upgrading to @vitejs/plugin-react@6 causes an Error :  Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object. */}
                 <Linkify componentDecorator={Link}>
                     {hightlightSameUser({ login, text: checkText(text) })}
                 </Linkify>
