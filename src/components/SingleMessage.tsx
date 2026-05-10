@@ -1,6 +1,6 @@
 import { MouseEvent, useCallback, useState, useEffect, useRef } from 'react'
 import Link from './Link'
-import Linkify from 'react-linkify'
+import Linkify from 'linkify-react'
 import { isDataUrlImg } from '../media'
 import { checkText } from 'smile2emoji'
 import MessageEmojis, { onEmojisType } from './MessageEmojis'
@@ -36,18 +36,20 @@ type MessageComponentType = {
     replyCount?: number
 }
 
-export const hightlightSameUser = ({
+// Function that returns plain text for link processing
+// and handles highlighting separately
+export const getHighlightedMessage = ({
     login,
     text,
 }: {
     login: string
     text: string
-}) =>
-    new RegExp(String.raw`\b(${login})\b`, 'gi').test(text) ? (
-        <span className="MessageSameUser">{text}</span>
-    ) : (
+}) => {
+    const shouldHighlight = new RegExp(String.raw`\b(${login})\b`, 'gi').test(
         text
     )
+    return { text, shouldHighlight }
+}
 
 const SingleMessage: React.FC<MessageComponentType> = ({
     login,
@@ -224,10 +226,37 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             <span
                 className={`MessagesText ${validated ? '' : 'MessagesTextPending'} ${isExpired ? 'MessagesTextExpired' : ''}`}
             >
-                {/* Upgrading to @vitejs/plugin-react@6 causes an Error :  Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: object. */}
-                <Linkify componentDecorator={Link}>
-                    {hightlightSameUser({ login, text: checkText(text) })}
-                </Linkify>
+                {/* Using linkify-react to fix Element type is invalid error */}
+                {(() => {
+                    const { text: processedText, shouldHighlight } =
+                        getHighlightedMessage({
+                            login,
+                            text: checkText(text),
+                        })
+
+                    const linkifiedContent = (
+                        <Linkify
+                            options={{
+                                render: ({ attributes, content }) => (
+                                    <Link
+                                        attributes={attributes}
+                                        content={content}
+                                    />
+                                ),
+                            }}
+                        >
+                            {processedText}
+                        </Linkify>
+                    )
+
+                    return shouldHighlight ? (
+                        <span className="MessageSameUser">
+                            {linkifiedContent}
+                        </span>
+                    ) : (
+                        linkifiedContent
+                    )
+                })()}
             </span>
             <MessageEmojis
                 msgId={msgId}

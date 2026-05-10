@@ -1,7 +1,7 @@
 import './Link.css'
 import AnchorTitleLink from './AnchorTitleLink'
 import { isImage, isVideo, isAudio, isMedia } from '../media'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 type LinkType = {
     url: string
@@ -26,7 +26,11 @@ const DetailLink: React.FC<{ url: string; children: ReactNode }> = ({
     return (
         <details open>
             <summary>
-                <a href={url} target="blank" rel="nofollow noopener">
+                <a
+                    href={url}
+                    target="_blank"
+                    rel="nofollow noopener noreferrer"
+                >
                     {url}
                 </a>
             </summary>
@@ -35,7 +39,14 @@ const DetailLink: React.FC<{ url: string; children: ReactNode }> = ({
     )
 }
 
-const Link = (url: string) => {
+type LinkComponentProps = {
+    attributes: Record<string, string>
+    content: string
+}
+
+const Link: React.FC<LinkComponentProps> = ({ attributes, content }) => {
+    const url = attributes.href || content
+
     if (isMedia(url)) {
         return (
             <DetailLink url={url}>

@@ -1,18 +1,18 @@
-import { hightlightSameUser } from './SingleMessage'
+import { getHighlightedMessage } from './SingleMessage'
 
 describe('Message', () => {
-    describe('hightlightSameUser', () => {
+    describe('getHighlightedMessage', () => {
         test('should highlight Bob in message', () =>
             expect(
-                hightlightSameUser({ login: 'Bob', text: 'Hey Bob' })
-            ).toEqual(<span className="MessageSameUser">Hey Bob</span>))
+                getHighlightedMessage({ login: 'Bob', text: 'Hey Bob' })
+            ).toEqual({ text: 'Hey Bob', shouldHighlight: true }))
         test('should highlight Bob in lowercase', () =>
             expect(
-                hightlightSameUser({ login: 'Bob', text: 'Hey bob' })
-            ).toEqual(<span className="MessageSameUser">Hey bob</span>))
+                getHighlightedMessage({ login: 'Bob', text: 'Hey bob' })
+            ).toEqual({ text: 'Hey bob', shouldHighlight: true }))
         test('should NOT highlight Bob if part of a word', () =>
             expect(
-                hightlightSameUser({ login: 'Bob', text: 'HeyBobInAWord' })
-            ).toEqual('HeyBobInAWord'))
+                getHighlightedMessage({ login: 'Bob', text: 'HeyBobInAWord' })
+            ).toEqual({ text: 'HeyBobInAWord', shouldHighlight: false }))
     })
 })
