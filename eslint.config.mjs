@@ -21,7 +21,6 @@ export default tseslint.config(
         languageOptions: {
             globals: {
                 ...globals.browser,
-                ...globals.jest,
                 ...globals.node,
             },
         },
@@ -30,5 +29,13 @@ export default tseslint.config(
             'react-hooks/rules-of-hooks': 'error',
             'react-hooks/exhaustive-deps': 'warn',
         },
-    }
+    },
+    {
+        files: ['**/*.{test,spec}.{js,jsx,ts,tsx}'],
+        languageOptions: {
+            globals: {
+                ...globals.vitest,
+            },
+        },
+    },
 )
