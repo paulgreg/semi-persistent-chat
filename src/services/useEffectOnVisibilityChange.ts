@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useEffectOnVisible = (cb: (dep: any) => void, dep: any) => {
+export const useEffectOnVisible = <T>(cb: (dep: T) => void, dep: T) => {
     useEffect(() => {
         const handler = () => {
             if (isDocumentVisible()) cb(dep)
@@ -15,8 +14,10 @@ export const useEffectOnVisible = (cb: (dep: any) => void, dep: any) => {
     }, [cb, dep])
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const useEffectOnceOnVisibleAndFocus = (cb: () => void, dep: any) => {
+export const useEffectOnceOnVisibleAndFocus = (
+    cb: () => void,
+    dep: unknown
+) => {
     useEffect(() => {
         if (isDocumentVisible()) {
             cb()

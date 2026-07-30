@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const useEffectOnNetworkOnline = (cb: (dep: any) => void, dep: any) => {
+const useEffectOnNetworkOnline = <T>(cb: (dep: T) => void, dep: T) => {
     useEffect(() => {
         const checkFn = () => navigator.onLine && cb(dep)
 

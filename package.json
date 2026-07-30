@@ -19,7 +19,8 @@
         "test": "vitest --run",
         "tdd": "vitest",
         "lint": "eslint src",
-        "format": "prettier -c src"
+        "format": "prettier -c src",
+        "format:fix": "prettier -c src --write"
     },
     "pre-commit": [
         "format",
