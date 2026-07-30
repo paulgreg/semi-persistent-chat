@@ -8,6 +8,7 @@ import { FullMessageType } from '../types/ChatTypes'
 import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import { clientConfig } from '../services/clientConfig'
 import { useEffectOnceOnVisibleAndFocus } from '../services/useEffectOnVisibilityChange'
+import s from './MessagesList.module.css'
 
 const HIGHLIGHT_DELAY = 1_000
 
@@ -134,19 +135,19 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const sameUser = login === username
     const userStatus = isUserOnline(username) ? 'online' : 'offline'
     const canReply = !isReply
-    const classEdition = msgId === editMsgId ? 'MessageEdition' : ''
-    const classReply = isReply ? 'MessageReply' : ''
-    const classHighlight = isHighlight ? 'MessagesRowHighlight' : ''
+    const classEdition = msgId === editMsgId ? s.MessageEdition : ''
+    const classReply = isReply ? s.MessageReply : ''
+    const classHighlight = isHighlight ? s.MessagesRowHighlight : ''
 
     if (isDataUrlImg(text))
         return (
             <div
                 key={msgId}
                 ref={elRef}
-                className={`MessagesRow ${classHighlight}`}
+                className={`${s.MessagesRow} ${classHighlight}`}
             >
                 <span
-                    className="MessagesTime"
+                    className={s.MessagesTime}
                     title={d.toLocaleDateString(
                         navigator.language,
                         dateOptions
@@ -155,13 +156,13 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     {d.toLocaleTimeString(navigator.language, timeOptions)}
                 </span>
                 <span
-                    className={`MessagesUser ${sameUser ? 'MessageSameUser' : ''}`}
+                    className={`${s.MessagesUser} ${sameUser ? s.MessageSameUser : ''}`}
                     title={`message version: ${version}`}
                 >
                     {message.username}
                     {!sameUser && (
                         <span
-                            className={`UserStatus ${userStatus}`}
+                            className={`${s.UserStatus} ${s[userStatus]}`}
                             title={userStatus}
                         >
                             •
@@ -170,7 +171,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 </span>
                 <details open>
                     <summary>Image</summary>
-                    <img className="preview" src={text} alt="" />
+                    <img className={s.preview} src={text} alt="" />
                     <MessageEmojis
                         msgId={msgId}
                         login={login}
@@ -179,7 +180,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     />
                     {sameUser && (
                         <button
-                            className="MessagesTextAction"
+                            className={s.MessagesTextAction}
                             type="button"
                             aria-label="Delete message"
                             onClick={onDeleteClick}
@@ -195,22 +196,22 @@ const SingleMessage: React.FC<MessageComponentType> = ({
         <div
             key={msgId}
             ref={elRef}
-            className={`MessagesRow ${classEdition} ${classReply} ${classHighlight}`}
+            className={`${s.MessagesRow} ${classEdition} ${classReply} ${classHighlight}`}
         >
             <span
-                className="MessagesTime"
+                className={s.MessagesTime}
                 title={d.toLocaleDateString(navigator.language, dateOptions)}
             >
                 {d.toLocaleTimeString(navigator.language, timeOptions)}
             </span>
             <span
-                className={`MessagesUser ${sameUser ? 'MessageSameUser' : ''}`}
+                className={`${s.MessagesUser} ${sameUser ? s.MessageSameUser : ''}`}
                 title={`message version: ${version}`}
             >
                 {message.username}
                 {!sameUser && (
                     <span
-                        className={`UserStatus ${userStatus}`}
+                        className={`${s.UserStatus} ${s[userStatus]}`}
                         title={userStatus}
                     >
                         •
@@ -218,13 +219,13 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 )}{' '}
                 :
                 {!isReply && replyCount > 0 && (
-                    <span className="MessageReplyCount" title="Replies">
+                    <span className={s.MessageReplyCount} title="Replies">
                         💬 {replyCount}
                     </span>
                 )}
             </span>
             <span
-                className={`MessagesText ${validated ? '' : 'MessagesTextPending'} ${isExpired ? 'MessagesTextExpired' : ''}`}
+                className={`${s.MessagesText} ${validated ? '' : s.MessagesTextPending} ${isExpired ? s.MessagesTextExpired : ''}`}
             >
                 {/* Using linkify-react to fix Element type is invalid error */}
                 {(() => {
@@ -250,7 +251,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     )
 
                     return shouldHighlight ? (
-                        <span className="MessageSameUser">
+                        <span className={s.MessageSameUser}>
                             {linkifiedContent}
                         </span>
                     ) : (
@@ -266,7 +267,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             />
             {canReply && (
                 <button
-                    className="MessagesTextAction"
+                    className={s.MessagesTextAction}
                     type="button"
                     aria-label="Reply"
                     onClick={() => onReply(message.msgId)}
@@ -276,7 +277,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             )}
             {sameUser && (
                 <button
-                    className="MessagesTextAction"
+                    className={s.MessagesTextAction}
                     type="button"
                     aria-label="Edit message"
                     onClick={onEditClick}
@@ -286,7 +287,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             )}
             {sameUser && (
                 <button
-                    className="MessagesTextAction"
+                    className={s.MessagesTextAction}
                     type="button"
                     aria-label="Delete message"
                     onClick={onDeleteClick}

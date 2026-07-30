@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
-import './EmojiPicker.css'
+import s from './EmojiPicker.module.css'
 
 export type EmojiPickerType = { native: string }
 
@@ -32,13 +32,13 @@ const EmojiPicker: React.FC<onSelectEmojiPickerType> = ({ onSelectEmoji }) => {
 
     return (
         <>
-            <button type="button" onClick={onClick} className="emojiButton">
+            <button type="button" onClick={onClick} className={s.emojiButton}>
                 <span role="img" aria-label="Emoji picker">
                     😀
                 </span>
             </button>
             <div
-                className="emojiPicker"
+                className={s.emojiPicker}
                 style={{ display: open ? 'block' : 'none' }}
             >
                 <Picker

@@ -21,7 +21,7 @@
         color: black;
     }
 
-    .WriteBoxReplyIndicator button {
+    .WriteBoxReplyIndicatorButton {
         color: black;
     }
 }
@@ -38,7 +38,7 @@
     color: white;
 }
 
-.WriteBoxReplyIndicator button {
+.WriteBoxReplyIndicatorButton {
     cursor: pointer;
     background: none;
     border: none;

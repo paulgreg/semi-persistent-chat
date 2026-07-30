@@ -1,4 +1,4 @@
-import './Link.css'
+import s from './Link.module.css'
 import AnchorTitleLink from './AnchorTitleLink'
 import { isImage, isVideo, isAudio, isMedia } from '../media'
 import React, { ReactNode } from 'react'
@@ -8,15 +8,15 @@ type LinkType = {
 }
 
 const AudioLink: React.FC<LinkType> = ({ url }) => (
-    <audio className="preview" src={url} controls={true} preload="none" />
+    <audio className={s.preview} src={url} controls={true} preload="none" />
 )
 
 const VideoLink: React.FC<LinkType> = ({ url }) => (
-    <video className="preview" src={url} controls={true} preload="none" />
+    <video className={s.preview} src={url} controls={true} preload="none" />
 )
 
 const ImageLink: React.FC<LinkType> = ({ url }) => (
-    <img className="preview" src={url} alt="" />
+    <img className={s.preview} src={url} alt="" />
 )
 
 const DetailLink: React.FC<{ url: string; children: ReactNode }> = ({

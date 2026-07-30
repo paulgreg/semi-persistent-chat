@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react'
-import './Login.css'
+import s from './Login.module.css'
+import sCommon from './Common.module.css'
 
 type LoginType = {
     login: string
@@ -13,8 +14,10 @@ const Login: React.FC<LoginType> = ({ login, onLoginChange }) => {
     }
 
     return (
-        <div className="login">
-            <label htmlFor="login">Login : </label>
+        <div className={s.login}>
+            <label className={sCommon.fieldLabel} htmlFor="login">
+                Login :
+            </label>
             <input
                 id="login"
                 type="text"

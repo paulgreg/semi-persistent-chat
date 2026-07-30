@@ -4,7 +4,7 @@ import Room from './Room'
 import { onLoginType } from '../App'
 import { saveLoginInfo } from '../services/utils'
 import { clientConfig } from '../services/clientConfig'
-import './Home.css'
+import s from './Home.module.css'
 
 const generateRandomRoom = () => Math.random().toString(36).substring(2, 6)
 
@@ -66,15 +66,20 @@ const Home: React.FC<HomeType> = ({ userId, onLogin }) => {
     }
 
     return (
-        <div className="Home">
-            <h1>Semi Persistent Chat</h1>
-            <hr />
-            <form name="loginAndRoom" autoComplete="off" onSubmit={onSubmit}>
+        <div className={s.Home}>
+            <h1 className={s.title}>Semi Persistent Chat</h1>
+            <hr className={s.divider} />
+            <form
+                className={s.form}
+                name="loginAndRoom"
+                autoComplete="off"
+                onSubmit={onSubmit}
+            >
                 <Login login={login} onLoginChange={onLoginChange} />
                 <Room room={room} onRoomChange={onRoomChange} />
-                <input className="submit" type="submit" value="Login" />
+                <input className={s.submit} type="submit" value="Login" />
             </form>
-            <hr />
+            <hr className={s.divider} />
             <p>
                 Share the room name (or the URL once logged in) to your friends
                 to chat together.

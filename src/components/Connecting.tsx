@@ -1,10 +1,10 @@
-import './Connecting.css'
+import s from './Connecting.module.css'
 
 const Connecting = () => {
     return (
-        <div className="Connecting">
+        <div className={s.Connecting}>
             Connecting...
-            <div className="Connecting-pulse"></div>
+            <div className={s['Connecting-pulse']}></div>
         </div>
     )
 }

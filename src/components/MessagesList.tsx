@@ -4,7 +4,7 @@ import { FullMessageType, UsersType } from '../types/ChatTypes'
 import { onEmojisType } from './MessageEmojis'
 import { onDeleteType, onReplyType, setEditMessageType } from '../App'
 import { sortMessages } from '../services/utils'
-import './MessagesList.css'
+import s from './MessagesList.module.css'
 
 const isUserOnlineFromUsers = (users: UsersType) => (username: string) =>
     users.some((user) => user.username === username)
@@ -65,11 +65,11 @@ const MessagesList: React.FC<MessagesListType> = ({
     )
 
     return (
-        <div className="Messages" ref={messagesRef}>
+        <div className={s.Messages} ref={messagesRef}>
             {topLevelMessages.map((message) => {
                 const replies = repliesByParent[message.msgId] ?? []
                 return (
-                    <div key={message.msgId} className="MessageGroup">
+                    <div key={message.msgId} className={s.MessageGroup}>
                         <SingleMessage
                             login={login}
                             message={message}
@@ -82,7 +82,7 @@ const MessagesList: React.FC<MessagesListType> = ({
                             replyCount={replies.length}
                         />
                         {replies.length > 0 && (
-                            <div className="MessageReplies">
+                            <div className={s.MessageReplies}>
                                 {replies.map((reply) => (
                                     <SingleMessage
                                         key={reply.msgId}

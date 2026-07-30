@@ -11,8 +11,8 @@
     border-radius: 12px;
 }
 
-.MessagesRow:hover .MessageEmojis,
-.MessagesRow:active .MessageEmojis,
+:global([class*='MessagesRow']):hover .MessageEmojis,
+:global([class*='MessagesRow']):active .MessageEmojis,
 .MessageEmojis:has(.MessageEmoji) {
     display: flex;
 }
@@ -43,8 +43,8 @@
     padding: 3px;
 }
 
-.MessagesRow:hover .MessageEmojiAdd,
-.MessagesRow:active .MessageEmojiAdd {
+:global([class*='MessagesRow']):hover .MessageEmojiAdd,
+:global([class*='MessagesRow']):active .MessageEmojiAdd {
     display: block;
 }
 

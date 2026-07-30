@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useCallback } from 'react'
-import './Room.css'
+import s from './Room.module.css'
+import sCommon from './Common.module.css'
 
 type RoomType = {
     room: string
@@ -13,8 +14,10 @@ const Room: React.FC<RoomType> = ({ room, onRoomChange }) => {
     )
 
     return (
-        <div className="room">
-            <label htmlFor="room">Room : </label>
+        <div className={s.room}>
+            <label className={sCommon.fieldLabel} htmlFor="room">
+                Room :
+            </label>
             <input
                 id="room"
                 type="text"

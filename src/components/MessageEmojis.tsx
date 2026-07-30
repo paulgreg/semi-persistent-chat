@@ -1,5 +1,5 @@
 import React, { MouseEvent, useCallback, useState } from 'react'
-import './MessageEmojis.css'
+import s from './MessageEmojis.module.css'
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 import { EmojiUserType } from '../types/ChatTypes'
@@ -56,12 +56,12 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
     )
 
     return (
-        <div className="MessageEmojisRow">
-            <span className="MessageEmojis">
+        <div className={s.MessageEmojisRow}>
+            <span className={s.MessageEmojis}>
                 {emojis.map((emoji, idx) =>
                     login === emoji.username ? (
                         <button
-                            className="MessageEmoji MessageEmojiButton MessageEmojiSameUser"
+                            className={`${s.MessageEmoji} ${s.MessageEmojiButton} ${s.MessageEmojiSameUser}`}
                             title={emoji.username}
                             type="button"
                             aria-label={`Remove ${emoji.emoji} reaction`}
@@ -72,7 +72,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
                         </button>
                     ) : (
                         <span
-                            className="MessageEmoji"
+                            className={s.MessageEmoji}
                             title={emoji.username}
                             key={idx}
                         >
@@ -81,7 +81,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
                     )
                 )}
                 <button
-                    className="MessageEmojiAdd"
+                    className={s.MessageEmojiAdd}
                     type="button"
                     aria-label="Add reaction"
                     onClick={onAddClick}
@@ -90,7 +90,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
                 </button>
             </span>
             {open && (
-                <div className="MessageEmojiPicker">
+                <div className={s.MessageEmojiPicker}>
                     <Picker
                         data={data}
                         onEmojiSelect={onSelect}

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import Logout from './Logout'
 import { UsersType } from '../types/ChatTypes'
-import './UsersList.css'
+import s from './UsersList.module.css'
 
 type UsersListType = {
     userId: string
@@ -16,16 +16,16 @@ const UsersList: React.FC<UsersListType> = ({ userId, users, room }) => {
 
     return (
         <>
-            <div className={`UsersList ${visible && 'UsersVisible'}`}>
-                <div className="UsersListContent">
-                    <p className="UsersListTitle">Connected users :</p>
-                    <ul className="UsersUl">
+            <div className={`${s.UsersList} ${visible ? s.UsersVisible : ''}`}>
+                <div className={s.UsersListContent}>
+                    <p className={s.UsersListTitle}>Connected users :</p>
+                    <ul className={s.UsersUl}>
                         {users.map((m) => (
                             <li key={m.userId}>
                                 {m.userId === userId ? (
                                     <>
                                         <span
-                                            className="higlight"
+                                            className={s.higlight}
                                             title={m.userId}
                                         >
                                             {m.username}
@@ -41,14 +41,14 @@ const UsersList: React.FC<UsersListType> = ({ userId, users, room }) => {
                 </div>
             </div>
             <button
-                className={`UsersCount ${visible && 'UsersCountVisible'}`}
+                className={`${s.UsersCount} ${visible ? s.UsersCountVisible : ''}`}
                 title="Users"
                 onClick={onClick}
             >
-                <span className="UsersCountText">
+                <span className={s.UsersCountText}>
                     {users.length}{' '}
                     <span
-                        className="UsersCountIcon"
+                        className={s.UsersCountIcon}
                         role="img"
                         aria-label="users"
                     >

@@ -16,7 +16,7 @@ import useTimeout from './useTimeout'
 import Warning from './Warning.tsx'
 import { FullMessageType } from '../types/ChatTypes'
 import { onMessageCbType, setEditMessageType } from '../App.tsx'
-import './WriteBox.css'
+import s from './WriteBox.module.css'
 import { clientConfig } from '../services/clientConfig.ts'
 
 type WriteBoxType = {
@@ -177,22 +177,27 @@ const WriteBox: React.FC<WriteBoxType> = ({
         login && (
             <>
                 {replyingTo && (
-                    <div className="WriteBoxReplyIndicator">
+                    <div className={s.WriteBoxReplyIndicator}>
                         <span>
                             💬 Replying to message
                             {replyPreview ? ` "${replyPreview}"` : ''}
                         </span>
-                        <button onClick={onCancelReply}>×</button>
+                        <button
+                            className={s.WriteBoxReplyIndicatorButton}
+                            onClick={onCancelReply}
+                        >
+                            ×
+                        </button>
                     </div>
                 )}
-                <div className="WriteBox">
-                    <label className="WriteBoxLabel" htmlFor="msg">
+                <div className={s.WriteBox}>
+                    <label className={s.WriteBoxLabel} htmlFor="msg">
                         {login}&nbsp;:
                     </label>
                     <input
                         type="text"
                         name="msg"
-                        className="WriteBoxInput"
+                        className={s.WriteBoxInput}
                         ref={inputRef}
                         value={message}
                         onChange={onChange}

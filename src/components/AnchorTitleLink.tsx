@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { mayUrlHaveATitle } from '../media'
 import { clientConfig } from '../services/clientConfig'
-import './AnchorTitleLink.css'
+import s from './AnchorTitleLink.module.css'
 
 type AnchorTitleLinkType = {
     url: string
@@ -36,7 +36,7 @@ const AnchorTitleLink: React.FC<AnchorTitleLinkType> = ({ url }) => {
             {title && (
                 <>
                     {' '}
-                    (<span className="linkTitle">{title}</span>)
+                    (<span className={s.linkTitle}>{title}</span>)
                 </>
             )}
         </>

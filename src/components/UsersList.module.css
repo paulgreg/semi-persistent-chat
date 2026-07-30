@@ -55,8 +55,8 @@
     top: 0;
 }
 
-.hightlight {
-    color: cyan;
+.higlight {
+    color: aquamarine;
 }
 
 .UsersListTitle {
@@ -81,6 +81,10 @@
     }
 
     .UsersYourself {
+        color: blue;
+    }
+
+    .higlight {
         color: blue;
     }
 }

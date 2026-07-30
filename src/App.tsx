@@ -37,7 +37,7 @@ import { getUserId } from './services/utils'
 import { isDataUrlImg } from './media'
 import logo192 from './assets/logo192.png'
 import './Global.css'
-import './App.css'
+import s from './App.module.css'
 
 const d = debug('App')
 
@@ -177,7 +177,7 @@ const App = () => {
     const ready = login && room
 
     return (
-        <div className="App">
+        <div className={s.App}>
             <Favicon url={logo192} alertCount={count} />
             {!ready && <Home userId={userId} onLogin={onLogin} />}
             {ready && (
