@@ -25,6 +25,7 @@ type WriteBoxType = {
     onMessage: onMessageCbType
     editMessage: FullMessageType | undefined
     setEditMessage: setEditMessageType
+    initialMessage?: string
     replyingTo?: string | null
     replyPreview?: string
     onCancelReply?: () => void
@@ -36,11 +37,13 @@ const WriteBox: React.FC<WriteBoxType> = ({
     onMessage,
     editMessage,
     setEditMessage,
+    initialMessage,
     replyingTo,
     replyPreview,
     onCancelReply,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null)
+    const initialMessageApplied = useRef(false)
     const [message, setMessage] = useState('')
     const { warning, setWarning, setTemporaryWarning } = useTemporaryWarning()
     const [cursorPosition, setCursorPosition] = useState(0)
@@ -56,6 +59,12 @@ const WriteBox: React.FC<WriteBoxType> = ({
     useEffect(() => {
         if (replyingTo) inputRef.current?.focus()
     }, [replyingTo])
+
+    useEffect(() => {
+        if (initialMessageApplied.current || !initialMessage) return
+        setMessage(initialMessage)
+        initialMessageApplied.current = true
+    }, [initialMessage])
 
     const onChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {

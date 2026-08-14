@@ -28,3 +28,13 @@ export const getUserId = () => {
     localStorage.setItem('spChatUserId', newUserId)
     return newUserId
 }
+
+export const getSharedTextFromLocation = (location: Location) => {
+    const params = new URLSearchParams(location.search)
+    const title = params.get('title')?.trim()
+    const text = params.get('text')?.trim()
+    const url = params.get('url')?.trim()
+
+    const sharedText = [title, text, url].filter(Boolean).join(' ').trim()
+    return sharedText || undefined
+}

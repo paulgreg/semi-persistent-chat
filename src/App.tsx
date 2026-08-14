@@ -33,7 +33,7 @@ import {
     UsersType,
 } from './types/ChatTypes'
 import { onEmojisType } from './components/MessageEmojis'
-import { getUserId } from './services/utils'
+import { getSharedTextFromLocation, getUserId } from './services/utils'
 import { isDataUrlImg } from './media'
 import logo192 from './assets/logo192.png'
 import './Global.css'
@@ -62,6 +62,9 @@ const App = () => {
     >()
     const [users, setUsers] = useState<UsersType>([])
     const [replyingTo, setReplyingTo] = useState<string | null>(null)
+    const [sharedMessage] = useState<string | undefined>(() =>
+        getSharedTextFromLocation(globalThis.location)
+    )
 
     // When editing a reply message, set the replyingTo state to preserve the reply relationship
     useEffect(() => {
@@ -199,6 +202,7 @@ const App = () => {
                         onMessage={onMessage}
                         editMessage={editMessage}
                         setEditMessage={setEditMessage}
+                        initialMessage={sharedMessage}
                         replyingTo={replyingTo}
                         replyPreview={replyPreview}
                         onCancelReply={onCancelReply}
