@@ -6,15 +6,20 @@
 }
 
 .MessageEmojis {
-    display: none;
+    display: flex;
     border: 1px solid grey;
     border-radius: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s;
 }
 
 :global([class*='MessagesRow']):hover .MessageEmojis,
 :global([class*='MessagesRow']):active .MessageEmojis,
-.MessageEmojis:has(.MessageEmoji) {
-    display: flex;
+.MessageEmojis:has(.MessageEmoji),
+.MessageEmojis:has(.MessageEmojiAdd:focus-visible) {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .MessageEmoji {
@@ -32,7 +37,6 @@
 }
 
 .MessageEmojiAdd {
-    display: none;
     opacity: 0.5;
     background: white;
     border-radius: 50%;
@@ -41,11 +45,6 @@
     font: inherit;
     line-height: 1;
     padding: 3px;
-}
-
-:global([class*='MessagesRow']):hover .MessageEmojiAdd,
-:global([class*='MessagesRow']):active .MessageEmojiAdd {
-    display: block;
 }
 
 .MessageEmoji + .MessageEmojiAdd {
