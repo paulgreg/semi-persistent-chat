@@ -12,6 +12,9 @@ import s from './MessagesList.module.css'
 
 const HIGHLIGHT_DELAY = 1_000
 
+const UNDECRYPTABLE_TITLE =
+    'Encrypted message — wrong or missing password, actions are disabled'
+
 const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'numeric',
     day: 'numeric',
@@ -66,6 +69,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
 }) => {
     const { msgId, text, emojis, username, timestamp, validated, version } =
         message
+    const { wasEncrypted, decryptFailed } = message
     const [isExpired, setIsExpired] = useState(false)
     const [isHighlight, setIsHighlight] = useState(true)
     const elRef = useRef<HTMLDivElement>(null)
@@ -139,6 +143,16 @@ const SingleMessage: React.FC<MessageComponentType> = ({
     const classReply = isReply ? s.MessageReply : ''
     const classHighlight = isHighlight ? s.MessagesRowHighlight : ''
 
+    // a small lock marks messages that were encrypted on the wire
+    const lock = wasEncrypted && (
+        <span
+            className={s.MessagesEncrypted}
+            title={decryptFailed ? UNDECRYPTABLE_TITLE : 'Encrypted message'}
+        >
+            🔒
+        </span>
+    )
+
     if (isDataUrlImg(text))
         return (
             <div
@@ -155,6 +169,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 >
                     {d.toLocaleTimeString(navigator.language, timeOptions)}
                 </span>
+                {lock}
                 <span
                     className={`${s.MessagesUser} ${sameUser ? s.MessageSameUser : ''}`}
                     title={`message version: ${version}`}
@@ -177,8 +192,9 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                         login={login}
                         emojis={emojis}
                         onEmojis={onEmojis}
+                        readOnly={decryptFailed}
                     />
-                    {sameUser && (
+                    {sameUser && !decryptFailed && (
                         <button
                             className={s.MessagesTextAction}
                             type="button"
@@ -204,6 +220,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
             >
                 {d.toLocaleTimeString(navigator.language, timeOptions)}
             </span>
+            {lock}
             <span
                 className={`${s.MessagesUser} ${sameUser ? s.MessageSameUser : ''}`}
                 title={`message version: ${version}`}
@@ -264,8 +281,9 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                 login={login}
                 emojis={emojis}
                 onEmojis={onEmojis}
+                readOnly={decryptFailed}
             />
-            {canReply && (
+            {canReply && !decryptFailed && (
                 <button
                     className={s.MessagesTextAction}
                     type="button"
@@ -275,7 +293,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     💬
                 </button>
             )}
-            {sameUser && (
+            {sameUser && !decryptFailed && (
                 <button
                     className={s.MessagesTextAction}
                     type="button"
@@ -285,7 +303,7 @@ const SingleMessage: React.FC<MessageComponentType> = ({
                     ✏️
                 </button>
             )}
-            {sameUser && (
+            {sameUser && !decryptFailed && (
                 <button
                     className={s.MessagesTextAction}
                     type="button"

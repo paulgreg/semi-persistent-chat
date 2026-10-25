@@ -27,6 +27,12 @@ const mergeMessages = (
             emojis: editedMessage?.emojis ?? m.emojis,
             validated: editedMessage?.validated ?? m.validated,
             version: editedMessage?.version ?? m.version,
+            wasEncrypted: editedMessage
+                ? editedMessage.wasEncrypted
+                : m.wasEncrypted,
+            decryptFailed: editedMessage
+                ? editedMessage.decryptFailed
+                : m.decryptFailed,
         }
     })
     if (d.enabled) d('- merged', merged)

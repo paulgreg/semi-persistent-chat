@@ -55,6 +55,12 @@
     font-size: small;
 }
 
+.MessagesEncrypted {
+    margin-right: 0.5em;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
 .MessagesUser {
     margin-right: 0.5em;
 }

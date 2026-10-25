@@ -23,6 +23,21 @@ Chat Screen :
 - can reply to messages (1 reply level)
 - comment with emojis
 - messages are strikethrough when they reach their expiration time
+- optional client-side encryption (password based): the server only stores encrypted content
+
+## Encryption
+
+On the home page, an optional password enables end-to-end encryption in the browser (AES-GCM 256, key derived with PBKDF2). When set:
+
+- messages (including pasted images) are encrypted before being sent: the server and Redis only ever see ciphertext. Messages that could not be decrypted (wrong or missing password) are displayed as 🔒 and their actions are disabled
+- the password lives in the URL fragment (`#pwd=...`), after the room name. Fragments are never sent to the server: sharing the full URL with friends shares the password with them, sharing only the room name keeps messages unreadable for them
+- the URL (and so the password) stays in the browser history: consider that before sharing your screen or history
+- encryption requires a secure context (HTTPS or localhost): the password field is disabled otherwise
+
+Limitations to be aware of:
+
+- room names, usernames, timestamps, emojis reactions and message sizes are not encrypted (they are needed to display the room)
+- losing the password (or the URL fragment) means losing the ability to read the room history
 
 ## Configuration
 

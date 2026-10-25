@@ -19,9 +19,15 @@ import { onMessageCbType, setEditMessageType } from '../App.tsx'
 import s from './WriteBox.module.css'
 import { clientConfig } from '../services/clientConfig.ts'
 
+// Encrypted content is ~1.33x bigger (base64 + envelope + auth tag): lower the
+// client limit so the server never truncates an encrypted message (truncated
+// ciphertext is unrecoverable)
+const ENCRYPTION_SIZE_OVERHEAD_FACTOR = 1.5
+
 type WriteBoxType = {
     login: string
     room: string
+    password: string
     onMessage: onMessageCbType
     editMessage: FullMessageType | undefined
     setEditMessage: setEditMessageType
@@ -34,6 +40,7 @@ type WriteBoxType = {
 const WriteBox: React.FC<WriteBoxType> = ({
     login,
     room,
+    password,
     onMessage,
     editMessage,
     setEditMessage,
@@ -48,6 +55,10 @@ const WriteBox: React.FC<WriteBoxType> = ({
     const { warning, setWarning, setTemporaryWarning } = useTemporaryWarning()
     const [cursorPosition, setCursorPosition] = useState(0)
     const { launch } = useTimeout()
+
+    const effectiveMaxMsgSize = password
+        ? Math.floor(clientConfig.maxMsgSize / ENCRYPTION_SIZE_OVERHEAD_FACTOR)
+        : clientConfig.maxMsgSize
 
     useEffect(() => {
         if (editMessage) {
@@ -70,13 +81,13 @@ const WriteBox: React.FC<WriteBoxType> = ({
         (e: ChangeEvent<HTMLInputElement>) => {
             const msg = e.target.value
             const warningMsg =
-                msg.length >= clientConfig.maxMsgSize
-                    ? 'Characters limit reached'
+                msg.length >= effectiveMaxMsgSize
+                    ? `Characters limit reached${password ? ' (lowered to leave room for encryption)' : ''}`
                     : ''
             setWarning(warningMsg)
             setMessage(msg)
         },
-        [setWarning]
+        [setWarning, effectiveMaxMsgSize, password]
     )
 
     const onKeyUp = useCallback(
@@ -95,10 +106,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
             } else if (e.key === 'Enter') {
                 if (editMessage && msgLength === 0) {
                     setEditMessage(undefined)
-                } else if (
-                    msgLength > 0 &&
-                    msgLength < clientConfig.maxMsgSize
-                ) {
+                } else if (msgLength > 0 && msgLength < effectiveMaxMsgSize) {
                     onMessage({
                         ...editMessage,
                         room,
@@ -120,6 +128,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
             room,
             login,
             onCancelReply,
+            effectiveMaxMsgSize,
         ]
     )
 
@@ -146,11 +155,10 @@ const WriteBox: React.FC<WriteBoxType> = ({
                             return
                         }
 
-                        if (dataUrl.length > clientConfig.maxMsgSize) {
-                            const diff =
-                                dataUrl.length - clientConfig.maxMsgSize
+                        if (dataUrl.length > effectiveMaxMsgSize) {
+                            const diff = dataUrl.length - effectiveMaxMsgSize
                             setTemporaryWarning(
-                                `Pasted image is too big : ${diff} bytes above limit (${clientConfig.maxMsgSize})`
+                                `Pasted image is too big : ${diff} bytes above limit (${effectiveMaxMsgSize})`
                             )
                             return
                         }
@@ -162,7 +170,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
                 }
             }
         },
-        [onMessage, login, room, setTemporaryWarning]
+        [onMessage, login, room, setTemporaryWarning, effectiveMaxMsgSize]
     )
 
     const onSelectEmoji: selectEmojiPickerType = useCallback(
@@ -215,7 +223,7 @@ const WriteBox: React.FC<WriteBoxType> = ({
                         onClick={onClick}
                         autoComplete="false"
                         minLength={1}
-                        maxLength={clientConfig.maxMsgSize}
+                        maxLength={effectiveMaxMsgSize}
                         autoFocus
                     ></input>
                     <EmojiPicker onSelectEmoji={onSelectEmoji} />

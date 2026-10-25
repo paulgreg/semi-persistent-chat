@@ -15,6 +15,9 @@ type MessagesEmojis = {
     login: string
     emojis: Array<EmojiUserType>
     onEmojis: (o: { msgId: string; emojis: Array<EmojiUserType> }) => void
+    // when true, reactions are displayed but cannot be added or removed
+    // (used for messages that could not be decrypted)
+    readOnly?: boolean
 }
 
 const MessageEmojis: React.FC<MessagesEmojis> = ({
@@ -22,6 +25,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
     login,
     emojis = [],
     onEmojis,
+    readOnly,
 }) => {
     const [open, setOpen] = useState(false)
 
@@ -59,7 +63,7 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
         <div className={s.MessageEmojisRow}>
             <span className={s.MessageEmojis}>
                 {emojis.map((emoji, idx) =>
-                    login === emoji.username ? (
+                    !readOnly && login === emoji.username ? (
                         <button
                             className={`${s.MessageEmoji} ${s.MessageEmojiButton} ${s.MessageEmojiSameUser}`}
                             title={emoji.username}
@@ -80,14 +84,16 @@ const MessageEmojis: React.FC<MessagesEmojis> = ({
                         </span>
                     )
                 )}
-                <button
-                    className={s.MessageEmojiAdd}
-                    type="button"
-                    aria-label="Add reaction"
-                    onClick={onAddClick}
-                >
-                    ➕
-                </button>
+                {!readOnly && (
+                    <button
+                        className={s.MessageEmojiAdd}
+                        type="button"
+                        aria-label="Add reaction"
+                        onClick={onAddClick}
+                    >
+                        ➕
+                    </button>
+                )}
             </span>
             {open && (
                 <div className={s.MessageEmojiPicker}>

@@ -33,6 +33,12 @@ export type FullMessageType = {
     validated: boolean
     replyToId?: string
     version: number
+    // client-side only (never set by the server): the message was encrypted
+    // on the wire and successfully decrypted for display
+    wasEncrypted?: boolean
+    // client-side only (never set by the server): the message is encrypted
+    // but could not be decrypted with the current password
+    decryptFailed?: boolean
 }
 
 export type EventUserOnlineType = {
