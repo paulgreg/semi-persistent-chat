@@ -31,6 +31,8 @@ const roomTtlSeconds = Math.max(60, Math.floor(cleanupWindowMs / 1000))
 const roomKey = (room: string) => `spc:room:${room}:messages`
 
 // Hourly cleanup for all rooms
+let cleanupInterval: NodeJS.Timeout | undefined
+
 const setupHourlyCleanup = async () => {
     const purgeAllOldMessages = async () => {
         try {
@@ -50,7 +52,8 @@ const setupHourlyCleanup = async () => {
 
     // Run immediately and then every hour
     await purgeAllOldMessages()
-    setInterval(purgeAllOldMessages, 60 * 60 * 1000)
+    cleanupInterval = setInterval(purgeAllOldMessages, 60 * 60 * 1000)
+    cleanupInterval.unref()
 }
 
 const parseMessage = (raw: string): FullMessageType | undefined => {
@@ -284,8 +287,13 @@ export const resetMessageAndRepliesExpiration = async (
     }
 }
 
-export const closeMessageStore = async () => {
-    if (client.isOpen) {
-        await client.quit()
+export const closeMessageStore = () => {
+    if (cleanupInterval) {
+        clearInterval(cleanupInterval)
+        cleanupInterval = undefined
     }
+    // Force-close the Redis connection: if Redis is already down (e.g. it was
+    // stopped before us during system shutdown), quit() would wait forever
+    // for a reply that never comes. destroy() is synchronous and cannot hang.
+    client.destroy()
 }

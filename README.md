@@ -79,6 +79,16 @@ Server will inject env vars and vite middleware (for hot reload) in dev.
 
 Run `npm run build` to generate static files into `build` directory, then run `npm run start` which will serve static files.
 
+## systemd deployment
+
+When running the server under systemd:
+
+- start node directly (`ExecStart=... node dist/server/index.js`), not `npm run start`
+- order the unit after the Redis provider (`After=redis.service`, or `After=docker.service` if Redis runs in a container) so this service stops *before* Redis on shutdown
+- set a bounded `TimeoutStopSec` (e.g. `10s`)
+
+On SIGTERM / SIGINT / SIGHUP the server closes socket.io and HTTP connections, force-closes the Redis client and exits within ~5s.
+
 ## nginx configuration
 
 ```

@@ -334,13 +334,25 @@ const logOnlineUsers = () => {
 }
 logOnlineUsers()
 
+const SHUTDOWN_FORCE_EXIT_MS = 5 * SECOND
+
 const registerGracefullShutdownOn = (
     signal: 'SIGINT' | 'SIGHUP' | 'SIGTERM'
 ) => {
     process.on(signal, () => {
         console.info(`received ${signal}, stopping gracefully`)
+        // Failsafe: never let the shutdown hang (e.g. on a dead connection),
+        // otherwise systemd waits for TimeoutStopSec before SIGKILLing us.
+        setTimeout(() => {
+            console.error('graceful shutdown timed out, forcing exit')
+            process.exit(1)
+        }, SHUTDOWN_FORCE_EXIT_MS).unref()
         Promise.resolve()
-            .then(async () => closeMessageStore())
+            .then(async () => {
+                server.closeIdleConnections()
+                await io.close() // closes socket.io clients and the HTTP server
+                closeMessageStore()
+            })
             .then(() => process.exit(0))
             .catch((err) => {
                 console.error(err)
